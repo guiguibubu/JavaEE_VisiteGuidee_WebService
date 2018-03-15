@@ -74,4 +74,8 @@ public class BaseDeDonnees {
 	//GETTER-SETTER
 	public Connection getConnect() {return this.connect;}
 
+	public Statement getStat() {return this.stat;}
+
+	public ResultSet getRs() {return this.rs;}
+
 }
