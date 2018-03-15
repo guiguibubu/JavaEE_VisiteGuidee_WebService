@@ -12,13 +12,15 @@ public class BaseDeDonnees {
 	private static BaseDeDonnees instance;
 
 	private static ResourceBundle bundle = ResourceBundle.getBundle("baseDeDonne");
-	private static String ip 	= bundle.getString("ip");
-	private static String port 	= bundle.getString("port");
-	private static String site 	= bundle.getString("site");
-	private static String login = bundle.getString("login");
-	private static String mdp 	= bundle.getString("mdp");
+	private static String ip 		= bundle.getString("ip");
+	private static String port 		= bundle.getString("port");
+	private static String nomBDD 	= bundle.getString("nomBDD");
+	private static String login 	= bundle.getString("login");
+	private static String mdp 		= bundle.getString("mdp");
 
 	private Connection connect;
+	private Statement stat;
+	private ResultSet rs;
 
 	// INIT LA BASE DE DONNEES
 
@@ -34,11 +36,11 @@ public class BaseDeDonnees {
 	}
 
 	//GESTION DE LA CONNEXION
-	protected void openConnection(String table) throws SQLException {
-		if(!this.connect.isClosed()) {
+	protected void openConnection() throws SQLException {
+		if(this.connect != null && !this.connect.isClosed()) {
 			this.closeConnection();
 		}
-		String url = "jdbc:mysql://"+ip+"/"+table+"?user="+login+"&password="+mdp;
+		String url = "jdbc:mysql://"+ip+"/"+nomBDD+"?user="+login+"&password="+mdp;
 		this.connect = DriverManager.getConnection(url);
 	}
 
@@ -48,19 +50,25 @@ public class BaseDeDonnees {
 
 	//GESTION REQUETE SQL
 	protected ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
-		ResultSet rs;
-		try(Statement stat = this.connect.createStatement()){
-			stat.execute(sql);
-			rs = stat.getResultSet();
+		try{
+			this.stat = this.connect.createStatement();
+			this.stat.execute(sql);
+			this.rs = this.stat.getResultSet();
+		} finally {
+			if(!(this.stat == null || this.rs == null || withReturn)) {
+				this.closeResulSet();
+				this.closeStatement();
+			}
 		}
-		if(!withReturn) {
-			this.closeResulSet(rs);
-		}
-		return rs;
+		return this.rs;
 	}
 
-	protected void closeResulSet(ResultSet rs) throws SQLException {
-		rs.close();
+	protected void closeResulSet() throws SQLException {
+		this.rs.close();
+	}
+
+	protected void closeStatement() throws SQLException {
+		this.stat.close();
 	}
 
 	//GETTER-SETTER
