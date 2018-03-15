@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="JavaEE_VisiteGuidee_WebService">
+    <wb-module deploy-name="GestionVisites">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
-        <property name="context-root" value="JavaEE_VisiteGuidee_WebService"/>
-        <property name="java-output-path" value="/JavaEE_VisiteGuidee_WebService/build/classes"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/properties"/>
+        <property name="java-output-path" value="/GestionVisites/build/classes"/>
+        <property name="context-root" value="GestionVisites"/>
     </wb-module>
 </project-modules>
