@@ -16,6 +16,15 @@ public class GestionDB {
 		bdd.closeConnection();
 	}
 
+	public static void cleanTable(String table) throws SQLException {
+		initConnection();
+		String sql = "DELETE FROM client";
+		bdd.executeSQL(sql, false);
+		bdd.closeResulSet();
+		bdd.closeStatement();
+		closeConnection();
+	}
+
 	public static boolean existeClient(String prenom, String nom) throws SQLException {
 		boolean existeClient = false;
 		initConnection();
@@ -46,5 +55,6 @@ public class GestionDB {
 			closeConnection();
 		}
 	}
+
 
 }
