@@ -40,4 +40,37 @@ class GestionDBTest {
 		}
 		Assertions.assertTrue(existeClient);
 	}
+
+	@Test
+	void testCleanTable() {
+		boolean existeClient = true;
+		try {
+			GestionDB.ajoutClient("Guillaume", "Buchle");
+			GestionDB.ajoutClient("Guillaume", "Buchle2");
+			GestionDB.ajoutClient("Guillaume", "Buchle3");
+			GestionDB.cleanTable("client");
+			existeClient = GestionDB.existeClient("Guillaume", "Buchle") ||
+					GestionDB.existeClient("Guillaume", "Buchle2") ||
+					GestionDB.existeClient("Guillaume", "Buchle3");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertFalse(existeClient);
+	}
+
+	@Test
+	void testUniciteClientSQL() {
+		int nbClient = 0;
+		try {
+			GestionDB.cleanTable("client");
+			GestionDB.ajoutClient("Guillaume", "Buchle");
+			GestionDB.ajoutClient("Guillaume", "Buchle");
+			nbClient = (GestionDB.existeClient("Guillaume", "Buchle")) ? nbClient+1 : nbClient;
+			GestionDB.supprimeClient("Guillaume", "Buchle");
+			nbClient = (GestionDB.existeClient("Guillaume", "Buchle")) ? nbClient+1 : nbClient;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(1, nbClient);
+	}
 }
