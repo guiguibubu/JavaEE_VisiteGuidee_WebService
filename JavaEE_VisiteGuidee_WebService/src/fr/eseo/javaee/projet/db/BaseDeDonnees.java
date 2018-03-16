@@ -45,7 +45,7 @@ public class BaseDeDonnees {
 	}
 
 	protected void closeConnection() throws SQLException {
-		this.connect.close();
+		if(this.connect != null){this.connect.close();}
 	}
 
 	//GESTION REQUETE SQL
@@ -64,11 +64,11 @@ public class BaseDeDonnees {
 	}
 
 	protected void closeResulSet() throws SQLException {
-		this.rs.close();
+		if(this.rs != null) {this.rs.close();}
 	}
 
 	protected void closeStatement() throws SQLException {
-		this.stat.close();
+		if(this.stat != null) {this.stat.close();}
 	}
 
 	//GETTER-SETTER
