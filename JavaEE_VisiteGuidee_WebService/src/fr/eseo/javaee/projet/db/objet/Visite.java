@@ -22,6 +22,10 @@ public class Visite {
 		this.prix = prix;
 	}
 
+	public boolean isOuverte() {
+		return LocalDateTime.now().isBefore(this.dateVisite);
+	}
+
 	public int getCodeVisite() {return this.codeVisite;}
 	public void setCodeVisite(int codeVisite) {this.codeVisite = codeVisite;}
 
