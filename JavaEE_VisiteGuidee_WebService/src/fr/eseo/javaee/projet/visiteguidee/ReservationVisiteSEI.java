@@ -7,6 +7,8 @@ import javax.jws.WebService;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 
+import fr.eseo.javaee.projet.db.objet.Visite;
+
 @WebService(name = "ReservationVisiteSEI", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 public interface ReservationVisiteSEI {
 

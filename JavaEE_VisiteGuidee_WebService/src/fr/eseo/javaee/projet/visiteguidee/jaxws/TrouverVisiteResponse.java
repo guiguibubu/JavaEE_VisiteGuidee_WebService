@@ -20,13 +20,13 @@ import javax.xml.bind.annotation.XmlType;
 public class TrouverVisiteResponse {
 
     @XmlElement(name = "return")
-    private fr.eseo.javaee.projet.visiteguidee.Visite[] _return;
+    private fr.eseo.javaee.projet.db.objet.Visite[] _return;
 
-    public fr.eseo.javaee.projet.visiteguidee.Visite[] getReturn() {
+    public fr.eseo.javaee.projet.db.objet.Visite[] getReturn() {
         return this._return;
     }
 
-    public void setReturn(fr.eseo.javaee.projet.visiteguidee.Visite[] new_return)  {
+    public void setReturn(fr.eseo.javaee.projet.db.objet.Visite[] new_return)  {
         this._return = new_return;
     }
 

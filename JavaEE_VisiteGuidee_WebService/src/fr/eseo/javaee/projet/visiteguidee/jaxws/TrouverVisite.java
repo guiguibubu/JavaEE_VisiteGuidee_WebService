@@ -20,13 +20,13 @@ import javax.xml.bind.annotation.XmlType;
 public class TrouverVisite {
 
     @XmlElement(name = "arg0")
-    private fr.eseo.javaee.projet.visiteguidee.Visite arg0;
+    private fr.eseo.javaee.projet.db.objet.Visite arg0;
 
-    public fr.eseo.javaee.projet.visiteguidee.Visite getArg0() {
+    public fr.eseo.javaee.projet.db.objet.Visite getArg0() {
         return this.arg0;
     }
 
-    public void setArg0(fr.eseo.javaee.projet.visiteguidee.Visite newArg0)  {
+    public void setArg0(fr.eseo.javaee.projet.db.objet.Visite newArg0)  {
         this.arg0 = newArg0;
     }
 

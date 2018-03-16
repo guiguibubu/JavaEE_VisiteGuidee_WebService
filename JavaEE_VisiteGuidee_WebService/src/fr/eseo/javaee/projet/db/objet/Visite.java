@@ -1,4 +1,4 @@
-package fr.eseo.javaee.projet.visiteguidee;
+package fr.eseo.javaee.projet.db.objet;
 
 import java.time.LocalDate;
 
@@ -11,11 +11,7 @@ public class Visite {
 	private float prix;
 
 	public Visite() {
-		this.codeVisite = 0;
-		this.typeDeVisite = "";
-		this.ville = "";
-		this.dateVisite = LocalDate.now();
-		this.prix = 0;
+		this(0,"","",LocalDate.now(),0);
 	}
 
 	public Visite(int codeVisite, String typeDeVisite, String ville, LocalDate dateVisite, float prix) {
