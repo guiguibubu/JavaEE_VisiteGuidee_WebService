@@ -2,8 +2,8 @@ package fr.eseo.javaee.projet.db.objet;
 
 public class Reservation {
 	private int codeReservation;
-	private int codeVisite;
-	private int codeClient;
+	private Visite visite;
+	private Client client;
 	private int nombrePersonnes;
 	private boolean paiementEffectue;
 
@@ -11,16 +11,16 @@ public class Reservation {
 	 * constructeur vide
 	 */
 	public Reservation() {
-		this(0,0,0,0,false);
+		this(0,null,null,0,false);
 	}
 
 	/**
 	 * constructeur non vide
 	 */
-	public Reservation(int codeReservation, int codeVisite, int codeClient, int nombrePersonnes, boolean paiementEffectue) {
+	public Reservation(int codeReservation, Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
 		this.codeReservation = codeReservation;
-		this.codeVisite = codeVisite;
-		this.codeClient = codeClient;
+		this.visite = visite;
+		this.client = client;
 		this.nombrePersonnes = nombrePersonnes;
 		this.paiementEffectue = paiementEffectue;
 	}
@@ -28,11 +28,11 @@ public class Reservation {
 	public int getCodeReservation() {return this.codeReservation;}
 	public void setCodeReservation(int codeReservation) {this.codeReservation = codeReservation;}
 
-	public int getCodeVisite() {return this.codeVisite;}
-	public void setCodeVisite(int codeVisite) {this.codeVisite = codeVisite;}
+	public Visite getCodeVisite() {return this.visite;}
+	public void setCodeVisite(Visite visite) {this.visite = visite;}
 
-	public int getCodeClient() {return this.codeClient;}
-	public void setCodeClient(int codeClient) {this.codeClient = codeClient;}
+	public Client getCodeClient() {return this.client;}
+	public void setCodeClient(Client client) {this.client = client;}
 
 	public int getNombrePersonnes() {return this.nombrePersonnes;}
 	public void setNombrePersonnes(int nombrePersonnes) {this.nombrePersonnes = nombrePersonnes;}
