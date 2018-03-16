@@ -7,27 +7,19 @@ public class Client {
 	private int idClient;
 	private String nom;
 	private String prenom;
-	private String dateNaissance;
-	private String adresse;
-	private int codePostal;
-	private String pays;
-	private int numTelephone;
-	private String mail;
+	private LocalDate dateNaissance;
+	private final Coordonnee coordonnee;
 
 	public Client (int idClient, String nom, String prenom) {
-		this(idClient, nom, prenom, "","",0,"",0,"");
+		this(idClient, nom, prenom, null, new Coordonnee());
 	}
 
-	public Client (int idClient, String nom, String prenom, String dateNaissance, String adresse, int codePostal, String pays, int numTelephone, String mail) {
+	public Client (int idClient, String nom, String prenom, LocalDate dateNaissance, Coordonnee coordonnee) {
 		this.idClient = idClient;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.dateNaissance = dateNaissance;
-		this.adresse = adresse;
-		this.codePostal = codePostal;
-		this.pays = pays;
-		this.numTelephone = numTelephone;
-		this.mail = mail;
+		this.coordonnee = coordonnee;
 	}
 
 	public boolean isAnniversaire() {
@@ -44,21 +36,21 @@ public class Client {
 	public String getPrenom() {return this.prenom;}
 	public void setPrenom(String prenom) {this.prenom = prenom;}
 
-	public String getDateNaissance() {return this.dateNaissance;}
-	public void setDateNaissance(String dateNaissance) {this.dateNaissance = dateNaissance;}
+	public LocalDate getDateNaissance() {return this.dateNaissance;}
+	public void setDateNaissance(LocalDate dateNaissance) {this.dateNaissance = dateNaissance;}
 
-	public String getAdresse() {return this.adresse;}
-	public void setAdresse(String adresse) {this.adresse = adresse;}
+	public String getAdresse() {return this.coordonnee.getAdresse();}
+	public void setAdresse(String adresse) {this.coordonnee.setAdresse(adresse);}
 
-	public int getCodePostal() {return this.codePostal;}
-	public void setCodePostal(int codePostal) {this.codePostal = codePostal;}
+	public int getCodePostal() {return this.coordonnee.getCodePostal();}
+	public void setCodePostal(int codePostal) {this.coordonnee.setCodePostal(codePostal);}
 
-	public String getPays() {return this.pays;}
-	public void setPays(String pays) {this.pays = pays;}
+	public String getPays() {return this.coordonnee.getPays();}
+	public void setPays(String pays) {this.coordonnee.setPays(pays);}
 
-	public int getNumTelephone() {return this.numTelephone;}
-	public void setNumTelephone(int numTelephone) {this.numTelephone = numTelephone;}
+	public int getNumTelephone() {return this.coordonnee.getNumTelephone();}
+	public void setNumTelephone(int numTelephone) {this.coordonnee.setNumTelephone(numTelephone);}
 
-	public String getMail() {return this.mail;}
-	public void setMail(String mail) {this.mail = mail;}
+	public String getMail() {return this.coordonnee.getMail();}
+	public void setMail(String mail) {this.coordonnee.setMail(mail);}
 }
