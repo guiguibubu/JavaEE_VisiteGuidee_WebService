@@ -1,6 +1,9 @@
 package fr.eseo.javaee.projet.visiteguidee;
 
-public class ReservationVisite {
+import javax.jws.WebService;
+
+@WebService(targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/", endpointInterface = "fr.eseo.javaee.projet.visiteguidee.ReservationVisiteSEI", portName = "ReservationVisitePort", serviceName = "ReservationVisiteService")
+public class ReservationVisite implements ReservationVisiteSEI {
 
 	private int codeReservation;
 	private int codeVisite;
@@ -45,15 +48,15 @@ public class ReservationVisite {
 	public boolean isPaiementEffectue() {return this.paiementEffectue;}
 	public void setPaiementEffectue(boolean paiementEffectue) {this.paiementEffectue = paiementEffectue;}
 
-	
+
 	public Visite[] trouverVisite (Visite maVisite) {return null;}
-	
-	public int reserverVisite (ReservationVisite maReservation) {return codeClient;	}
-	
-	public String PayerVisite (int monCodeReservation) {return null;}
-	
-	public boolean annulerVisite (int monCodeReservation) {return paiementEffectue;}
-	
-	
-	
+
+	public int reserverVisite (ReservationVisite maReservation) {return this.codeClient;	}
+
+	public String payerVisite (int monCodeReservation) {return null;}
+
+	public boolean annulerVisite (int monCodeReservation) {return this.paiementEffectue;}
+
+
+
 }

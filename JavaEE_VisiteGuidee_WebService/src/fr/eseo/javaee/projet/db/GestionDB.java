@@ -24,6 +24,7 @@ public class GestionDB {
 		ResultSet rs = bdd.executeSQL(sql, true);
 		existeClient = rs.next();
 		bdd.closeResulSet();
+		bdd.closeStatement();
 		closeConnection();
 		return existeClient;
 	}
