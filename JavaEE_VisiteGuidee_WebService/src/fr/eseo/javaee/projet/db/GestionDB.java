@@ -45,7 +45,7 @@ public class GestionDB {
 			closeConnection();
 		}
 	}
-	
+
 	public static void updateClient(String prenom, String nom, String dateNaissance, String adresse, int codePostal, int num_tel, String mail) throws SQLException {
 		if(existeClient(prenom, nom)) {
 			initConnection();
@@ -54,10 +54,10 @@ public class GestionDB {
 			closeConnection();
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	public static boolean existeVisite(String typeVisite, String ville, String date) throws SQLException {
 		boolean existeVisite = false;
 		initConnection();
@@ -69,7 +69,7 @@ public class GestionDB {
 		closeConnection();
 		return existeVisite;
 	}
-	
+
 	public static void ajoutVisite(String type, String ville, String date, int prix) throws SQLException {
 		if(!existeVisite(type, ville, date)) {
 			initConnection();
@@ -78,8 +78,8 @@ public class GestionDB {
 			closeConnection();
 		}
 	}
-	
-	
+
+
 	public static void supprimerVisite(String type, String ville, String date) throws SQLException {
 		if(!existeVisite(type, ville, date)) {
 			initConnection();
@@ -88,6 +88,5 @@ public class GestionDB {
 			closeConnection();
 		}
 	}
-	
-	
+
 }
