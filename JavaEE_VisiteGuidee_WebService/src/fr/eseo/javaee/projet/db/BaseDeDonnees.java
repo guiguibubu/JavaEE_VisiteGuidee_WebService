@@ -5,11 +5,17 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class BaseDeDonnees {
 
 	private static BaseDeDonnees instance;
+
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	private static ResourceBundle bundle = ResourceBundle.getBundle("baseDeDonne");
 	private static String ip 		= bundle.getString("ip");
@@ -69,6 +75,15 @@ public class BaseDeDonnees {
 
 	protected void closeStatement() throws SQLException {
 		if(this.stat != null) {this.stat.close();}
+	}
+
+	//GESTION DATE
+	public String convertDateForDB(LocalDate date) {
+		return date.format(dateFormatter);
+	}
+
+	public String convertDateTimeForDB(LocalDateTime date) {
+		return date.format(dateTimeFormatter);
 	}
 
 	//GETTER-SETTER
