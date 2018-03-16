@@ -45,4 +45,15 @@ public class ReservationVisite {
 	public boolean isPaiementEffectue() {return this.paiementEffectue;}
 	public void setPaiementEffectue(boolean paiementEffectue) {this.paiementEffectue = paiementEffectue;}
 
+	
+	public Visite[] trouverVisite (Visite maVisite) {return null;}
+	
+	public int reserverVisite (ReservationVisite maReservation) {return codeClient;	}
+	
+	public String PayerVisite (int monCodeReservation) {return null;}
+	
+	public boolean annulerVisite (int monCodeReservation) {return paiementEffectue;}
+	
+	
+	
 }
