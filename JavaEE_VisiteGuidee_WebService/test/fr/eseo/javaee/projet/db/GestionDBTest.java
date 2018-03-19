@@ -48,7 +48,7 @@ class GestionDBTest {
 			GestionDB.ajoutClient("Guillaume", "Buchle");
 			GestionDB.ajoutClient("Guillaume", "Buchle2");
 			GestionDB.ajoutClient("Guillaume", "Buchle3");
-			GestionDB.cleanTable("client");
+			BaseDeDonnees.cleanTable("client");
 			existeClient = GestionDB.existeClient("Guillaume", "Buchle") ||
 					GestionDB.existeClient("Guillaume", "Buchle2") ||
 					GestionDB.existeClient("Guillaume", "Buchle3");
@@ -62,7 +62,7 @@ class GestionDBTest {
 	void testUniciteClientSQL() {
 		int nbClient = 0;
 		try {
-			GestionDB.cleanTable("client");
+			BaseDeDonnees.cleanTable("client");
 			GestionDB.ajoutClient("Guillaume", "Buchle");
 			GestionDB.ajoutClient("Guillaume", "Buchle");
 			nbClient = (GestionDB.existeClient("Guillaume", "Buchle")) ? nbClient+1 : nbClient;
