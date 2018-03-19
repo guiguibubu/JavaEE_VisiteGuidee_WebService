@@ -87,6 +87,14 @@ public class BaseDeDonnees {
 		return date.format(dateTimeFormatter);
 	}
 
+	public LocalDate convertDateFromDB(String dateDB) {
+		return LocalDate.parse(dateDB, dateFormatter);
+	}
+
+	public LocalDateTime convertDateTimeFromDB(String dateDB) {
+		return LocalDateTime.parse(dateDB, dateFormatter);
+	}
+
 	public boolean isEmailGoodFormat(String email) {
 		return email.matches(regexEmail);
 	}
