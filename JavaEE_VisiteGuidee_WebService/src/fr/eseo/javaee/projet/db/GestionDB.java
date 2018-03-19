@@ -23,6 +23,7 @@ public class GestionDB {
 	}
 
 	//METHODES CLIENT
+	// TODO : méthodes avec objet Client
 	public static boolean existeClient(String prenom, String nom) throws SQLException {
 		boolean existeClient = false;
 		initConnection();
@@ -140,7 +141,9 @@ public class GestionDB {
 	}
 
 	public static void supprimerVisite(Visite visite) throws SQLException {
-		//		ArrayList<Visite> listVisite = searchVisite(String typeVisite, String ville, LocalDateTime dateMin, LocalDateTime dateMax);
 		supprimerVisite(visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite());
 	}
+
+	//METHODES RESERVATION
+	// TODO : Implémenter search, exist, insert, delete, update + version avec objet Reservation
 }

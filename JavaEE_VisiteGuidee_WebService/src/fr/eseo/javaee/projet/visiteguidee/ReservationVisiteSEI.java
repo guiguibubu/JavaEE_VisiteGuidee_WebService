@@ -7,6 +7,7 @@ import javax.jws.WebService;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
 
+import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
 @WebService(name = "ReservationVisiteSEI", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
@@ -22,7 +23,7 @@ public interface ReservationVisiteSEI {
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.ReserverVisite", localName = "reserverVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.ReserverVisiteResponse", localName = "reserverVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	int reserverVisite(@WebParam(name = "arg0") ReservationVisite maReservation);
+	int reserverVisite(@WebParam(name = "arg0") Reservation maReservation);
 
 	@WebMethod(operationName = "payerVisite", action = "urn:PayerVisite")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.PayerVisite", localName = "payerVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")

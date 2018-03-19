@@ -8,7 +8,11 @@ public class Client {
 	private String nom;
 	private String prenom;
 	private LocalDate dateNaissance;
-	private final Coordonnee coordonnee;
+	private Coordonnee coordonnee;
+
+	public Client() {
+		super();
+	}
 
 	public Client (int idClient, String nom, String prenom) {
 		this(idClient, nom, prenom, null, new Coordonnee());
