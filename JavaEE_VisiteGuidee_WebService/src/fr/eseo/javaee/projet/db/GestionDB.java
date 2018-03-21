@@ -217,7 +217,6 @@ public class GestionDB {
 	}
 
 	//METHODES RESERVATION
-	// TODO : Completer search, exist, insert, delete, update + version avec objet Reservation
 
 	public static List<Reservation> searchReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
 		List<Reservation> listReservation = new ArrayList<Reservation>();
