@@ -2,38 +2,36 @@ package fr.eseo.javaee.projet.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.eseo.javaee.projet.db.objet.Visite;
 
 public class GestionDB {
 
-	static BaseDeDonnees bdd;
+	private GestionDB() {};
 
 	private static void initConnection() throws SQLException {
-		bdd = BaseDeDonnees.getInstance();
-		bdd.openConnection();
+		BaseDeDonnees.initBDD();
+		BaseDeDonnees.openConnection();
 	}
 
 	private static void closeConnection() throws SQLException {
-		bdd.closeConnection();
-	}
-
-	public static void cleanTable(String table) throws SQLException {
-		initConnection();
-		String sql = "DELETE FROM client";
-		bdd.executeSQL(sql, false);
-		bdd.closeResulSet();
-		bdd.closeStatement();
-		closeConnection();
+		BaseDeDonnees.closeConnection();
 	}
 
 	//METHODES CLIENT
+	// TODO : méthodes avec objet Client
 	public static boolean existeClient(String prenom, String nom) throws SQLException {
 		boolean existeClient = false;
 		initConnection();
-		String sql = "SELECT * FROM client";
-		ResultSet rs = bdd.executeSQL(sql, true);
+		String sql = "SELECT * FROM client WHERE prenom=\""+prenom+"\" AND nom=\""+nom+"\"";
+		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		existeClient = rs.next();
-		bdd.closeResulSet();
-		bdd.closeStatement();
+		BaseDeDonnees.closeResulSet();
+		BaseDeDonnees.closeStatement();
 		closeConnection();
 		return existeClient;
 	}
@@ -42,7 +40,7 @@ public class GestionDB {
 		if(!existeClient(prenom, nom)) {
 			initConnection();
 			String sql = "INSERT INTO client (prenom, nom) VALUES ('"+prenom+"','"+nom+"')";
-			bdd.executeSQL(sql, false);
+			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
@@ -51,107 +49,102 @@ public class GestionDB {
 		if(existeClient(prenom, nom)) {
 			initConnection();
 			String sql = "DELETE FROM client WHERE prenom='"+prenom+"' AND nom='"+nom+"'";
-			bdd.executeSQL(sql, false);
+			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
 
-	public static void updateClient(String prenom, String nom, String dateNaissance, String adresse, int codePostal,
-			int num_tel, String mail) throws SQLException {
+	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, String adresse, int codePostal, int numTel, String mail) throws SQLException {
 		if(existeClient(prenom, nom)) {
 			initConnection();
-			String sql = "UPDATE client SET dateNaissance='"+dateNaissance+"', adresse='"+adresse+"', "
-					+ "codePostal='"+codePostal+"', numTelephone='"+num_tel+"', mail='"+mail+"' WHERE "
-					+ "prenom='"+prenom+"' AND nom='"+nom+"'";
-			bdd.executeSQL(sql, false);
+			String sql = "UPDATE client SET dateNaissance='"+BaseDeDonnees.convertDateForDB(dateNaissance)+"', adresse='"+adresse+"', codePostal='"+codePostal+"', numTelephone='"+numTel+"', mail='"+mail+"' WHERE prenom='"+prenom+"' AND nom='"+nom+"'";
+			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
 
+	//METHODES VISITES
 
-
-	// TODO : tester (sera fait samedi/dimanche)
-	public static boolean existeVisite(String typeVisite, String ville, String date) throws SQLException {
-		boolean existeVisite = false;
+	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime dateMin, LocalDateTime dateMax) throws SQLException {
+		ArrayList<Visite> listVisite = new ArrayList<Visite>();
+		boolean whereClause = false;
 		initConnection();
 		String sql = "SELECT * FROM visite";
-		ResultSet rs = bdd.executeSQL(sql, true);
-		existeVisite = rs.next();
-		bdd.closeResulSet();
-		bdd.closeStatement();
+
+		if(!"".equals(typeVisite)) {
+			if(!whereClause) {
+				sql += " WHERE";
+				whereClause = true;
+			}
+			sql += " typeVisite = \""+typeVisite+"\"";
+		}
+		if(!"".equals(ville)) {
+			if(!whereClause) {
+				sql += " WHERE";
+				whereClause = true;
+			}
+			sql += " ville = \""+ville+"\"";
+		}
+		if(dateMin != null) {
+			if(!whereClause) {
+				sql += " WHERE";
+				whereClause = true;
+			}
+			sql += " date >= \""+BaseDeDonnees.convertDateTimeForDB(dateMin)+"\"";
+		}
+		if(dateMax != null) {
+			if(!whereClause) {
+				sql += " WHERE";
+				whereClause = true;
+			}
+			sql += " date <= \""+BaseDeDonnees.convertDateTimeForDB(dateMax)+"\"";
+		}
+
+		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
+		while (rs.next()) {
+			listVisite.add(new Visite(rs.getInt("idVisite"),
+					rs.getString("typeVisite"),
+					rs.getString("ville"),
+					BaseDeDonnees.convertDateTimeFromDB(rs.getString("dateVisite")) ,
+					Float.parseFloat(rs.getString("prixVisite"))));
+		}
+		BaseDeDonnees.closeResulSet();
+		BaseDeDonnees.closeStatement();
 		closeConnection();
-		return existeVisite;
+		return listVisite;
 	}
 
-	public static void ajoutVisite(String type, String ville, String date, int prix) throws SQLException {
+	public static void ajoutVisite(String type, String ville, LocalDateTime date, float prix) throws SQLException {
 		if(!existeVisite(type, ville, date)) {
 			initConnection();
-			String sql = "INSERT INTO visite (typeVisite, ville, date, prix) VALUES "
-					+ "('"+type+"','"+ville+"','"+date+"','"+prix+"')";
-			bdd.executeSQL(sql, false);
+			String sql = "INSERT INTO visite (typeVisite, ville, date, prix) VALUES ('"+type+"','"+ville+"','"+BaseDeDonnees.convertDateTimeForDB(date)+"','"+prix+"')";
+			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
 
-
-	public static void supprimerVisite(String type, String ville, String date) throws SQLException {
-		if(existeVisite(type, ville, date)) {
+	public static void supprimerVisite(String type, String ville, LocalDateTime date) throws SQLException {
+		if(!existeVisite(type, ville, date)) {
 			initConnection();
-			String sql = "DELETE FROM visite WHERE typeVisite='"+type+"' AND ville='"+ville+"' AND date='"+date+"'";
-			bdd.executeSQL(sql, false);
+			String sql = "DELETE FROM visite WHERE typeVisite='"+type+"' AND ville='"+ville+"' AND date='"+date+"')";
+			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
 
-	public static boolean existeReservation(int idVisite, int idClient) throws SQLException {
-		boolean existeReservation = false;
-		initConnection();
-		String sql = "SELECT * FROM reservation";
-		ResultSet rs = bdd.executeSQL(sql, true);
-		existeReservation = rs.next();
-		bdd.closeResulSet();
-		bdd.closeStatement();
-		closeConnection();
-		return existeReservation;
+	public static boolean existeVisite(String typeVisite, String ville, LocalDateTime date) throws SQLException {
+		return searchVisite(typeVisite, ville, date, date).size() > 0;
 	}
 
-	public static void ajouterReservation(int idVisite, int idClient) throws SQLException {
-		if(!existeReservation(idVisite, idClient)) {
-			initConnection();
-			String sql = "INSERT INTO visite (idVisite, idClient) VALUES ('"+idVisite+"','"+idClient+"')";
-			bdd.executeSQL(sql, false);
-			closeConnection();
-		}
+	public static void ajoutVisite(Visite visite) throws SQLException {
+		ajoutVisite(visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite(), visite.getPrix());
 	}
 
-	public static void supprimerReservation(int idVisite, int idClient) throws SQLException {
-		if(existeReservation(idVisite, idClient)) {
-			initConnection();
-			String sql = "DELETE FROM reservation WHERE idVisite='"+idVisite+"' AND idClient='"+idClient+"'";
-			bdd.executeSQL(sql, false);
-			closeConnection();
-		}
+	public static void supprimerVisite(Visite visite) throws SQLException {
+		supprimerVisite(visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite());
 	}
 
-
-	public static int[] trouverReservationPlaceLibre(int places) throws SQLException {
-		int[] id_reservation_dispo = null;
-		initConnection();
-		String sql = "SELECT idVisite FROM reservation WHERE nombrePlaces >= '"+places+"'";
-		//ResultSet rs = bdd.executeSQL(sql);
-		//id_reservation_dispo = rs.next();
-		return id_reservation_dispo;
-	}
-
-	public static boolean reservationVilleDate(String ville, String date) throws SQLException {
-		boolean existeReservationVille = false;
-		initConnection();
-		String sql = "SELECT reservation.idReservation FROM reservation, visite WHERE reservation.idVisite = visite.idVisite AND visite.ville='"+ville+"' AND visite.date='"+date+"'";
-		ResultSet rs = bdd.executeSQL(sql, true);
-		existeReservationVille = rs.next();
-		bdd.closeResulSet();
-		bdd.closeStatement();
-		closeConnection();
-		return existeReservationVille;
-	}
+	//METHODES RESERVATION
+	// TODO : Implémenter search, exist, insert, delete, update + version avec objet Reservation
 }
+

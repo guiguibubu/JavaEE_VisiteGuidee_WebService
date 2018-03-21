@@ -5,11 +5,18 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class BaseDeDonnees {
 
 	private static BaseDeDonnees instance;
+
+	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static String regexEmail = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
 	private static ResourceBundle bundle = ResourceBundle.getBundle("baseDeDonne");
 	private static String ip 		= bundle.getString("ip");
@@ -29,53 +36,88 @@ public class BaseDeDonnees {
 	}
 
 	public static BaseDeDonnees getInstance() throws SQLException {
-		if(instance == null) {
-			instance = new BaseDeDonnees();
-		}
+		initBDD();
 		return instance;
 	}
 
-	//GESTION DE LA CONNEXION
-	protected void openConnection() throws SQLException {
-		if(this.connect != null && !this.connect.isClosed()) {
-			this.closeConnection();
+	public static void initBDD() throws SQLException {
+		if(!isInitialized()) {
+			instance = new BaseDeDonnees();
 		}
-		String url = "jdbc:mysql://"+ip+"/"+nomBDD+"?user="+login+"&password="+mdp;
-		this.connect = DriverManager.getConnection(url);
 	}
 
-	protected void closeConnection() throws SQLException {
-		if(this.connect != null){this.connect.close();}
+	//GESTION DE LA CONNEXION
+	protected static void openConnection() throws SQLException {
+		if(instance.connect != null && !instance.connect.isClosed()) {
+			closeConnection();
+		}
+		String url = "jdbc:mysql://"+ip+"/"+nomBDD+"?user="+login+"&password="+mdp;
+		instance.connect = DriverManager.getConnection(url);
+	}
+
+	protected static void closeConnection() throws SQLException {
+		if(instance.connect != null){instance.connect.close();}
 	}
 
 	//GESTION REQUETE SQL
-	protected ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
+	protected static ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
 		try{
-			this.stat = this.connect.createStatement();
-			this.stat.execute(sql);
-			this.rs = this.stat.getResultSet();
+			instance.stat = instance.connect.createStatement();
+			instance.stat.execute(sql);
+			instance.rs = instance.stat.getResultSet();
 		} finally {
-			if(!(this.stat == null || this.rs == null || withReturn)) {
-				this.closeResulSet();
-				this.closeStatement();
+			if(!(instance.stat == null || instance.rs == null || withReturn)) {
+				closeResulSet();
+				closeStatement();
 			}
 		}
-		return this.rs;
+		return instance.rs;
 	}
 
-	protected void closeResulSet() throws SQLException {
-		if(this.rs != null) {this.rs.close();}
+	public static void cleanTable(String table) throws SQLException {
+		openConnection();
+		String sql = "DELETE FROM "+table;
+		executeSQL(sql, false);
+		closeResulSet();
+		closeStatement();
+		closeConnection();
+	}
+	protected static void closeResulSet() throws SQLException {
+		if(instance.rs != null) {instance.rs.close();}
 	}
 
-	protected void closeStatement() throws SQLException {
-		if(this.stat != null) {this.stat.close();}
+	protected static void closeStatement() throws SQLException {
+		if(instance.stat != null) {instance.stat.close();}
+	}
+
+	//GESTION DATE
+	public static String convertDateForDB(LocalDate date) {
+		return date.format(dateFormatter);
+	}
+
+	public static String convertDateTimeForDB(LocalDateTime date) {
+		return date.format(dateTimeFormatter);
+	}
+
+	public static LocalDate convertDateFromDB(String dateDB) {
+		return LocalDate.parse(dateDB, dateFormatter);
+	}
+
+	public static LocalDateTime convertDateTimeFromDB(String dateDB) {
+		return LocalDateTime.parse(dateDB, dateFormatter);
+	}
+
+	public static boolean isEmailGoodFormat(String email) {
+		return email.matches(regexEmail);
 	}
 
 	//GETTER-SETTER
-	public Connection getConnect() {return this.connect;}
+	public static boolean isInitialized() {return instance != null;}
 
-	public Statement getStat() {return this.stat;}
+	public static Connection getConnect() {return instance.connect;}
 
-	public ResultSet getRs() {return this.rs;}
+	public static Statement getStat() {return instance.stat;}
+
+	public static ResultSet getRs() {return instance.rs;}
 
 }
