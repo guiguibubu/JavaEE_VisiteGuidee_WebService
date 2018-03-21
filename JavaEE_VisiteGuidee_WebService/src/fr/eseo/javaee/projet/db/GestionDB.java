@@ -10,10 +10,11 @@ import java.util.List;
 import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
+import fr.eseo.javaee.projet.db.tools.SQLTools;
 
 public class GestionDB {
 
-	private GestionDB() {};
+	private GestionDB() {}
 
 	private static void initConnection() throws SQLException {
 		BaseDeDonnees.initBDD();
@@ -25,41 +26,79 @@ public class GestionDB {
 	}
 
 	//METHODES CLIENT
-	// TODO : méthodes avec objet Client
-	public static boolean existeClient(String prenom, String nom) throws SQLException {
-		boolean existeClient = false;
+	// TODO : méthodes avec objet Client + search
+	public static Client searchClient(String prenom, String nom) throws SQLException {
+		Client client = new Client(nom, prenom);
+		// Elements de recherche
+		List<String> listeNomArgs = new ArrayList<String>();
+		List<String> listeArgs = new ArrayList<String>();
+		listeNomArgs.add(Client.NOM_COL_NOM);
+		listeNomArgs.add(Client.NOM_COL_PRENOM);
+		listeArgs.add(nom);
+		listeArgs.add(prenom);
+		// Element de résultat
+		List<String> listeNouveauAttributs = new ArrayList<String>();
+
 		initConnection();
-		String sql = "SELECT * FROM client WHERE prenom=\""+prenom+"\" AND nom=\""+nom+"\"";
+		String sql = SQLTools.selectSQL(client.getNomTable(), listeNomArgs, listeArgs);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
-		existeClient = rs.next();
+		while(rs.next()) {
+			for(String nomCol : client.getListeNomAttributs()) {
+				listeNouveauAttributs.add(rs.getString(nomCol));
+			}
+			client.setListeAttributs(listeNouveauAttributs);
+		}
 		BaseDeDonnees.closeResulSet();
 		BaseDeDonnees.closeStatement();
 		closeConnection();
-		return existeClient;
+		return client;
+	}
+
+	public static boolean existeClient(String prenom, String nom) throws SQLException {
+		return searchClient(prenom, nom).getIdClient() != 0;
 	}
 
 	public static void ajoutClient(String prenom, String nom) throws SQLException {
 		if(!existeClient(prenom, nom)) {
 			initConnection();
-			String sql = "INSERT INTO client (prenom, nom) VALUES ('"+prenom+"','"+nom+"')";
+			Client client = new Client(nom, prenom);
+			String sql = SQLTools.insertSQL(client.getNomTable(), client.getListeNomAttributs(), client.getListeAttributs());
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
 
 	public static void supprimeClient(String prenom, String nom) throws SQLException {
-		if(existeClient(prenom, nom)) {
+		Client client = searchClient(prenom, nom);
+		// Elements de recherche
+		List<String> listeNomArgs = new ArrayList<String>();
+		List<String> listeArgs = new ArrayList<String>();
+		listeNomArgs.add(Client.NOM_COL_ID);
+		listeArgs.add(String.valueOf(client.getIdClient()));
+		if(client.getIdClient() != 0) {
 			initConnection();
-			String sql = "DELETE FROM client WHERE prenom='"+prenom+"' AND nom='"+nom+"'";
+			String sql = SQLTools.deleteSQL(Client.NOM_TABLE, listeNomArgs, listeArgs);
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
 	}
 
-	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, String adresse, int codePostal, int numTel, String mail) throws SQLException {
-		if(existeClient(prenom, nom)) {
+	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTel, String mail) throws SQLException {
+		Client client = searchClient(prenom, nom);
+		// Elements de recherche
+		List<String> listColNamesWhere = new ArrayList<String>();
+		List<String> listArgsWhere = new ArrayList<String>();
+		listColNamesWhere.add(Client.NOM_COL_ID);
+		listArgsWhere.add(String.valueOf(client.getIdClient()));
+		if(client.getIdClient() != 0) {
 			initConnection();
-			String sql = "UPDATE client SET dateNaissance='"+BaseDeDonnees.convertDateForDB(dateNaissance)+"', adresse='"+adresse+"', codePostal='"+codePostal+"', numTelephone='"+numTel+"', mail='"+mail+"' WHERE prenom='"+prenom+"' AND nom='"+nom+"'";
+			client.setDateNaissance(dateNaissance);
+			client.setAdresse(adresse);
+			client.setCodePostal(codePostal);
+			client.setPays(pays);
+			client.setNumTelephone(numTel);
+			client.setMail(mail);
+			String sql = SQLTools.updateSQL(Client.NOM_TABLE, client.getListeNomAttributs(), client.getListeAttributs(), listColNamesWhere, listArgsWhere);
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
@@ -135,7 +174,7 @@ public class GestionDB {
 	}
 
 	public static boolean existeVisite(String typeVisite, String ville, LocalDateTime date) throws SQLException {
-		return searchVisite(typeVisite, ville, date, date).size() > 0;
+		return !searchVisite(typeVisite, ville, date, date).isEmpty();
 	}
 
 	public static void ajoutVisite(Visite visite) throws SQLException {
