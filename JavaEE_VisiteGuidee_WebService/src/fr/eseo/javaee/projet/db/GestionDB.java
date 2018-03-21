@@ -107,7 +107,7 @@ public class GestionDB {
 	//METHODES VISITES
 
 	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime dateMin, LocalDateTime dateMax) throws SQLException {
-		ArrayList<Visite> listVisite = new ArrayList<Visite>();
+		ArrayList<Visite> listVisite = new ArrayList<>();
 		boolean whereClause = false;
 		initConnection();
 		String sql = "SELECT * FROM visite";

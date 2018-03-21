@@ -16,6 +16,7 @@ public class Reservation implements Memorisable {
 	public static final String NOM_COL_PAIEMENT	= "booleanPaiementEffectue";
 
 	private static List<String> listeNomAttributs;
+
 	private int codeReservation;
 	private Visite visite;
 	private Client client;
