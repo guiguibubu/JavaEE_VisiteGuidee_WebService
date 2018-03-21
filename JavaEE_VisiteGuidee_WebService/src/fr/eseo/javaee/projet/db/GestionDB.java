@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.eseo.javaee.projet.db.objet.Client;
+import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
 public class GestionDB {
@@ -145,6 +147,29 @@ public class GestionDB {
 	}
 
 	//METHODES RESERVATION
-	// TODO : Implémenter search, exist, insert, delete, update + version avec objet Reservation
-}
+	// TODO : Completer search, exist, insert, delete, update + version avec objet Reservation
 
+	public static List<Reservation> searchReservation(int codeReservation, Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
+		return null;
+	}
+
+	public static void ajoutReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
+
+	}
+
+	public static void supprimerReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
+
+	}
+
+	public static void updateReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
+
+	}
+
+	public static void ajoutReservationObjet(Reservation reservation) {
+
+	}
+
+	public static void supprimerReservationObjet(Reservation reservation) {
+
+	}
+}
