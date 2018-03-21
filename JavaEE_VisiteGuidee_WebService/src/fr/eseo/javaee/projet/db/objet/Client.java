@@ -56,9 +56,8 @@ public class Client implements Memorisable {
 		return LocalDate.now().equals(this.dateNaissance);
 	}
 
-	private static List<String> extractNomAttributs() {
+	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<String>();
-		listeNomAttribut.add(NOM_COL_ID);
 		listeNomAttribut.add(NOM_COL_NOM);
 		listeNomAttribut.add(NOM_COL_PRENOM);
 		listeNomAttribut.add(NOM_COL_NAISSANCE);
@@ -105,10 +104,9 @@ public class Client implements Memorisable {
 	@Override
 	public List<String> getListeAttributs() {
 		List<String> listeAttributs = new ArrayList<String>();
-		listeAttributs.add(String.valueOf(this.idClient));
 		listeAttributs.add(this.nom);
 		listeAttributs.add(this.prenom);
-		listeAttributs.add(BaseDeDonnees.convertDateForDB(this.dateNaissance));
+		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateNaissance));
 		listeAttributs.addAll(this.coordonnee.getListeAttributs());
 		return listeAttributs;
 	}

@@ -46,9 +46,8 @@ public class Visite implements Memorisable {
 		}
 	}
 
-	private static List<String> extractNomAttributs() {
+	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<String>();
-		listeNomAttribut.add(NOM_COL_ID);
 		listeNomAttribut.add(NOM_COL_TYPE);
 		listeNomAttribut.add(NOM_COL_VILLE);
 		listeNomAttribut.add(NOM_COL_DATE);
@@ -91,11 +90,10 @@ public class Visite implements Memorisable {
 	@Override
 	public List<String> getListeAttributs() {
 		List<String> listeAttributs = new ArrayList<String>();
-		listeAttributs.add(String.valueOf(this.codeVisite));
 		listeAttributs.add(this.typeDeVisite);
 		listeAttributs.add(this.ville);
-		listeAttributs.add(BaseDeDonnees.convertDateTimeForDB(this.dateVisite));
-		listeAttributs.add(BaseDeDonnees.convertFloatForDB(this.prix));
+		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateVisite));
+		listeAttributs.add(BaseDeDonnees.convertForDB(this.prix));
 		return null;
 	}
 

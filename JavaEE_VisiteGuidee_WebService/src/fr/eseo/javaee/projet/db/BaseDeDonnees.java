@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
+import fr.eseo.javaee.projet.db.objet.Reservation;
+import fr.eseo.javaee.projet.db.objet.Visite;
+
 public class BaseDeDonnees {
 
 	private static BaseDeDonnees instance;
@@ -93,23 +96,38 @@ public class BaseDeDonnees {
 		if(instance.stat != null) {instance.stat.close();}
 	}
 
-	//CONVERTISSEURS
-	public static String convertDateForDB(LocalDate date) {
+	//CONVERTISSEURS POUR INTRODUIRE DES DONNEES
+	public static String convertForDB(LocalDate date) {
 		return date.format(dateFormatter);
 	}
 
-	public static String convertDateTimeForDB(LocalDateTime date) {
+	public static String convertForDB(LocalDateTime date) {
 		return date.format(dateTimeFormatter);
 	}
 
-	public static String convertBooleanForDB(boolean bool) {
+	public static String convertForDB(boolean bool) {
 		return (bool) ? TRUE : FALSE;
 	}
 
-	public static String convertFloatForDB(float num) {
+	public static String convertForDB(float num) {
 		return String.format(FORMAT_FLOAT, num);
 	}
 
+	public static String convertForDB(int num) {
+		return String.format(FORMAT_FLOAT, num);
+	}
+
+	public static String convertForDB(Visite visite) {
+		if(visite == null) {visite = new Visite();}
+		return convertForDB(visite.getCodeVisite());
+	}
+
+	public static String convertForDB(Reservation reservation) {
+		if(reservation == null) {reservation = new Reservation();}
+		return convertForDB(reservation.getCodeReservation());
+	}
+
+	// CONVERTISSEURS POUR EXTRAIRE DES DONNEES
 	public static LocalDate convertDateFromDB(String dateDB) {
 		return LocalDate.parse(dateDB, dateFormatter);
 	}
@@ -125,6 +143,12 @@ public class BaseDeDonnees {
 	public static float convertFloatFromDB(String numDB) {
 		return Float.parseFloat(numDB);
 	}
+
+	public static int convertIntFromDB(String numDB) {
+		return Integer.parseInt(numDB);
+	}
+
+	//
 
 	public static boolean isEmailGoodFormat(String email) {
 		return email.matches(regexEmail);

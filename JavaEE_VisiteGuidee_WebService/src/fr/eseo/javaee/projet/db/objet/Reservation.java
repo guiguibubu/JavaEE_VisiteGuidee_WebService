@@ -27,7 +27,7 @@ public class Reservation implements Memorisable {
 	 * constructeur vide
 	 */
 	public Reservation() {
-		this(0,null,null,0,false);
+		this(0);
 	}
 
 	/**
@@ -44,9 +44,16 @@ public class Reservation implements Memorisable {
 		}
 	}
 
-	private static List<String> extractNomAttributs() {
+	public Reservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
+		this(0, visite, client, nombrePersonnes, paiementEffectue);
+	}
+
+	public Reservation(int idReservation) {
+		this(0, null,null,0,false);
+	}
+
+	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<String>();
-		listeNomAttribut.add(NOM_COL_ID);
 		listeNomAttribut.add(NOM_COL_VISITE);
 		listeNomAttribut.add(NOM_COL_CLIENT);
 		listeNomAttribut.add(NOM_COL_PLACE);
@@ -85,11 +92,10 @@ public class Reservation implements Memorisable {
 	@Override
 	public List<String> getListeAttributs() {
 		List<String> listeAttributs = new ArrayList<String>();
-		listeAttributs.add(String.valueOf(this.codeReservation));
 		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
 		listeAttributs.add(String.valueOf(this.client.getIdClient()));
 		listeAttributs.add(String.valueOf(this.nombrePersonnes));
-		listeAttributs.add(BaseDeDonnees.convertBooleanForDB(this.paiementEffectue));
+		listeAttributs.add(BaseDeDonnees.convertForDB(this.paiementEffectue));
 		return listeAttributs;
 	}
 

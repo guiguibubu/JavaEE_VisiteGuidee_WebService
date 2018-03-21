@@ -37,7 +37,7 @@ public class Coordonnee implements Memorisable {
 		}
 	}
 
-	private static List<String> extractNomAttributs() {
+	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<String>();
 		listeNomAttribut.add(NOM_COL_ADRESSE);
 		listeNomAttribut.add(NOM_COL_CODE_POSTAL);
