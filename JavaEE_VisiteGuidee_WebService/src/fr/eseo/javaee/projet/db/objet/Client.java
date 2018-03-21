@@ -1,17 +1,38 @@
 package fr.eseo.javaee.projet.db.objet;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Client {
+import fr.eseo.javaee.projet.db.BaseDeDonnees;
+
+public class Client implements Memorisable {
+
+	public static final String NOM_TABLE 		= "client";
+
+	public static final String NOM_COL_ID 		= "idClient";
+	public static final String NOM_COL_NOM 		= "nom";
+	public static final String NOM_COL_PRENOM 	= "prenom";
+	public static final String NOM_COL_NAISSANCE = "dateNaissance";
+
+	private static List<String> listeNomAttributs;
 
 	private int idClient;
 	private String nom;
 	private String prenom;
 	private LocalDate dateNaissance;
-	private Coordonnee coordonnee;
+	private final Coordonnee coordonnee;
 
 	public Client() {
-		super();
+		this(0);
+	}
+
+	public Client(int idClient) {
+		this(idClient, "", "");
+	}
+
+	public Client (String nom, String prenom) {
+		this(0, nom, prenom);
 	}
 
 	public Client (int idClient, String nom, String prenom) {
@@ -24,10 +45,24 @@ public class Client {
 		this.prenom = prenom;
 		this.dateNaissance = dateNaissance;
 		this.coordonnee = coordonnee;
+
+		if(listeNomAttributs ==  null) {
+			listeNomAttributs = extractNomAttributs();
+		}
+		listeNomAttributs.addAll(this.coordonnee.getListeNomAttributs());
 	}
 
 	public boolean isAnniversaire() {
 		return LocalDate.now().equals(this.dateNaissance);
+	}
+
+	private static List<String> extractNomAttributs() {
+		List<String> listeNomAttribut = new ArrayList<String>();
+		listeNomAttribut.add(NOM_COL_ID);
+		listeNomAttribut.add(NOM_COL_NOM);
+		listeNomAttribut.add(NOM_COL_PRENOM);
+		listeNomAttribut.add(NOM_COL_NAISSANCE);
+		return listeNomAttribut;
 	}
 
 	//GETTER - SETTER
@@ -57,4 +92,38 @@ public class Client {
 
 	public String getMail() {return this.coordonnee.getMail();}
 	public void setMail(String mail) {this.coordonnee.setMail(mail);}
+
+	@Override
+	public List<String> getListeNomAttributs() {
+		if(listeNomAttributs ==  null) {
+			listeNomAttributs = extractNomAttributs();
+		}
+		listeNomAttributs.addAll(this.coordonnee.getListeNomAttributs());
+		return listeNomAttributs;
+	}
+
+	@Override
+	public List<String> getListeAttributs() {
+		List<String> listeAttributs = new ArrayList<String>();
+		listeAttributs.add(String.valueOf(this.idClient));
+		listeAttributs.add(this.nom);
+		listeAttributs.add(this.prenom);
+		listeAttributs.add(BaseDeDonnees.convertDateForDB(this.dateNaissance));
+		listeAttributs.addAll(this.coordonnee.getListeAttributs());
+		return listeAttributs;
+	}
+
+	@Override
+	public void setListeAttributs(List<String> listeNouvellesValeurs) {
+		this.idClient 	= Integer.parseInt(listeNouvellesValeurs.get(0));
+		this.nom 		= listeNouvellesValeurs.get(1);
+		this.prenom 	= listeNouvellesValeurs.get(2);
+		this.dateNaissance = BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3));
+		this.coordonnee.setListeAttributs(listeNouvellesValeurs);
+	}
+
+	@Override
+	public String getNomTable() {
+		return NOM_TABLE;
+	}
 }
