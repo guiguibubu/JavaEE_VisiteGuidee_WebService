@@ -1,1 +1,7 @@
 /build/
+/lib/JUnit5/
+/.scannerwork/
+/sonar-project.properties
+/build.xml
+/buildAntSonar.txt
+/reports/

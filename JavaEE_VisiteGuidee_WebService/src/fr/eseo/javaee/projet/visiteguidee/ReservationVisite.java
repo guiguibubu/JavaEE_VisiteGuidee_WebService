@@ -1,48 +1,44 @@
 package fr.eseo.javaee.projet.visiteguidee;
 
-public class ReservationVisite {
 
-	private int codeReservation;
-	private int codeVisite;
-	private int codeClient;
-	private int nombrePersonnes;
-	private boolean paiementEffectue;
+import java.sql.SQLException;
+import java.util.List;
 
-	/**
-	 * constructeur vide
-	 */
-	public ReservationVisite() {
-		this.codeReservation = 0;
-		this.codeVisite = 0;
-		this.codeClient = 0;
-		this.nombrePersonnes = 0;
-		this.paiementEffectue = false;
+import javax.jws.WebService;
+
+import fr.eseo.javaee.projet.db.GestionDB;
+import fr.eseo.javaee.projet.db.objet.Reservation;
+import fr.eseo.javaee.projet.db.objet.Visite;
+
+@WebService(targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/", endpointInterface = "fr.eseo.javaee.projet.visiteguidee.ReservationVisiteSEI", portName = "ReservationVisitePort", serviceName = "ReservationVisiteService")
+public class ReservationVisite implements ReservationVisiteSEI {
+
+	@Override
+	public Visite[] trouverVisite (Visite maVisite) throws SQLException {
+		return GestionDB.searchVisite(maVisite).toArray(new Visite[0]);
 	}
 
-	/**
-	 * constructeur non vide
-	 */
-	public ReservationVisite(int codeReservation, int codeVisite, int codeClient, int nombrePersonnes, boolean paiementEffectue) {
-		this.codeReservation = codeReservation;
-		this.codeVisite = codeVisite;
-		this.codeClient = codeClient;
-		this.nombrePersonnes = nombrePersonnes;
-		this.paiementEffectue = paiementEffectue;
+	@Override
+	public int reserverVisite (Reservation maReservation) throws SQLException {
+		int idReservation = 0;
+		GestionDB.ajoutReservation(maReservation);
+		List<Reservation> listReservation = GestionDB.searchReservation(maReservation);
+		idReservation = listReservation.get(listReservation.size()-1).getCodeReservation();
+		return idReservation;
 	}
 
-	public int getCodeReservation() {return this.codeReservation;}
-	public void setCodeReservation(int codeReservation) {this.codeReservation = codeReservation;}
+	@Override
+	public String payerVisite (int monCodeReservation) throws SQLException {
+		String text = "";
+		Reservation reservation = GestionDB.searchReservationById(monCodeReservation);
+		reservation.setPaiementEffectue(true);
+		GestionDB.updateReservationById(reservation);
+		return text;
+	}
 
-	public int getCodeVisite() {return this.codeVisite;}
-	public void setCodeVisite(int codeVisite) {this.codeVisite = codeVisite;}
-
-	public int getCodeClient() {return this.codeClient;}
-	public void setCodeClient(int codeClient) {this.codeClient = codeClient;}
-
-	public int getNombrePersonnes() {return this.nombrePersonnes;}
-	public void setNombrePersonnes(int nombrePersonnes) {this.nombrePersonnes = nombrePersonnes;}
-
-	public boolean isPaiementEffectue() {return this.paiementEffectue;}
-	public void setPaiementEffectue(boolean paiementEffectue) {this.paiementEffectue = paiementEffectue;}
-
+	@Override
+	public boolean annulerVisite (int monCodeReservation) throws SQLException {
+		GestionDB.supprimerReservationById(monCodeReservation);
+		return GestionDB.existeReservationById(monCodeReservation);
+	}
 }
