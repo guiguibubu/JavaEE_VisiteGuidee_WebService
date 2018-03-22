@@ -15,7 +15,7 @@ public class Reservation implements Memorisable {
 	public static final String NOM_COL_PLACE 	= "nombrePlaces";
 	public static final String NOM_COL_PAIEMENT	= "booleanPaiementEffectue";
 
-	private static List<String> listeNomAttributs;
+	private static List<String> listeNomAttributs = extractNomAttributs();
 
 	private int codeReservation;
 	private Visite visite;
@@ -39,9 +39,6 @@ public class Reservation implements Memorisable {
 		this.client = client;
 		this.nombrePersonnes = nombrePersonnes;
 		this.paiementEffectue = paiementEffectue;
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
 	}
 
 	public Reservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
@@ -49,11 +46,11 @@ public class Reservation implements Memorisable {
 	}
 
 	public Reservation(int idReservation) {
-		this(0, null,null,0,false);
+		this(idReservation, null,null,0,false);
 	}
 
 	public static List<String> extractNomAttributs() {
-		List<String> listeNomAttribut = new ArrayList<String>();
+		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_VISITE);
 		listeNomAttribut.add(NOM_COL_CLIENT);
 		listeNomAttribut.add(NOM_COL_PLACE);
@@ -83,15 +80,12 @@ public class Reservation implements Memorisable {
 
 	@Override
 	public List<String> getListeNomAttributs() {
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
 		return listeNomAttributs;
 	}
 
 	@Override
 	public List<String> getListeAttributs() {
-		List<String> listeAttributs = new ArrayList<String>();
+		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
 		listeAttributs.add(String.valueOf(this.client.getIdClient()));
 		listeAttributs.add(String.valueOf(this.nombrePersonnes));

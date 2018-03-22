@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.eseo.javaee.projet.db.objet.Client;
+import fr.eseo.javaee.projet.db.objet.Coordonnee;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 import fr.eseo.javaee.projet.db.tools.SQLTools;
@@ -29,14 +30,14 @@ public class GestionDB {
 	public static Client searchClient(String prenom, String nom) throws SQLException {
 		Client client = new Client(nom, prenom);
 		// Elements de recherche
-		List<String> listeNomArgs = new ArrayList<String>();
-		List<String> listeArgs = new ArrayList<String>();
+		List<String> listeNomArgs = new ArrayList<>();
+		List<String> listeArgs = new ArrayList<>();
 		listeNomArgs.add(Client.NOM_COL_NOM);
 		listeNomArgs.add(Client.NOM_COL_PRENOM);
 		listeArgs.add(nom);
 		listeArgs.add(prenom);
 		// Element de résultat
-		List<String> listeNouveauAttributs = new ArrayList<String>();
+		List<String> listeNouveauAttributs = new ArrayList<>();
 
 		initConnection();
 		String sql = SQLTools.selectSQL(client.getNomTable(), listeNomArgs, listeArgs);
@@ -80,16 +81,12 @@ public class GestionDB {
 		}
 	}
 
-	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTel, String mail) throws SQLException {
+	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, Coordonnee coordonnee) throws SQLException {
 		Client client = searchClient(prenom, nom);
 		if(client.getIdClient() != 0) {
 			initConnection();
 			client.setDateNaissance(dateNaissance);
-			client.setAdresse(adresse);
-			client.setCodePostal(codePostal);
-			client.setPays(pays);
-			client.setNumTelephone(numTel);
-			client.setMail(mail);
+			client.setCoordonnee(coordonnee);
 			String sql = SQLTools.updateSQL(Client.NOM_TABLE, client.getListeNomAttributs(), client.getListeAttributs(), Client.NOM_COL_ID, BaseDeDonnees.convertForDB(client.getIdClient()));
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
@@ -99,9 +96,9 @@ public class GestionDB {
 	//METHODES VISITES
 
 	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime dateMin, LocalDateTime dateMax) throws SQLException {
-		List<Visite> listVisite = new ArrayList<Visite>();
+		List<Visite> listVisite = new ArrayList<>();
 		initConnection();
-		List<String> listClausesWhere = new ArrayList<String>();
+		List<String> listClausesWhere = new ArrayList<>();
 		if(typeVisite != null && !typeVisite.trim().isEmpty()) {
 			listClausesWhere.add(SQLTools.convertIntoWhereClause(Visite.NOM_COL_TYPE, typeVisite));
 		}
@@ -134,7 +131,7 @@ public class GestionDB {
 	}
 
 	public static List<Visite> searchVisite(Visite visite) throws SQLException{
-		List<Visite> listVisite = new ArrayList<Visite>();
+		List<Visite> listVisite = new ArrayList<>();
 		if(visite != null) {
 			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite());
 		}
@@ -219,7 +216,7 @@ public class GestionDB {
 	//METHODES RESERVATION
 
 	public static List<Reservation> searchReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
-		List<Reservation> listReservation = new ArrayList<Reservation>();
+		List<Reservation> listReservation = new ArrayList<>();
 		initConnection();
 		Reservation reservation = new Reservation(visite, client, nombrePersonnes, paiementEffectue);
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, reservation.getListeNomAttributs(), reservation.getListeAttributs());

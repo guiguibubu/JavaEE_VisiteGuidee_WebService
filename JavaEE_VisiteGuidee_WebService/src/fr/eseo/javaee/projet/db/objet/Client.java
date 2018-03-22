@@ -15,13 +15,13 @@ public class Client implements Memorisable {
 	public static final String NOM_COL_PRENOM 	= "prenom";
 	public static final String NOM_COL_NAISSANCE = "dateNaissance";
 
-	private static List<String> listeNomAttributs;
+	private static List<String> listeNomAttributs = extractNomAttributs();
 
 	private int idClient;
 	private String nom;
 	private String prenom;
 	private LocalDate dateNaissance;
-	private final Coordonnee coordonnee;
+	private Coordonnee coordonnee;
 
 	public Client() {
 		this(0);
@@ -45,11 +45,6 @@ public class Client implements Memorisable {
 		this.prenom = prenom;
 		this.dateNaissance = dateNaissance;
 		this.coordonnee = coordonnee;
-
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
-		listeNomAttributs.addAll(this.coordonnee.getListeNomAttributs());
 	}
 
 	public boolean isAnniversaire() {
@@ -57,10 +52,11 @@ public class Client implements Memorisable {
 	}
 
 	public static List<String> extractNomAttributs() {
-		List<String> listeNomAttribut = new ArrayList<String>();
+		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_NOM);
 		listeNomAttribut.add(NOM_COL_PRENOM);
 		listeNomAttribut.add(NOM_COL_NAISSANCE);
+		listeNomAttribut.addAll(Coordonnee.extractNomAttributs());
 		return listeNomAttribut;
 	}
 
@@ -76,6 +72,9 @@ public class Client implements Memorisable {
 
 	public LocalDate getDateNaissance() {return this.dateNaissance;}
 	public void setDateNaissance(LocalDate dateNaissance) {this.dateNaissance = dateNaissance;}
+
+	public Coordonnee getCoordonnee() {return this.coordonnee;}
+	public void setCoordonnee(Coordonnee coordonnee) {this.coordonnee = coordonnee;}
 
 	public String getAdresse() {return this.coordonnee.getAdresse();}
 	public void setAdresse(String adresse) {this.coordonnee.setAdresse(adresse);}
@@ -94,16 +93,12 @@ public class Client implements Memorisable {
 
 	@Override
 	public List<String> getListeNomAttributs() {
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
-		listeNomAttributs.addAll(this.coordonnee.getListeNomAttributs());
 		return listeNomAttributs;
 	}
 
 	@Override
 	public List<String> getListeAttributs() {
-		List<String> listeAttributs = new ArrayList<String>();
+		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.nom);
 		listeAttributs.add(this.prenom);
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateNaissance));

@@ -16,7 +16,7 @@ public class Visite implements Memorisable {
 	public static final String NOM_COL_DATE 	= "dateVisite";
 	public static final String NOM_COL_PRIX 	= "prixVisite";
 
-	private static List<String> listeNomAttributs;
+	private static List<String> listeNomAttributs = extractNomAttributs();
 
 	private int codeVisite;
 	private String typeDeVisite;
@@ -41,13 +41,10 @@ public class Visite implements Memorisable {
 		this.ville = ville;
 		this.dateVisite = dateVisite;
 		this.prix = prix;
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
 	}
 
 	public static List<String> extractNomAttributs() {
-		List<String> listeNomAttribut = new ArrayList<String>();
+		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_TYPE);
 		listeNomAttribut.add(NOM_COL_VILLE);
 		listeNomAttribut.add(NOM_COL_DATE);
@@ -81,20 +78,17 @@ public class Visite implements Memorisable {
 
 	@Override
 	public List<String> getListeNomAttributs() {
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
 		return listeNomAttributs;
 	}
 
 	@Override
 	public List<String> getListeAttributs() {
-		List<String> listeAttributs = new ArrayList<String>();
+		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.typeDeVisite);
 		listeAttributs.add(this.ville);
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateVisite));
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.prix));
-		return null;
+		return listeAttributs;
 	}
 
 	@Override

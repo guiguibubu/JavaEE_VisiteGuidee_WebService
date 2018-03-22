@@ -19,17 +19,17 @@ public class BaseDeDonnees {
 
 	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	private static final String regexEmail = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+	private static final String REGEX_MAIL = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 	private static final String TRUE = "1";
 	private static final String FALSE = "0";
 	private static final String FORMAT_FLOAT = "%.2f";
 
 	private static final ResourceBundle bundle = ResourceBundle.getBundle("baseDeDonne");
-	private static final String ip 			= bundle.getString("ip");
-	private static final String port 		= bundle.getString("port");
-	private static final String nomBDD 		= bundle.getString("nomBDD");
-	private static final String login 		= bundle.getString("login");
-	private static final String mdp 		= bundle.getString("mdp");
+	private static final String PARAM_IP 	= bundle.getString("ip");
+	private static final String PARAM_PORT 	= bundle.getString("port");
+	private static final String PARAM_NOM 	= bundle.getString("nomBDD");
+	private static final String PARAM_LOGIN = bundle.getString("login");
+	private static final String PARAM_MDP 	= bundle.getString("mdp");
 
 	private Connection connect;
 	private Statement stat;
@@ -57,7 +57,7 @@ public class BaseDeDonnees {
 		if(instance.connect != null && !instance.connect.isClosed()) {
 			closeConnection();
 		}
-		String url = "jdbc:mysql://"+ip+"/"+nomBDD+"?user="+login+"&password="+mdp;
+		String url = "jdbc:mysql://"+PARAM_IP+"/"+PARAM_NOM+"?user="+PARAM_LOGIN+"&password="+PARAM_MDP;
 		instance.connect = DriverManager.getConnection(url);
 	}
 
@@ -151,7 +151,7 @@ public class BaseDeDonnees {
 	//
 
 	public static boolean isEmailGoodFormat(String email) {
-		return email.matches(regexEmail);
+		return email.matches(REGEX_MAIL);
 	}
 
 	//GETTER-SETTER

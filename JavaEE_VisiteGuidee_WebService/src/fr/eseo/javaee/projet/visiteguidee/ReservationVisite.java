@@ -13,12 +13,12 @@ import fr.eseo.javaee.projet.db.objet.Visite;
 @WebService(targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/", endpointInterface = "fr.eseo.javaee.projet.visiteguidee.ReservationVisiteSEI", portName = "ReservationVisitePort", serviceName = "ReservationVisiteService")
 public class ReservationVisite implements ReservationVisiteSEI {
 
+	@Override
 	public Visite[] trouverVisite (Visite maVisite) throws SQLException {
-		Visite[] listVisites = new Visite[0];
-		listVisites = (Visite[])GestionDB.searchVisite(maVisite).toArray();
-		return listVisites;
+		return GestionDB.searchVisite(maVisite).toArray(new Visite[0]);
 	}
 
+	@Override
 	public int reserverVisite (Reservation maReservation) throws SQLException {
 		int idReservation = 0;
 		GestionDB.ajoutReservation(maReservation);
@@ -27,6 +27,7 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return idReservation;
 	}
 
+	@Override
 	public String payerVisite (int monCodeReservation) throws SQLException {
 		String text = "";
 		Reservation reservation = GestionDB.searchReservationById(monCodeReservation);
@@ -35,6 +36,7 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return text;
 	}
 
+	@Override
 	public boolean annulerVisite (int monCodeReservation) throws SQLException {
 		GestionDB.supprimerReservationById(monCodeReservation);
 		return GestionDB.existeReservationById(monCodeReservation);

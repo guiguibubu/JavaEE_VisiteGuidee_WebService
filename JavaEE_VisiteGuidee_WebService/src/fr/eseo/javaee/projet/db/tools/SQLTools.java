@@ -5,14 +5,16 @@ import java.util.List;
 
 public class SQLTools {
 
+	private SQLTools() {super();}
+
 	// METHODES SERVANT DE CONVERTISSEURS UTILES
 	public static String deleteSpaceAndPrefixBefore(String text, String prefix) {
 		if(text != null) {
-			deleteSpaceBefore(text);
+			text = deleteSpaceBefore(text);
 			if(prefix != null && text.startsWith(prefix)) {
 				text = text.substring(prefix.length(), text.length());
 			}
-			deleteSpaceBefore(text);
+			text = deleteSpaceBefore(text);
 		}
 		return text;
 	}
@@ -28,28 +30,34 @@ public class SQLTools {
 
 	public static String stickElementWithLink(String textLeft, String textRight, String link) {
 		String text = "";
-		if(textLeft != null && textLeft != null && link != null) {
+		if(textLeft != null && textRight != null && link != null) {
 			text += textLeft + link + textRight;
 		}
 		return text;
 	}
 
 	public static String stickElementWithLink(List<String> list, String link) {
-		String text = "";
-		if(list != null && link != null && list.size()>1) {
+		return stickElementWithLinkAndGuillemet(list, link, "");
+	}
+
+	public static String stickElementWithLinkAndGuillemet(List<String> list, String link, String guillemet) {
+		StringBuilder stringBuilder = new StringBuilder();
+		if(list != null && link != null && !list.isEmpty()) {
 			for(int i = 0; i<list.size(); i++) {
 				if(list.get(i) != null && !list.get(i).trim().isEmpty()) {
-					text += list.get(i);
+					stringBuilder.append(guillemet);
+					stringBuilder.append(list.get(i));
+					stringBuilder.append(guillemet);
 					if(i<list.size()-1) {
-						text += link;
+						stringBuilder.append(link);
 					}
 				}
 			}
-			if(text.endsWith(link)) {
-				text = text.substring(0, text.length()-link.length());
+			if(stringBuilder.toString().endsWith(link)) {
+				stringBuilder.delete(stringBuilder.length()-link.length(), stringBuilder.length());
 			}
 		}
-		return text;
+		return stringBuilder.toString();
 	}
 
 	public static String stickElementWithLinkAndGuillemet(String textLeft, String textRight, String link, String guillemet) {
@@ -60,42 +68,54 @@ public class SQLTools {
 		return text;
 	}
 
-	public static List<String> stickElementWithLinkAndGuillemet(List<String> listLeft, List<String> listRight, String link, String guillement) {
-		List<String> list = new ArrayList<String>();
+	public static List<String> stickElementWithLinkAndGuillemet(List<String> listLeft, List<String> listRight, String link, String guillemet) {
+		List<String> list = new ArrayList<>();
 		boolean listesNotNull = listLeft != null && listRight != null;
 		boolean listesSameSize = (listesNotNull) ? listLeft.size() == listRight.size() : false;
-		if(link != null && listesSameSize && listLeft.size()>0) {
+		if(link != null && listesSameSize && !listLeft.isEmpty()) {
 			for(int i = 0; i<listLeft.size(); i++) {
 				boolean elementsNotNull = listLeft.get(i) != null && listRight.get(i) != null;
 				boolean elementsNotEmpty = (elementsNotNull) ? !listLeft.get(i).trim().isEmpty() && !listRight.get(i).trim().isEmpty() : false;
 				if(elementsNotEmpty) {
-					list.add(stickElementWithLinkAndGuillemet(listLeft.get(i), listRight.get(i), link, "'"));
+					list.add(stickElementWithLinkAndGuillemet(listLeft.get(i), listRight.get(i), link, guillemet));
 				}
 			}
 		}
 		return list;
 	}
 
-	public static List<String> convertIntoListOfWhereOrSetClauses(List<String> listColNames, List<String> listArgs){
+	public static List<String> convertIntoListOfWhereClauses(List<String> listColNames, List<String> listArgs){
 		return stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'");
 	}
 
-	public static String convertIntoWhereClauses(List<String> listClausesWhere){
-		return stickElementWithLink(listClausesWhere, " AND ");
+	public static String convertIntoWhereClauses(List<String> listClauses){
+		return stickElementWithLink(listClauses, " AND ");
 	}
 
 	public static String convertIntoWhereClause(String textLeft, String textRight){
 		return stickElementWithLinkAndGuillemet(textLeft, textRight, " = ", "'");
 	}
 
+	public static List<String> convertIntoListOfSetClauses(List<String> listColNames, List<String> listArgs){
+		return stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'");
+	}
+
+	public static String convertIntoSetClauses(List<String> listClauses){
+		return stickElementWithLink(listClauses, ", ");
+	}
+
+	public static String convertIntoSetClause(String textLeft, String textRight){
+		return stickElementWithLinkAndGuillemet(textLeft, textRight, " = ", "'");
+	}
+
 	//METHODES SELECT
 	public static String selectSQL(String table, List<String> listColNames, List<String> listArgs) {
-		return selectSQL(table, convertIntoListOfWhereOrSetClauses(listColNames, listArgs));
+		return selectSQL(table, convertIntoListOfWhereClauses(listColNames, listArgs));
 	}
 
 	public static String selectSQL(String table, String colName, String arg) {
-		List<String> listColNames = new ArrayList<String>();
-		List<String> listArgs = new ArrayList<String>();
+		List<String> listColNames = new ArrayList<>();
+		List<String> listArgs = new ArrayList<>();
 		listColNames.add(colName);
 		listArgs.add(arg);
 		return selectSQL(table, listColNames, listArgs);
@@ -119,17 +139,17 @@ public class SQLTools {
 	// METHODES INSERT
 	public static String insertSQL(String table, List<String> listColNames, List<String> listArgs) {
 		String sql = "";
-		if(listColNames != null && listArgs != null && listColNames.size() == listArgs.size() && listColNames.size() > 0) {
+		if(listColNames != null && listArgs != null && listColNames.size() == listArgs.size() && !listColNames.isEmpty()) {
 			//Insert et nom colonnes
 			sql = "INSERT INTO "+table+" ("+stickElementWithLink(listColNames, ",")+") ";
-			sql += "VALUES ("+stickElementWithLink(listArgs, ",")+")";
+			sql += "VALUES ("+stickElementWithLinkAndGuillemet(listArgs, ",", "'")+")";
 		}
 		return sql;
 	}
 
 	//METHODE DELETE
 	public static String deleteSQL(String table, List<String> listColNames, List<String> listArgs) {
-		return deleteSQL(table, convertIntoListOfWhereOrSetClauses(listColNames, listArgs));
+		return deleteSQL(table, convertIntoListOfWhereClauses(listColNames, listArgs));
 	}
 
 	public static String deleteSQL(String table, String colName, String arg) {
@@ -145,14 +165,14 @@ public class SQLTools {
 		//Sécurité pour ne pas supprimer toutes les valeurs en une seule fois
 		if(!clausesWhere.trim().isEmpty()) {
 			sql = "DELETE FROM "+table;
-			sql += " WHERE"+clausesWhere;
+			sql += " WHERE "+clausesWhere;
 		}
 		return sql;
 	}
 
 	//METHODE UPDATE
 	public static String updateSQL(String table, List<String> listColNames, List<String> listArgs, List<String> listColNamesWhere, List<String> listArgsWhere) {
-		return updateSQL(table, listColNames, listArgs, convertIntoListOfWhereOrSetClauses(listColNamesWhere, listArgsWhere));
+		return updateSQL(table, listColNames, listArgs, convertIntoListOfWhereClauses(listColNamesWhere, listArgsWhere));
 	}
 
 	public static String updateSQL(String table, List<String> listColNames, List<String> listArgs, String colNameWhere, String argWhere) {
@@ -164,15 +184,14 @@ public class SQLTools {
 	}
 
 	public static String updateSQL(String table, List<String> listColNames, List<String> listArgs, String clausesWhere) {
-		String sql = null;
-		boolean listeValuesOK = listColNames != null && listArgs != null && listColNames.size() == listArgs.size() && listColNames.size() > 0;
-		if(listeValuesOK) {
+		String sql = "";
+		boolean listeValuesOK = listColNames != null && listArgs != null && listColNames.size() == listArgs.size() && !listColNames.isEmpty();
+		boolean clausesWhereOK = clausesWhere != null && !clausesWhere.trim().isEmpty(); // Sécurité pour éviter d'avoir un update général non voulu
+		if(listeValuesOK && clausesWhereOK) {
 			// valeur d'update
-			sql = "UPDATE "+table+" SET "+stickElementWithLink(stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'"), ", ");
+			sql = "UPDATE "+table+" SET "+convertIntoSetClauses(convertIntoListOfSetClauses(listColNames, listArgs));
 			// clause where
-			if(clausesWhere != null && !clausesWhere.trim().isEmpty()) {
-				sql += " WHERE "+deleteSpaceAndPrefixBefore(clausesWhere, "WHERE");
-			}
+			sql += " WHERE "+deleteSpaceAndPrefixBefore(clausesWhere, "WHERE");
 		}
 		return sql;
 	}

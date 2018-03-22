@@ -13,7 +13,7 @@ public class Coordonnee implements Memorisable {
 	public static final String NOM_COL_TELEPHONE 	= "numTelephone";
 	public static final String NOM_COL_MAIL 		= "mail";
 
-	private static List<String> listeNomAttributs;
+	private static List<String> listeNomAttributs = extractNomAttributs();
 
 	private String adresse;
 	private int codePostal;
@@ -31,14 +31,10 @@ public class Coordonnee implements Memorisable {
 		this.pays = pays;
 		this.numTelephone = numTelephone;
 		this.mail = mail;
-
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
 	}
 
 	public static List<String> extractNomAttributs() {
-		List<String> listeNomAttribut = new ArrayList<String>();
+		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_ADRESSE);
 		listeNomAttribut.add(NOM_COL_CODE_POSTAL);
 		listeNomAttribut.add(NOM_COL_PAYS);
@@ -70,15 +66,12 @@ public class Coordonnee implements Memorisable {
 
 	@Override
 	public List<String> getListeNomAttributs() {
-		if(listeNomAttributs ==  null) {
-			listeNomAttributs = extractNomAttributs();
-		}
 		return listeNomAttributs;
 	}
 
 	@Override
 	public List<String> getListeAttributs() {
-		List<String> listeAttributs = new ArrayList<String>();
+		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.adresse);
 		listeAttributs.add(String.valueOf(this.codePostal));
 		listeAttributs.add(this.pays);
