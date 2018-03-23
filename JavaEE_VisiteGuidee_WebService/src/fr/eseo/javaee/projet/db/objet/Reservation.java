@@ -71,7 +71,7 @@ public class Reservation implements Memorisable {
 	public void setListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeReservation = Integer.parseInt(listeNouvellesValeurs.get(0));
 		this.visite = ConstructorFactory.createVisite(Integer.parseInt(listeNouvellesValeurs.get(1)));
-		this.client = new Client(Integer.parseInt(listeNouvellesValeurs.get(2)));
+		this.client = ConstructorFactory.createClient(Integer.parseInt(listeNouvellesValeurs.get(2)));
 		this.nombrePersonnes = Integer.parseInt(listeNouvellesValeurs.get(3));
 		this.paiementEffectue = BaseDeDonnees.convertBooleanFromDB(listeNouvellesValeurs.get(4));
 	}

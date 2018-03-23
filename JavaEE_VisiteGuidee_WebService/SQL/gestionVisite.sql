@@ -47,7 +47,7 @@ CREATE TABLE `client` (
   `adresse` varchar(70) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `codePostal` int(5) DEFAULT NULL,
   `pays` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `numTelephone` int(10) DEFAULT NULL,
+  `numTelephone` VARCHAR(10) DEFAULT NULL,
   `mail` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -164,12 +164,12 @@ ALTER TABLE `reservation`
 /* Populate client Table */
 
 
-insert into client values(1,'Pabst','Benoit',1994-11-25,'11 rue Carnot',49100,'France',0607080910,'bp@gmail.com');
-insert into client values(2,'Pabst','Clement',1994-11-25,'11 rue Carnot',49100,'France',0607080910,'bp@gmail.com');
-insert into client values(3,'Pabst','Guy',1994-11-25,'11 rue Carnot',49100,'France',0607080910,'bp@gmail.com');
-insert into client values(4,'Skoro','Jakub',1994-11-25,'11 rue Carnot',49100,'France',0607080910,'bp@gmail.com');
-insert into client values(5,'Qu','Marc',1994-11-25,'11 rue Carnot',49100,'France',0607080910,'bp@gmail.com');
-insert into client values(6,'Buchle','Guillaume',1994-11-25,'11 rue Carnot',49100,'France',0607080910,'bp@gmail.com');
+insert into client values(1,'Pabst','Benoit','1994-11-25','11 rue Carnot',49100,'France','0607080910','bp@gmail.com');
+insert into client values(2,'Pabst','Clement','1994-11-25','11 rue Carnot',49100,'France','0607080910','cp@gmail.com');
+insert into client values(3,'Pabst','Guy','1994-11-25','11 rue Carnot',49100,'France','0607080910','gp@gmail.com');
+insert into client values(4,'Skoro','Jakub','1994-11-25','11 rue Carnot',49100,'France','0607080910','js@gmail.com');
+insert into client values(5,'Qu','Marc','1994-11-25','11 rue Carnot',49100,'France','0607080910','mq@gmail.com');
+insert into client values(6,'Buchle','Guillaume','1994-11-25','11 rue Carnot',49100,'France','0607080910','gb@gmail.com');
 
 
 

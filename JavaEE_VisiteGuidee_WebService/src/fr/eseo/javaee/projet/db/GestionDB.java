@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.eseo.javaee.projet.db.objet.Client;
-import fr.eseo.javaee.projet.db.objet.Coordonnee;
+import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 import fr.eseo.javaee.projet.db.tools.SQLTools;
@@ -28,7 +28,8 @@ public class GestionDB {
 
 	//METHODES CLIENT
 	public static Client searchClient(String prenom, String nom) throws SQLException {
-		Client client = new Client(nom, prenom);
+		Client client = new Client();
+		client = ConstructorFactory.createClient(nom, prenom);
 		// Elements de recherche
 		List<String> listeNomArgs = new ArrayList<>();
 		List<String> listeArgs = new ArrayList<>();
@@ -61,7 +62,8 @@ public class GestionDB {
 	public static void ajoutClient(String prenom, String nom) throws SQLException {
 		if(!existeClient(prenom, nom)) {
 			initConnection();
-			Client client = new Client(nom, prenom);
+			Client client = new Client();
+			client = ConstructorFactory.createClient(nom, prenom);
 			String sql = SQLTools.insertSQL(client.getNomTable(), client.getListeNomAttributs(), client.getListeAttributs());
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
@@ -81,12 +83,16 @@ public class GestionDB {
 		}
 	}
 
-	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, Coordonnee coordonnee) throws SQLException {
+	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTelephone, String mail) throws SQLException {
 		Client client = searchClient(prenom, nom);
 		if(client.getIdClient() != 0) {
 			initConnection();
 			client.setDateNaissance(dateNaissance);
-			client.setCoordonnee(coordonnee);
+			client.setAdresse(adresse);
+			client.setCodePostal(codePostal);
+			client.setPays(pays);
+			client.setNumTelephone(numTelephone);
+			client.setMail(mail);
 			String sql = SQLTools.updateSQL(Client.NOM_TABLE, client.getListeNomAttributs(), client.getListeAttributs(), Client.NOM_COL_ID, BaseDeDonnees.convertForDB(client.getIdClient()));
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
@@ -114,11 +120,11 @@ public class GestionDB {
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {
-			listVisite.add(new Visite(rs.getInt(Visite.NOM_COL_ID),
-					rs.getString(Visite.NOM_COL_TYPE),
-					rs.getString(Visite.NOM_COL_VILLE),
-					BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)) ,
-					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX))));
+			Visite visiteTest = new Visite();
+			visiteTest = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
+					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
+					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
+			listVisite.add(visiteTest);
 		}
 		BaseDeDonnees.closeResulSet();
 		BaseDeDonnees.closeStatement();
@@ -144,10 +150,8 @@ public class GestionDB {
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, Visite.NOM_COL_ID, BaseDeDonnees.convertForDB(idVisite));
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {
-			visite = new Visite(rs.getInt(Visite.NOM_COL_ID),
-					rs.getString(Visite.NOM_COL_TYPE),
-					rs.getString(Visite.NOM_COL_VILLE),
-					BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)) ,
+			visite = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
+					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
 					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
 		}
 		BaseDeDonnees.closeResulSet();
@@ -171,7 +175,8 @@ public class GestionDB {
 	public static void ajoutVisite(String type, String ville, LocalDateTime date, float prix) throws SQLException {
 		if(!existeVisite(type, ville, date)) {
 			initConnection();
-			Visite visite = new Visite(type, ville, date, prix);
+			Visite visite = new Visite();
+			visite = ConstructorFactory.createVisite(type, ville, date, prix);
 			String sql = SQLTools.insertSQL(visite.getNomTable(), visite.getListeNomAttributs(), visite.getListeAttributs());
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
@@ -194,7 +199,8 @@ public class GestionDB {
 	}
 
 	public static void updateVisiteById(int idVisite, String type, String ville, LocalDateTime date, float prix) throws SQLException {
-		Visite visite = new Visite(idVisite);
+		Visite visite = new Visite();
+		visite = ConstructorFactory.createVisite(idVisite, type, ville, date, prix);
 		if(idVisite != 0) {
 			initConnection();
 			visite.setTypeDeVisite(type);
@@ -218,15 +224,16 @@ public class GestionDB {
 	public static List<Reservation> searchReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
 		List<Reservation> listReservation = new ArrayList<>();
 		initConnection();
-		Reservation reservation = new Reservation(visite, client, nombrePersonnes, paiementEffectue);
+		//Reservation reservation = new Reservation(visite, client, nombrePersonnes, paiementEffectue);
+		Reservation reservation = new Reservation();
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, reservation.getListeNomAttributs(), reservation.getListeAttributs());
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {
-			listReservation.add(new Reservation(rs.getInt(Reservation.NOM_COL_ID),
-					new Visite(rs.getInt(Reservation.NOM_COL_VISITE)),
-					new Client(rs.getInt(Reservation.NOM_COL_CLIENT)),
-					rs.getInt(Reservation.NOM_COL_PLACE),
-					BaseDeDonnees.convertBooleanFromDB(rs.getString(Reservation.NOM_COL_PAIEMENT))));
+			reservation = ConstructorFactory.createReservation(rs.getInt(Reservation.NOM_COL_ID),
+					ConstructorFactory.createVisite(rs.getInt(Reservation.NOM_COL_VISITE)),
+					ConstructorFactory.createClient(rs.getInt(Reservation.NOM_COL_CLIENT)), rs.getInt(Reservation.NOM_COL_PLACE),
+					BaseDeDonnees.convertBooleanFromDB(rs.getString(Reservation.NOM_COL_PAIEMENT)));
+			listReservation.add(reservation);
 		}
 		BaseDeDonnees.closeResulSet();
 		BaseDeDonnees.closeStatement();
@@ -244,10 +251,9 @@ public class GestionDB {
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, Reservation.NOM_COL_ID, BaseDeDonnees.convertForDB(idReservation));
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {
-			reservation = new Reservation(rs.getInt(Reservation.NOM_COL_ID),
-					new Visite(rs.getInt(Reservation.NOM_COL_VISITE)),
-					new Client(rs.getInt(Reservation.NOM_COL_CLIENT)),
-					rs.getInt(Reservation.NOM_COL_PLACE),
+			reservation = ConstructorFactory.createReservation(rs.getInt(Reservation.NOM_COL_ID),
+					ConstructorFactory.createVisite(rs.getInt(Reservation.NOM_COL_VISITE)),
+					ConstructorFactory.createClient(rs.getInt(Reservation.NOM_COL_CLIENT)), rs.getInt(Reservation.NOM_COL_PLACE),
 					BaseDeDonnees.convertBooleanFromDB(rs.getString(Reservation.NOM_COL_PAIEMENT)));
 		}
 		BaseDeDonnees.closeResulSet();
@@ -259,7 +265,8 @@ public class GestionDB {
 	public static void ajoutReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
 		if(!existeReservation(visite, client, nombrePersonnes, paiementEffectue)) {
 			initConnection();
-			Reservation reservation = new Reservation(visite, client, nombrePersonnes, paiementEffectue);
+			Reservation reservation = new Reservation();
+			reservation = ConstructorFactory.createReservation(visite, client, nombrePersonnes, paiementEffectue);
 			String sql = SQLTools.insertSQL(reservation.getNomTable(), reservation.getListeNomAttributs(), reservation.getListeAttributs());
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
@@ -286,7 +293,8 @@ public class GestionDB {
 	}
 
 	public static void updateReservationById(int idReservation, Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
-		Reservation reservation = new Reservation(idReservation);
+		Reservation reservation = new Reservation();
+		reservation = ConstructorFactory.createReservation(idReservation);
 		if(idReservation != 0) {
 			initConnection();
 			reservation.setVisite(visite);
