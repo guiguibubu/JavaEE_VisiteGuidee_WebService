@@ -47,7 +47,7 @@ CREATE TABLE `client` (
   `adresse` varchar(70) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `codePostal` int(5) DEFAULT NULL,
   `pays` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `numTelephone` int(11) DEFAULT NULL,
+  `numTelephone` VARCHAR(10) DEFAULT NULL,
   `mail` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
