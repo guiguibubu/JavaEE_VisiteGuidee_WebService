@@ -9,7 +9,6 @@ import java.util.List;
 
 import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
-import fr.eseo.javaee.projet.db.objet.Coordonnee;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 import fr.eseo.javaee.projet.db.tools.SQLTools;
@@ -84,12 +83,16 @@ public class GestionDB {
 		}
 	}
 
-	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, Coordonnee coordonnee) throws SQLException {
+	public static void updateClient(String prenom, String nom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTelephone, String mail) throws SQLException {
 		Client client = searchClient(prenom, nom);
 		if(client.getIdClient() != 0) {
 			initConnection();
 			client.setDateNaissance(dateNaissance);
-			client.setCoordonnee(coordonnee);
+			client.setAdresse(adresse);
+			client.setCodePostal(codePostal);
+			client.setPays(pays);
+			client.setNumTelephone(numTelephone);
+			client.setMail(mail);
 			String sql = SQLTools.updateSQL(Client.NOM_TABLE, client.getListeNomAttributs(), client.getListeAttributs(), Client.NOM_COL_ID, BaseDeDonnees.convertForDB(client.getIdClient()));
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
