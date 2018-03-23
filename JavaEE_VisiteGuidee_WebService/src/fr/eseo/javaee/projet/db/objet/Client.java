@@ -23,33 +23,9 @@ public class Client implements Memorisable {
 	private LocalDate dateNaissance;
 	private Coordonnee coordonnee;
 
-	public Client() {
-		this(0);
-	}
-
-	public Client(int idClient) {
-		this(idClient, "", "");
-	}
-
-	public Client (String nom, String prenom) {
-		this(0, nom, prenom);
-	}
-
-	public Client (int idClient, String nom, String prenom) {
-		this(idClient, nom, prenom, null, new Coordonnee());
-	}
-
-	public Client (int idClient, String nom, String prenom, LocalDate dateNaissance, Coordonnee coordonnee) {
-		this.idClient = idClient;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.dateNaissance = dateNaissance;
-		this.coordonnee = coordonnee;
-	}
-
-	public boolean isAnniversaire() {
-		return LocalDate.now().equals(this.dateNaissance);
-	}
+	//	public boolean isAnniversaire() {
+	//		return LocalDate.now().equals(this.dateNaissance);
+	//	}
 
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();

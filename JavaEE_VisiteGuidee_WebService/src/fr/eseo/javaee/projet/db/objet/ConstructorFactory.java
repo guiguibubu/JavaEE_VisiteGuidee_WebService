@@ -1,5 +1,8 @@
 package fr.eseo.javaee.projet.db.objet;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class ConstructorFactory {
 
 	//RESERVATION
@@ -26,4 +29,54 @@ public class ConstructorFactory {
 		return createReservation(0);
 	}
 
+	//VISITE
+
+	public static Visite createVisite(int codeVisite, String typeDeVisite, String ville, LocalDateTime dateVisite, float prix) {
+		Visite visite = new Visite();
+		visite.setCodeVisite(codeVisite);
+		visite.setTypeDeVisite(typeDeVisite);
+		visite.setVille(ville);
+		visite.setDateVisite(dateVisite);
+		visite.setPrix(prix);
+		return visite;
+	}
+
+	public static Visite createVisite(String typeDeVisite, String ville, LocalDateTime dateVisite, float prix) {
+		return createVisite(0, typeDeVisite, ville, dateVisite, prix);
+	}
+
+	public static Visite createVisite(int codeVisite) {
+		return createVisite(codeVisite,"","",LocalDateTime.now(),0);
+	}
+
+	public static Visite createVisite() {
+		return createVisite(0);
+	}
+
+	//CLIENT
+	public static Client createClient() {
+		return createClient(0);
+	}
+
+	public static Client createClient(int idClient) {
+		return createClient(idClient, "", "");
+	}
+
+	public static Client createClient (String nom, String prenom) {
+		return createClient(0, nom, prenom);
+	}
+
+	public static Client createClient (int idClient, String nom, String prenom) {
+		return createClient(idClient, nom, prenom, null, new Coordonnee());
+	}
+
+	public static Client createClient (int idClient, String nom, String prenom, LocalDate dateNaissance, Coordonnee coordonnee) {
+		Client client = new Client();
+		client.setIdClient(idClient);
+		client.setNom(nom);
+		client.setPrenom(prenom);
+		client.setDateNaissance(dateNaissance);
+		client.setCoordonnee(coordonnee);
+		return client;
+	}
 }
