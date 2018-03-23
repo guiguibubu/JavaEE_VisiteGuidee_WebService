@@ -50,31 +50,32 @@ public class Client implements Memorisable {
 	}
 
 	//GETTER - SETTER
-	public int getIdClient() {return this.idClient;}
+	public int getIdClient() {return idClient;}
 	public void setIdClient(int idClient) {this.idClient = idClient;}
 
-	public String getNom() {return this.nom;}
+	public String getNom() {return nom;}
 	public void setNom(String nom) {this.nom = nom;}
 
-	public String getPrenom() {return this.prenom;}
+	public String getPrenom() {return prenom;}
 	public void setPrenom(String prenom) {this.prenom = prenom;}
 
-	public LocalDate getDateNaissance() {return this.dateNaissance;}
+	//public LocalDate getDateNaissance() {return this.dateNaissance;}
+	LocalDate getDatenaissance() {return (dateNaissance == null) ? LocalDate.MIN : dateNaissance;}
 	public void setDateNaissance(LocalDate dateNaissance) {this.dateNaissance = dateNaissance;}
 
-	public String getAdresse() {return this.adresse;}
+	public String getAdresse() {return adresse;}
 	public void setAdresse(String adresse) {this.adresse = adresse;}
 
-	public int getCodePostal() {return this.codePostal;}
+	public int getCodePostal() {return codePostal;}
 	public void setCodePostal(int codePostal) {this.codePostal = codePostal;}
 
-	public String getPays() {return this.pays;}
+	public String getPays() {return pays;}
 	public void setPays(String pays) {this.pays = pays;}
 
-	public int getNumTelephone() {return this.numTelephone;}
+	public int getNumTelephone() {return numTelephone;}
 	public void setNumTelephone(int numTelephone) {this.numTelephone = numTelephone;}
 
-	public String getMail() {return this.mail;}
+	public String getMail() {return mail;}
 	public void setMail(String mail) {this.mail = mail;}
 
 	@Override
@@ -85,28 +86,28 @@ public class Client implements Memorisable {
 	@Override
 	public List<String> getListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
-		listeAttributs.add(this.nom);
-		listeAttributs.add(this.prenom);
-		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateNaissance));
-		listeAttributs.add(this.adresse);
-		listeAttributs.add(String.valueOf(this.codePostal));
-		listeAttributs.add(this.pays);
-		listeAttributs.add(String.valueOf(this.numTelephone));
-		listeAttributs.add(this.mail);
+		listeAttributs.add(nom);
+		listeAttributs.add(prenom);
+		listeAttributs.add(BaseDeDonnees.convertForDB(dateNaissance));
+		listeAttributs.add(adresse);
+		listeAttributs.add(String.valueOf(codePostal));
+		listeAttributs.add(pays);
+		listeAttributs.add(String.valueOf(numTelephone));
+		listeAttributs.add(mail);
 		return listeAttributs;
 	}
 
 	@Override
 	public void setListeAttributs(List<String> listeNouvellesValeurs) {
-		this.idClient 	= Integer.parseInt(listeNouvellesValeurs.get(0));
-		this.nom 		= listeNouvellesValeurs.get(1);
-		this.prenom 	= listeNouvellesValeurs.get(2);
-		this.dateNaissance = BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3));
-		this.adresse 	= listeNouvellesValeurs.get(4);
-		this.codePostal = Integer.parseInt(listeNouvellesValeurs.get(5));
-		this.pays 		= listeNouvellesValeurs.get(6);
-		this.numTelephone = Integer.parseInt(listeNouvellesValeurs.get(7));
-		this.mail 		= listeNouvellesValeurs.get(8);
+		idClient 	= Integer.parseInt(listeNouvellesValeurs.get(0));
+		nom 		= listeNouvellesValeurs.get(1);
+		prenom 	= listeNouvellesValeurs.get(2);
+		dateNaissance = BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3));
+		adresse 	= listeNouvellesValeurs.get(4);
+		codePostal = Integer.parseInt(listeNouvellesValeurs.get(5));
+		pays 		= listeNouvellesValeurs.get(6);
+		numTelephone = Integer.parseInt(listeNouvellesValeurs.get(7));
+		mail 		= listeNouvellesValeurs.get(8);
 	}
 
 	@Override
