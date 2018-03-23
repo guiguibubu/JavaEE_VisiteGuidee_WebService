@@ -163,7 +163,7 @@ public class SQLTools {
 	public static String deleteSQL(String table, String clausesWhere) {
 		String sql = "";
 		//Sécurité pour ne pas supprimer toutes les valeurs en une seule fois
-		if(!clausesWhere.trim().isEmpty()) {
+		if(clausesWhere != null && !clausesWhere.trim().isEmpty()) {
 			sql = "DELETE FROM "+table;
 			sql += " WHERE "+clausesWhere;
 		}

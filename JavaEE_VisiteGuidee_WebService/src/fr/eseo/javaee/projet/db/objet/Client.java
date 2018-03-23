@@ -48,7 +48,7 @@ public class Client implements Memorisable {
 	}
 
 	public boolean isAnniversaire() {
-		return LocalDate.now().equals(this.dateNaissance);
+		return LocalDate.now().equals(dateNaissance);
 	}
 
 	public static List<String> extractNomAttributs() {
