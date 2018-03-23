@@ -14,6 +14,11 @@ public class Client implements Memorisable {
 	public static final String NOM_COL_NOM 		= "nom";
 	public static final String NOM_COL_PRENOM 	= "prenom";
 	public static final String NOM_COL_NAISSANCE = "dateNaissance";
+	public static final String NOM_COL_ADRESSE 		= "adresse";
+	public static final String NOM_COL_CODE_POSTAL 	= "codePostal";
+	public static final String NOM_COL_PAYS 		= "pays";
+	public static final String NOM_COL_TELEPHONE 	= "numTelephone";
+	public static final String NOM_COL_MAIL 		= "mail";
 
 	private static List<String> listeNomAttributs = extractNomAttributs();
 
@@ -21,42 +26,26 @@ public class Client implements Memorisable {
 	private String nom;
 	private String prenom;
 	private LocalDate dateNaissance;
-	private Coordonnee coordonnee;
+	private String adresse;
+	private int codePostal;
+	private String pays;
+	private int numTelephone;
+	private String mail;
 
-	public Client() {
-		this(0);
-	}
-
-	public Client(int idClient) {
-		this(idClient, "", "");
-	}
-
-	public Client (String nom, String prenom) {
-		this(0, nom, prenom);
-	}
-
-	public Client (int idClient, String nom, String prenom) {
-		this(idClient, nom, prenom, null, new Coordonnee());
-	}
-
-	public Client (int idClient, String nom, String prenom, LocalDate dateNaissance, Coordonnee coordonnee) {
-		this.idClient = idClient;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.dateNaissance = dateNaissance;
-		this.coordonnee = coordonnee;
-	}
-
-	public boolean isAnniversaire() {
-		return LocalDate.now().equals(this.dateNaissance);
-	}
+	//	public boolean isAnniversaire() {
+	//		return LocalDate.now().equals(this.dateNaissance);
+	//	}
 
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_NOM);
 		listeNomAttribut.add(NOM_COL_PRENOM);
 		listeNomAttribut.add(NOM_COL_NAISSANCE);
-		listeNomAttribut.addAll(Coordonnee.extractNomAttributs());
+		listeNomAttribut.add(NOM_COL_ADRESSE);
+		listeNomAttribut.add(NOM_COL_CODE_POSTAL);
+		listeNomAttribut.add(NOM_COL_PAYS);
+		listeNomAttribut.add(NOM_COL_TELEPHONE);
+		listeNomAttribut.add(NOM_COL_MAIL);
 		return listeNomAttribut;
 	}
 
@@ -73,23 +62,20 @@ public class Client implements Memorisable {
 	public LocalDate getDateNaissance() {return this.dateNaissance;}
 	public void setDateNaissance(LocalDate dateNaissance) {this.dateNaissance = dateNaissance;}
 
-	public Coordonnee getCoordonnee() {return this.coordonnee;}
-	public void setCoordonnee(Coordonnee coordonnee) {this.coordonnee = coordonnee;}
+	public String getAdresse() {return this.adresse;}
+	public void setAdresse(String adresse) {this.adresse = adresse;}
 
-	public String getAdresse() {return this.coordonnee.getAdresse();}
-	public void setAdresse(String adresse) {this.coordonnee.setAdresse(adresse);}
+	public int getCodePostal() {return this.codePostal;}
+	public void setCodePostal(int codePostal) {this.codePostal = codePostal;}
 
-	public int getCodePostal() {return this.coordonnee.getCodePostal();}
-	public void setCodePostal(int codePostal) {this.coordonnee.setCodePostal(codePostal);}
+	public String getPays() {return this.pays;}
+	public void setPays(String pays) {this.pays = pays;}
 
-	public String getPays() {return this.coordonnee.getPays();}
-	public void setPays(String pays) {this.coordonnee.setPays(pays);}
+	public int getNumTelephone() {return this.numTelephone;}
+	public void setNumTelephone(int numTelephone) {this.numTelephone = numTelephone;}
 
-	public int getNumTelephone() {return this.coordonnee.getNumTelephone();}
-	public void setNumTelephone(int numTelephone) {this.coordonnee.setNumTelephone(numTelephone);}
-
-	public String getMail() {return this.coordonnee.getMail();}
-	public void setMail(String mail) {this.coordonnee.setMail(mail);}
+	public String getMail() {return this.mail;}
+	public void setMail(String mail) {this.mail = mail;}
 
 	@Override
 	public List<String> getListeNomAttributs() {
@@ -102,7 +88,11 @@ public class Client implements Memorisable {
 		listeAttributs.add(this.nom);
 		listeAttributs.add(this.prenom);
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateNaissance));
-		listeAttributs.addAll(this.coordonnee.getListeAttributs());
+		listeAttributs.add(this.adresse);
+		listeAttributs.add(String.valueOf(this.codePostal));
+		listeAttributs.add(this.pays);
+		listeAttributs.add(String.valueOf(this.numTelephone));
+		listeAttributs.add(this.mail);
 		return listeAttributs;
 	}
 
@@ -112,7 +102,11 @@ public class Client implements Memorisable {
 		this.nom 		= listeNouvellesValeurs.get(1);
 		this.prenom 	= listeNouvellesValeurs.get(2);
 		this.dateNaissance = BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3));
-		this.coordonnee.setListeAttributs(listeNouvellesValeurs);
+		this.adresse 	= listeNouvellesValeurs.get(4);
+		this.codePostal = Integer.parseInt(listeNouvellesValeurs.get(5));
+		this.pays 		= listeNouvellesValeurs.get(6);
+		this.numTelephone = Integer.parseInt(listeNouvellesValeurs.get(7));
+		this.mail 		= listeNouvellesValeurs.get(8);
 	}
 
 	@Override
