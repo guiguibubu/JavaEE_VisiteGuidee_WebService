@@ -24,25 +24,6 @@ public class Visite implements Memorisable {
 	private LocalDateTime dateVisite;
 	private float prix;
 
-	public Visite() {
-		this(0);
-	}
-
-	public Visite(int codeVisite) {
-		this(codeVisite,"","",LocalDateTime.now(),0);
-	}
-
-	public Visite(String typeDeVisite, String ville, LocalDateTime dateVisite, float prix) {
-		this(0, typeDeVisite, ville, dateVisite, prix);
-	}
-	public Visite(int codeVisite, String typeDeVisite, String ville, LocalDateTime dateVisite, float prix) {
-		this.codeVisite = codeVisite;
-		this.typeDeVisite = typeDeVisite;
-		this.ville = ville;
-		this.dateVisite = dateVisite;
-		this.prix = prix;
-	}
-
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_TYPE);

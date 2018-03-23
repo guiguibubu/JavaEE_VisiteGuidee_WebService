@@ -23,32 +23,6 @@ public class Reservation implements Memorisable {
 	private int nombrePersonnes;
 	private boolean paiementEffectue;
 
-	/**
-	 * constructeur vide
-	 */
-	public Reservation() {
-		this(0);
-	}
-
-	/**
-	 * constructeur non vide
-	 */
-	public Reservation(int codeReservation, Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
-		this.codeReservation = codeReservation;
-		this.visite = visite;
-		this.client = client;
-		this.nombrePersonnes = nombrePersonnes;
-		this.paiementEffectue = paiementEffectue;
-	}
-
-	public Reservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
-		this(0, visite, client, nombrePersonnes, paiementEffectue);
-	}
-
-	public Reservation(int idReservation) {
-		this(idReservation, null,null,0,false);
-	}
-
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
 		listeNomAttribut.add(NOM_COL_VISITE);
@@ -96,7 +70,7 @@ public class Reservation implements Memorisable {
 	@Override
 	public void setListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeReservation = Integer.parseInt(listeNouvellesValeurs.get(0));
-		this.visite = new Visite(Integer.parseInt(listeNouvellesValeurs.get(1)));
+		this.visite = ConstructorFactory.createVisite(Integer.parseInt(listeNouvellesValeurs.get(1)));
 		this.client = new Client(Integer.parseInt(listeNouvellesValeurs.get(2)));
 		this.nombrePersonnes = Integer.parseInt(listeNouvellesValeurs.get(3));
 		this.paiementEffectue = BaseDeDonnees.convertBooleanFromDB(listeNouvellesValeurs.get(4));

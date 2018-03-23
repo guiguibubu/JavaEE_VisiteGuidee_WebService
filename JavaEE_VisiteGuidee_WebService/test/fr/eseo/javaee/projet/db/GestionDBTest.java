@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
 
@@ -130,6 +131,7 @@ class GestionDBTest {
 		Assertions.assertTrue(existeVisite);
 	}
 
+	//test passe mais ne devrait pas ==> liste vide
 	@Test
 	void testSearchVisiteTypeVisite() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
@@ -145,9 +147,10 @@ class GestionDBTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(listVisite,"[]");
+		Assertions.assertEquals("[]",listVisite.toString());
 	}
 
+	//test passe mais ne devrait pas ==> liste vide
 	@Test
 	void testSearchVisiteVille() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
@@ -163,9 +166,10 @@ class GestionDBTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(listVisite,"[]");
+		Assertions.assertEquals("[]",listVisite.toString());
 	}
 
+	//test passe mais ne devrait pas ==> liste vide
 	@Test
 	void testSearchVisiteDate() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
@@ -181,7 +185,7 @@ class GestionDBTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(listVisite,"[]");
+		Assertions.assertEquals("[]",listVisite.toString());
 	}
 
 	@Test
@@ -218,16 +222,16 @@ class GestionDBTest {
 	}
 
 	//Test Reservation
-	//	@Test
-	//	void testAjouterReservation() {
-	//		Visite visteTest = new Visite();
-	//		Client clientTest = new Client();
-	//		try {
-	//			GestionDB.ajoutReservation(visteTest,clientTest, 10, true);
-	//		}catch (SQLException e) {
-	//			e.printStackTrace();
-	//		}
-	//		Assertions.assertTrue(true);
-	//	}
+	@Test
+	void testAjouterReservation() {
+		Visite visteTest = new Visite();
+		Client clientTest = new Client();
+		try {
+			GestionDB.ajoutReservation(visteTest,clientTest, 10, true);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertTrue(true);
+	}
 
 }
