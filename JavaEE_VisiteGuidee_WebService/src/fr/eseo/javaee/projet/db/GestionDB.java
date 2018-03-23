@@ -120,11 +120,11 @@ public class GestionDB {
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {
-			Visite visiteTest = new Visite();
-			visiteTest = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
+			Visite visite = new Visite();
+			visite = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
 					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
 					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
-			listVisite.add(visiteTest);
+			listVisite.add(visite);
 		}
 		BaseDeDonnees.closeResulSet();
 		BaseDeDonnees.closeStatement();
@@ -224,8 +224,7 @@ public class GestionDB {
 	public static List<Reservation> searchReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
 		List<Reservation> listReservation = new ArrayList<>();
 		initConnection();
-		//Reservation reservation = new Reservation(visite, client, nombrePersonnes, paiementEffectue);
-		Reservation reservation = new Reservation();
+		Reservation reservation = ConstructorFactory.createReservation(visite, client, nombrePersonnes, paiementEffectue);
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, reservation.getListeNomAttributs(), reservation.getListeAttributs());
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {

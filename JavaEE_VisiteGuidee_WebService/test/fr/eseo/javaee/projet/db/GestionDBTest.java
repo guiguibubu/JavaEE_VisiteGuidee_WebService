@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import fr.eseo.javaee.projet.db.objet.Client;
+import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
 
@@ -105,7 +106,8 @@ class GestionDBTest {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visite = new Visite("guide","Angers", date,59);
+		Visite visite = new Visite();
+		visite = ConstructorFactory.createVisite("guide", "Angers", date, 59);
 		try {
 			GestionDB.ajoutVisite("guide","Angers", date, 59);
 			GestionDB.supprimerVisiteById(visite);
@@ -194,7 +196,8 @@ class GestionDBTest {
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		float prix = 59;
-		Visite visiteTest = new Visite(1,"guide", "Angers", date, prix);
+		Visite visiteTest = new Visite();
+		visiteTest = ConstructorFactory.createVisite(1,"guide", "Angers", date, prix);
 		try {
 			GestionDB.ajoutVisite(visiteTest);
 		}catch (SQLException e) {
@@ -210,7 +213,8 @@ class GestionDBTest {
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		float prix = 59;
-		Visite visiteTest = new Visite(1,"guide", "Angers", date, prix);
+		Visite visiteTest = new Visite();
+		visiteTest = ConstructorFactory.createVisite(1,"guide", "Angers", date, prix);
 		try {
 			GestionDB.ajoutVisite(visiteTest);
 			GestionDB.supprimerVisiteById(visiteTest);
@@ -228,6 +232,19 @@ class GestionDBTest {
 		Client clientTest = new Client();
 		try {
 			GestionDB.ajoutReservation(visteTest,clientTest, 10, true);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertTrue(true);
+	}
+
+	@Test
+	void testSupprimerReservation() {
+		Visite visteTest = new Visite();
+		Client clientTest = new Client();
+		try {
+			GestionDB.ajoutReservation(visteTest,clientTest, 10, true);
+			GestionDB.supprimeClient(clientTest.getIdClient());
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
