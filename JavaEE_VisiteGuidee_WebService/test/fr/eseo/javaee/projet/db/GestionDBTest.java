@@ -1,5 +1,8 @@
 package fr.eseo.javaee.projet.db;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,6 +10,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +21,39 @@ import fr.eseo.javaee.projet.db.objet.Visite;
 
 
 class GestionDBTest {
+
+	@Before @After
+	void resetDonneesDeTests() {
+		BufferedReader bufferedReader = null;
+		try {
+			bufferedReader = new BufferedReader(new FileReader("SQL/gestionVisiteInsertData.sql"));
+			String sql = "";
+			BaseDeDonnees.openConnection();
+			while((sql = bufferedReader.readLine()) !=null){
+				System.out.println(sql);
+				if(!sql.trim().isEmpty() || sql.startsWith("/*")) {
+					BaseDeDonnees.executeSQL(sql, false);
+				}
+			}
+			BaseDeDonnees.closeStatement();
+			System.out.println(BaseDeDonnees.getRs());
+		} catch (IOException | SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (bufferedReader != null) {
+					bufferedReader.close();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	@Test
+	void testResetDonnesDeTests() {
+		this.resetDonneesDeTests();
+	}
 
 	//Test Client
 	@Test
@@ -30,6 +68,7 @@ class GestionDBTest {
 
 	@Test
 	void testSupprimeClient() {
+		System.out.println("Dans fonction");
 		boolean existeClient = true;
 		try {
 			GestionDB.supprimeClient("Guillaume", "Buchle");
@@ -42,6 +81,7 @@ class GestionDBTest {
 
 	@Test
 	void testExisteClient() {
+		System.out.println("Dans fonction");
 		boolean existeClient = false;
 		try {
 			GestionDB.ajoutClient("Guillaume", "Buchle");
@@ -54,6 +94,7 @@ class GestionDBTest {
 
 	@Test
 	void testCleanTable() {
+		System.out.println("Dans fonction");
 		boolean existeClient = true;
 		try {
 			GestionDB.ajoutClient("Guillaume", "Buchle");
@@ -71,6 +112,7 @@ class GestionDBTest {
 
 	@Test
 	void testUniciteClientSQL() {
+		System.out.println("Dans fonction");
 		int nbClient = 0;
 		try {
 			BaseDeDonnees.cleanTable("client");
