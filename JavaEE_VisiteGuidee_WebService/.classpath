@@ -22,5 +22,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/org.jacoco.ant-0.8.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

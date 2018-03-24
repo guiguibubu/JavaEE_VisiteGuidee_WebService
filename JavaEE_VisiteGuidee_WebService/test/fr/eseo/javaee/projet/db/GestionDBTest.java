@@ -3,6 +3,7 @@ package fr.eseo.javaee.projet.db;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,33 +11,44 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
-
 class GestionDBTest {
 
-	@Before @After
-	void resetDonneesDeTests() {
+	private static int nbBefore = 0;
+	private static int nbAfter = 0;
+
+	private static List<String> sqlReset;
+
+	private static void setDonneesDeTests() {
+		nbBefore++;
 		BufferedReader bufferedReader = null;
 		try {
-			bufferedReader = new BufferedReader(new FileReader("SQL/gestionVisiteInsertData.sql"));
-			String sql = "";
+			if(sqlReset == null) {
+				sqlReset = new ArrayList<>();
+				bufferedReader = new BufferedReader(new FileReader("SQL/gestionVisiteInsertData.sql"));
+				String sql = "";
+				while((sql = bufferedReader.readLine()) !=null){
+					if(!sql.trim().isEmpty() || sql.startsWith("/*")) {
+						sqlReset.add(sql);
+					}
+				}
+			}
+
 			BaseDeDonnees.openConnection();
-			while((sql = bufferedReader.readLine()) !=null){
-				System.out.println(sql);
+			for(String sql : sqlReset) {
 				if(!sql.trim().isEmpty() || sql.startsWith("/*")) {
 					BaseDeDonnees.executeSQL(sql, false);
 				}
 			}
 			BaseDeDonnees.closeStatement();
-			System.out.println(BaseDeDonnees.getRs());
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -50,27 +62,50 @@ class GestionDBTest {
 		}
 	}
 
+	@BeforeEach
+	void resetDonneesDeTestsBefore() {
+		nbBefore++;
+		setDonneesDeTests();
+	}
+
+	@AfterAll
+	static void resetDonneesDeTestsAfter() {
+		nbAfter++;
+		GestionDBTest.setDonneesDeTests();
+	}
+
 	@Test
 	void testResetDonnesDeTests() {
-		this.resetDonneesDeTests();
+		GestionDBTest.setDonneesDeTests();
 	}
 
 	//Test Client
 	@Test
 	void testAjoutClient() {
+		String nom = "";
+		String prenom = "";
 		try {
+			BaseDeDonnees.openConnection();
+			BaseDeDonnees.executeSQL("DELETE FROM client WHERE nom='Buchle' AND prenom='Guillaume'", false);
 			GestionDB.ajoutClient("Guillaume", "Buchle");
+
+			BaseDeDonnees.openConnection();
+			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='Buchle' AND prenom='Guillaume'", true);
+			while(rs.next()) {
+				nom = rs.getString("nom");
+				prenom = rs.getString("prenom");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertTrue(true);
+		Assertions.assertTrue("Buchle".equals(nom) && "Guillaume".equals(prenom));
 	}
 
 	@Test
 	void testSupprimeClient() {
-		System.out.println("Dans fonction");
 		boolean existeClient = true;
 		try {
+			GestionDB.ajoutClient("Guillaume", "Buchle");
 			GestionDB.supprimeClient("Guillaume", "Buchle");
 			existeClient = GestionDB.existeClient("Guillaume", "Buchle");
 		} catch (SQLException e) {
@@ -81,7 +116,6 @@ class GestionDBTest {
 
 	@Test
 	void testExisteClient() {
-		System.out.println("Dans fonction");
 		boolean existeClient = false;
 		try {
 			GestionDB.ajoutClient("Guillaume", "Buchle");
@@ -94,7 +128,7 @@ class GestionDBTest {
 
 	@Test
 	void testCleanTable() {
-		System.out.println("Dans fonction");
+
 		boolean existeClient = true;
 		try {
 			GestionDB.ajoutClient("Guillaume", "Buchle");
@@ -112,7 +146,7 @@ class GestionDBTest {
 
 	@Test
 	void testUniciteClientSQL() {
-		System.out.println("Dans fonction");
+
 		int nbClient = 0;
 		try {
 			BaseDeDonnees.cleanTable("client");
@@ -151,7 +185,7 @@ class GestionDBTest {
 		Visite visite = new Visite();
 		visite = ConstructorFactory.createVisite("guide", "Angers", date, 59);
 		try {
-			GestionDB.ajoutVisite("guide","Angers", date, 59);
+			visite.setCodeVisite(GestionDB.ajoutVisite("guide","Angers", date, 59));
 			GestionDB.supprimerVisiteById(visite);
 			existeVisite = GestionDB.existeVisite("guide","Angers",date);
 		}catch (SQLException e) {
@@ -183,6 +217,7 @@ class GestionDBTest {
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		List<Visite> listVisite = new ArrayList<Visite>();
 		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			GestionDB.ajoutVisite("guide", "Nante", date, 60);
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
@@ -191,7 +226,7 @@ class GestionDBTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals("[]",listVisite.toString());
+		Assertions.assertEquals(3,listVisite.size());
 	}
 
 	//test passe mais ne devrait pas ==> liste vide
@@ -202,6 +237,7 @@ class GestionDBTest {
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		List<Visite> listVisite = new ArrayList<Visite>();
 		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			GestionDB.ajoutVisite("guide", "Nante", date, 60);
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
@@ -210,7 +246,7 @@ class GestionDBTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals("[]",listVisite.toString());
+		Assertions.assertEquals(2,listVisite.size());
 	}
 
 	//test passe mais ne devrait pas ==> liste vide
@@ -221,15 +257,16 @@ class GestionDBTest {
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		List<Visite> listVisite = new ArrayList<Visite>();
 		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			GestionDB.ajoutVisite("guide", "Nante", date, 60);
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite(null, null, date, null);
+			listVisite = GestionDB.searchVisite(null, null, date, date);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals("[]",listVisite.toString());
+		Assertions.assertEquals(3, listVisite.size());
 	}
 
 	@Test
@@ -255,10 +292,9 @@ class GestionDBTest {
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		float prix = 59;
-		Visite visiteTest = new Visite();
-		visiteTest = ConstructorFactory.createVisite(1,"guide", "Angers", date, prix);
+		Visite visiteTest = ConstructorFactory.createVisite(1,"guide", "Angers", date, prix);
 		try {
-			GestionDB.ajoutVisite(visiteTest);
+			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
 			GestionDB.supprimerVisiteById(visiteTest);
 			existeVisite = GestionDB.existeVisite("guide","Angers",date);
 		}catch (SQLException e) {

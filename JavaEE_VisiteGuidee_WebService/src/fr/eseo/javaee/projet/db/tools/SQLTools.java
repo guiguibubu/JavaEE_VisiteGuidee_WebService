@@ -36,15 +36,15 @@ public class SQLTools {
 		return text;
 	}
 
-	public static String stickElementWithLink(List<String> list, String link) {
-		return stickElementWithLinkAndGuillemet(list, link, "");
+	public static String stickElementWithLink(List<String> list, String link, boolean keepEmptyData) {
+		return stickElementWithLinkAndGuillemet(list, link, "", keepEmptyData);
 	}
 
-	public static String stickElementWithLinkAndGuillemet(List<String> list, String link, String guillemet) {
+	public static String stickElementWithLinkAndGuillemet(List<String> list, String link, String guillemet, boolean keepEmptyData) {
 		StringBuilder stringBuilder = new StringBuilder();
 		if(list != null && link != null && !list.isEmpty()) {
 			for(int i = 0; i<list.size(); i++) {
-				if(list.get(i) != null && !list.get(i).trim().isEmpty()) {
+				if(list.get(i) != null && (keepEmptyData || !list.get(i).trim().isEmpty())) {
 					stringBuilder.append(guillemet);
 					stringBuilder.append(list.get(i));
 					stringBuilder.append(guillemet);
@@ -89,7 +89,7 @@ public class SQLTools {
 	}
 
 	public static String convertIntoWhereClauses(List<String> listClauses){
-		return stickElementWithLink(listClauses, " AND ");
+		return stickElementWithLink(listClauses, " AND ", false);
 	}
 
 	public static String convertIntoWhereClause(String textLeft, String textRight){
@@ -101,7 +101,7 @@ public class SQLTools {
 	}
 
 	public static String convertIntoSetClauses(List<String> listClauses){
-		return stickElementWithLink(listClauses, ", ");
+		return stickElementWithLink(listClauses, ", ", false);
 	}
 
 	public static String convertIntoSetClause(String textLeft, String textRight){
@@ -141,8 +141,8 @@ public class SQLTools {
 		String sql = "";
 		if(listColNames != null && listArgs != null && listColNames.size() == listArgs.size() && !listColNames.isEmpty()) {
 			//Insert et nom colonnes
-			sql = "INSERT INTO "+table+" ("+stickElementWithLink(listColNames, ",")+") ";
-			sql += "VALUES ("+stickElementWithLinkAndGuillemet(listArgs, ",", "'")+")";
+			sql = "INSERT INTO "+table+" ("+stickElementWithLink(listColNames, ",", false)+") ";
+			sql += "VALUES ("+stickElementWithLinkAndGuillemet(listArgs, ",", "'", true)+")";
 		}
 		return sql;
 	}

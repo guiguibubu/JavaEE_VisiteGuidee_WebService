@@ -27,6 +27,7 @@ public class Visite implements Memorisable {
 
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
+		listeNomAttribut.add(NOM_COL_ID);
 		listeNomAttribut.add(NOM_COL_TYPE);
 		listeNomAttribut.add(NOM_COL_VILLE);
 		listeNomAttribut.add(NOM_COL_DATE);

@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 public class ConstructorFactory {
 
+	private ConstructorFactory() { throw new IllegalStateException("Utility class");}
+
 	//RESERVATION
 
 	public static Reservation createReservation(int codeReservation, Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) {
@@ -67,7 +69,7 @@ public class ConstructorFactory {
 	}
 
 	public static Client createClient (int idClient, String nom, String prenom) {
-		return createClient(idClient, nom, prenom, LocalDate.MIN, "", 0,"", 0,"");
+		return createClient(idClient, nom, prenom, LocalDate.MIN, "", 0,"", 0, Client.emailParDefaut);
 	}
 
 	public static Client createClient (int idClient, String nom, String prenom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTelephone, String mail) {
