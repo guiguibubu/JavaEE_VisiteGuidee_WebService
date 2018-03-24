@@ -19,16 +19,28 @@ public interface Memorisable {
 	public String getNomTable();
 
 	/**
-	 * Renvoie la liste des noms des attributs DANS la Base de Donnee
-	 * @return la liste des noms des attributs DANS la Base de Donnee
+	 * Renvoie la liste des noms des attributs DANS la Base de Donnee SANS l'ID de l'objet (clé primaire)
+	 * @return la liste des noms des attributs DANS la Base de Donnee SANS l'ID de l'objet (clé primaire)
 	 */
 	public List<String> getListeNomAttributs();
 
 	/**
-	 * Renvoie la liste des valeurs des attributs actuels formatés pour la base de données
-	 * @return la liste des valeurs des attributs actuels formatés pour la base de données
+	 * Renvoie la liste des valeurs des attributs actuels formatés pour la base de données SANS l'ID de l'objet (clé primaire)
+	 * @return la liste des valeurs des attributs actuels formatés pour la base de données SANS l'ID de l'objet (clé primaire)
 	 */
 	public List<String> getListeAttributs();
+
+	/**
+	 * Renvoie la liste des noms des attributs DANS la Base de Donnee AVEC l'ID de l'objet (clé primaire)
+	 * @return la liste des noms des attributs DANS la Base de Donnee AVEC l'ID de l'objet (clé primaire)
+	 */
+	public List<String> getListeNomAttributsWithID();
+
+	/**
+	 * Renvoie la liste des valeurs des attributs actuels formatés pour la base de données AVEC l'ID de l'objet (clé primaire)
+	 * @return la liste des valeurs des attributs actuels formatés pour la base de données AVEC l'ID de l'objet (clé primaire)
+	 */
+	public List<String> getListeAttributsWithID();
 
 	/**
 	 * Valorise les attributs de l'objet avec les valeurs dans la liste

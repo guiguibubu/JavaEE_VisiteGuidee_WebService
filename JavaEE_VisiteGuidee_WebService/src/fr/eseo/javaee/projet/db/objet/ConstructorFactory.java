@@ -67,7 +67,7 @@ public class ConstructorFactory {
 	}
 
 	public static Client createClient (int idClient, String nom, String prenom) {
-		return createClient(idClient, nom, prenom, null, "", 0,"", 0,"");
+		return createClient(idClient, nom, prenom, LocalDate.MIN, "", 0,"", 0,"");
 	}
 
 	public static Client createClient (int idClient, String nom, String prenom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTelephone, String mail) {
