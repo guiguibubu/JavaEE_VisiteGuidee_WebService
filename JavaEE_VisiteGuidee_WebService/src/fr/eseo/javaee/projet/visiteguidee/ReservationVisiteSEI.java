@@ -1,6 +1,7 @@
 package fr.eseo.javaee.projet.visiteguidee;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -19,7 +20,7 @@ public interface ReservationVisiteSEI {
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverVisite", localName = "trouverVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverVisiteResponse", localName = "trouverVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	Visite[] trouverVisite(@WebParam(name = "arg0") Visite maVisite) throws SQLException;
+	List<Visite> trouverVisite(@WebParam(name = "arg0") Visite maVisite) throws SQLException;
 
 	@WebMethod(operationName = "reserverVisite", action = "urn:ReserverVisite")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.ReserverVisite", localName = "reserverVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
@@ -31,7 +32,7 @@ public interface ReservationVisiteSEI {
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.PayerVisite", localName = "payerVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.PayerVisiteResponse", localName = "payerVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	String payerVisite(@WebParam(name = "arg0") int monCodeReservation) throws SQLException;
+	boolean payerVisite(@WebParam(name = "arg0") int monCodeReservation) throws SQLException;
 
 	@WebMethod(operationName = "annulerVisite", action = "urn:AnnulerVisite")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.AnnulerVisite", localName = "annulerVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")

@@ -90,7 +90,7 @@ class ReservationVisiteTest {
 		Visite visiteTest = new Visite();
 		visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
 		ReservationVisite reservation = new ReservationVisite();
-		Visite[] visite_trouvee = null;
+		List<Visite> visite_trouvee = null;
 		try {
 			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			GestionDB.ajoutVisite(visiteTest);
@@ -98,8 +98,8 @@ class ReservationVisiteTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(1, visite_trouvee.length);
-		Assertions.assertEquals("Angers", visite_trouvee[0].getVille());
+		Assertions.assertEquals(1, visite_trouvee.size());
+		Assertions.assertEquals("Angers", visite_trouvee.get(0).getVille());
 	}
 
 	@Test
@@ -112,7 +112,7 @@ class ReservationVisiteTest {
 		Visite visiteTestRecherche = ConstructorFactory.createVisite("guidee", "", date, 99);
 		//		Visite[] listAttendu = {visiteTest1, visiteTest2};
 		ReservationVisite reservation = new ReservationVisite();
-		Visite[] visite_trouvee = null;
+		List<Visite> visite_trouvee = null;
 		try {
 			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			visiteTest1.setCodeVisite(GestionDB.ajoutVisite(visiteTest1));
@@ -121,7 +121,7 @@ class ReservationVisiteTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(2, visite_trouvee.length);
+		Assertions.assertEquals(2, visite_trouvee.size());
 	}
 
 	@Test
@@ -131,7 +131,7 @@ class ReservationVisiteTest {
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Lille", date, 999);
 		ReservationVisite reservation = new ReservationVisite();
-		Visite[] visite_trouvee = null;
+		List<Visite> visite_trouvee = null;
 		try {
 			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			GestionDB.ajoutVisite("", "Nantes", LocalDateTime.now(), 0);
@@ -139,7 +139,7 @@ class ReservationVisiteTest {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(0, visite_trouvee.length);
+		Assertions.assertEquals(0, visite_trouvee.size());
 	}
 
 	@Test
@@ -222,8 +222,8 @@ class ReservationVisiteTest {
 			reservationTest.setClient(clientTest);
 			reservationTest.setVisite(visiteTest);
 			reservationTest.setCodeReservation(GestionDB.ajoutReservation(reservationTest));
-			String isPayed = reservation.payerVisite(reservationTest.getCodeReservation());
-			reservationTest.setPaiementEffectue(BaseDeDonnees.convertBooleanFromDB(isPayed));
+			boolean isPayed = reservation.payerVisite(reservationTest.getCodeReservation());
+			reservationTest.setPaiementEffectue(isPayed);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
