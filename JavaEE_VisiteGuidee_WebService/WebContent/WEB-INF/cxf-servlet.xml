@@ -8,7 +8,7 @@
 		xmlns:tns="http://visiteguidee.projet.javaee.eseo.fr/"
 		id="reservationvisite"
 		implementor="fr.eseo.javaee.projet.visiteguidee.ReservationVisite"
-		wsdlLocation="wsdl/gestionvisite.wsdl"
+		wsdlLocation="wsdl/reservationvisite.wsdl"
 		endpointName="tns:ReservationVisitePort"
 		serviceName="tns:ReservationVisiteService"
 		address="/ReservationVisitePort">

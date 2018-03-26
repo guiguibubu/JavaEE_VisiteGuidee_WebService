@@ -39,8 +39,12 @@ public class BaseDeDonnees {
 
 	// INIT LA BASE DE DONNEES
 
-	private BaseDeDonnees() throws SQLException {
-		DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+	private BaseDeDonnees() {
+		try {
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static BaseDeDonnees getInstance() throws SQLException {

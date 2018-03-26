@@ -1,6 +1,5 @@
 package fr.eseo.javaee.projet.visiteguidee;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.jws.WebMethod;
@@ -20,24 +19,24 @@ public interface ReservationVisiteSEI {
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverVisite", localName = "trouverVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverVisiteResponse", localName = "trouverVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	List<Visite> trouverVisite(@WebParam(name = "arg0") Visite maVisite) throws SQLException;
+	List<Visite> trouverVisite(@WebParam(name = "arg0") Visite maVisite);
 
 	@WebMethod(operationName = "reserverVisite", action = "urn:ReserverVisite")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.ReserverVisite", localName = "reserverVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.ReserverVisiteResponse", localName = "reserverVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	int reserverVisite(@WebParam(name = "arg0") Reservation maReservation) throws SQLException;
+	int reserverVisite(@WebParam(name = "arg0") Reservation maReservation);
 
 	@WebMethod(operationName = "payerVisite", action = "urn:PayerVisite")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.PayerVisite", localName = "payerVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.PayerVisiteResponse", localName = "payerVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	boolean payerVisite(@WebParam(name = "arg0") int monCodeReservation) throws SQLException;
+	boolean payerVisite(@WebParam(name = "arg0") int monCodeReservation);
 
 	@WebMethod(operationName = "annulerVisite", action = "urn:AnnulerVisite")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.AnnulerVisite", localName = "annulerVisite", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.AnnulerVisiteResponse", localName = "annulerVisiteResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@WebResult(name = "return")
-	boolean annulerVisite(@WebParam(name = "arg0") int monCodeReservation) throws SQLException;
+	boolean annulerVisite(@WebParam(name = "arg0") int monCodeReservation);
 
 }
