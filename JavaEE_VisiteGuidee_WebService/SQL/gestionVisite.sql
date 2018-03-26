@@ -89,7 +89,7 @@ CREATE TABLE `visite` (
   `typeVisite` varchar(15) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `ville` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `dateVisite` datetime NOT NULL,
-  `prixVisite` int(11) NOT NULL DEFAULT '0'
+  `prixVisite` DECIMAL(10,2) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
