@@ -21,6 +21,8 @@ public class Visite implements Memorisable {
 	private static List<String> listeNomAttributsWithID = extractNomAttributs();
 	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
 
+	public static final LocalDateTime dateVisiteParDefaut = LocalDateTime.of(0, 1, 1, 0, 0, 0);
+
 	private int codeVisite;
 	private String typeDeVisite;
 	private String ville;
@@ -37,9 +39,9 @@ public class Visite implements Memorisable {
 		return listeNomAttribut;
 	}
 
-	//	public boolean isOuverte() {
-	//		return LocalDateTime.now().isBefore(this.dateVisite);
-	//	}
+	public static boolean isOuverte(Visite visite) {
+		return LocalDateTime.now().isBefore(ConvertisseurDate.asLocalDateTime(visite.getDateVisite()));
+	}
 
 	public int getCodeVisite() {return this.codeVisite;}
 	public void setCodeVisite(int codeVisite) {this.codeVisite = codeVisite;}
@@ -50,7 +52,7 @@ public class Visite implements Memorisable {
 	public String getVille() {return this.ville;}
 	public void setVille(String ville) {this.ville = ville;}
 
-	public Date getDateVisite() {return (this.dateVisite == null) ? ConvertisseurDate.asUtilDate(LocalDateTime.MIN) : this.dateVisite;}
+	public Date getDateVisite() {return (this.dateVisite == null) ? ConvertisseurDate.asUtilDate(dateVisiteParDefaut) : this.dateVisite;}
 	public void setDateVisite(Date dateVisite) {this.dateVisite = dateVisite;}
 
 	public float getPrix() {return this.prix;}

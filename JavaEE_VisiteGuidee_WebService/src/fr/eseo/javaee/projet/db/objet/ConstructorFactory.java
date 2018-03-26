@@ -50,7 +50,7 @@ public class ConstructorFactory {
 	}
 
 	public static Visite createVisite(int codeVisite) {
-		return createVisite(codeVisite,"","",LocalDateTime.now(),0);
+		return createVisite(codeVisite,"","",Visite.dateVisiteParDefaut,0);
 	}
 
 	public static Visite createVisite() {
@@ -71,7 +71,7 @@ public class ConstructorFactory {
 	}
 
 	public static Client createClient (int idClient, String nom, String prenom) {
-		return createClient(idClient, nom, prenom, LocalDate.MIN, "", 0,"", 0, Client.emailParDefaut);
+		return createClient(idClient, nom, prenom, Client.dateNaissanceParDefaut, "", 0,"", 0, Client.emailParDefaut);
 	}
 
 	public static Client createClient (int idClient, String nom, String prenom, LocalDate dateNaissance, String adresse, int codePostal, String pays, int numTelephone, String mail) {

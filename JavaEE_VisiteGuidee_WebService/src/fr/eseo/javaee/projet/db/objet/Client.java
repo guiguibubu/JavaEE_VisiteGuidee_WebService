@@ -26,6 +26,7 @@ public class Client implements Memorisable {
 	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
 
 	public static final String emailParDefaut = "mail@parDefaut.fr";
+	public static final LocalDate dateNaissanceParDefaut = LocalDate.of(0, 1, 1);
 
 	private int idClient;
 	private String nom;
@@ -37,9 +38,9 @@ public class Client implements Memorisable {
 	private int numTelephone;
 	private String mail;
 
-	//	public boolean isAnniversaire() {
-	//		return LocalDate.now().equals(this.dateNaissance);
-	//	}
+	public static boolean isAnniversaire(Client client) {
+		return LocalDate.now().equals(ConvertisseurDate.asLocalDate(client.getDatenaissance()));
+	}
 
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
@@ -65,7 +66,7 @@ public class Client implements Memorisable {
 	public String getPrenom() {return this.prenom;}
 	public void setPrenom(String prenom) {this.prenom = prenom;}
 
-	public Date getDatenaissance() {return (this.dateNaissance == null) ?ConvertisseurDate.asUtilDate(LocalDate.MIN) : this.dateNaissance;}
+	public Date getDatenaissance() {return (this.dateNaissance == null) ? ConvertisseurDate.asUtilDate(dateNaissanceParDefaut) : this.dateNaissance;}
 	public void setDateNaissance(Date dateNaissance) {this.dateNaissance = dateNaissance;}
 
 	public String getAdresse() {return this.adresse;}

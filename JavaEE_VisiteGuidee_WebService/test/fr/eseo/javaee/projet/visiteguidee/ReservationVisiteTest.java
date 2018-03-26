@@ -87,8 +87,7 @@ class ReservationVisiteTest {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = new Visite();
-		visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
 		ReservationVisite reservation = new ReservationVisite();
 		List<Visite> visite_trouvee = null;
 		try {
@@ -147,18 +146,21 @@ class ReservationVisiteTest {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = new Visite();
-		visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
 		ReservationVisite reservation = new ReservationVisite();
-		Client clientTest = new Client();
-		int reservationID = 1;
-		Reservation reservationTest = new Reservation();
-		reservationTest = ConstructorFactory.createReservation(reservationID, visiteTest, clientTest, 20, false);
+		Client clientTest = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Reservation reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
 		try {
-			reservation.reserverVisite(reservationTest);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Reservation.NOM_TABLE);
+			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
+			clientTest.setIdClient(GestionDB.ajoutClient(clientTest));
+			reservationTest.setCodeReservation(reservation.reserverVisite(reservationTest));
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
+		Assertions.assertNotEquals(0, reservationTest.getCodeReservation());
 
 	}
 
@@ -167,43 +169,26 @@ class ReservationVisiteTest {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = new Visite();
-		visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
 		ReservationVisite reservation = new ReservationVisite();
-		Client clientTest = new Client();
-		int reservationID = 1;
-		Reservation reservationTest = new Reservation();
-		Reservation reservationTest2 = new Reservation();
-		reservationTest = ConstructorFactory.createReservation(reservationID, visiteTest, clientTest, 20, false);
-		reservationTest2 = ConstructorFactory.createReservation(reservationID, visiteTest, clientTest, 20, false);
+		Client clientTest = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Reservation reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
+		Reservation reservationTest2 = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
 		try {
-			reservation.reserverVisite(reservationTest);
-			reservation.reserverVisite(reservationTest2);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Reservation.NOM_TABLE);
+			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
+			clientTest.setIdClient(GestionDB.ajoutClient(clientTest));
+			reservationTest.setCodeReservation(reservation.reserverVisite(reservationTest));
+			reservationTest2.setCodeReservation(reservation.reserverVisite(reservationTest2));
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertEquals(clientTest.toString(), reservationTest.getClient().toString());
+		Assertions.assertNotEquals(reservationTest.getCodeReservation(), reservationTest2.getCodeReservation());
+		Assertions.assertEquals(reservationTest.getVisite().getCodeVisite(), reservationTest.getVisite().getCodeVisite());
+		Assertions.assertEquals(reservationTest.getClient().getIdClient(), reservationTest.getClient().getIdClient());
 	}
-
-	@Test
-	void testReserverVisiteIDNull() {
-		LocalDate dateDate = LocalDate.of(2018,02, 2);
-		LocalTime dateTime = LocalTime.of(11,22,33,00);
-		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = new Visite();
-		visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
-		ReservationVisite reservation = new ReservationVisite();
-		Client clientTest = new Client();
-		Reservation reservationTest = new Reservation();
-		reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
-		try {
-			reservation.reserverVisite(reservationTest);
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
-		Assertions.assertEquals(clientTest.toString(), reservationTest.getClient().toString());
-	}
-
 
 	@Test
 	void testPayerVisite() {
@@ -255,24 +240,27 @@ class ReservationVisiteTest {
 		Assertions.assertFalse(reservationTest.isPaiementEffectue());
 	}
 
+	@Test
 	void testPayerVisitePayee() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = new Visite();
-		visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
-		Client clientTest = new Client();
-		int idReservation = 0;
-		Reservation reservationTest = new Reservation();
-		reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
+		Client clientTest = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Reservation reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
 		ReservationVisite reservation = new ReservationVisite();
+		boolean isPayed = false;
 		try {
-			GestionDB.ajoutReservation(reservationTest);
-			reservation.payerVisite(idReservation);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			clientTest.setIdClient(GestionDB.ajoutClient(clientTest));
+			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
+			reservationTest.setCodeReservation(GestionDB.ajoutReservation(reservationTest));
+			isPayed = reservation.payerVisite(reservationTest.getCodeReservation());
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertTrue(reservationTest.isPaiementEffectue());
+		Assertions.assertTrue(isPayed);
 	}
 
 	@Test
@@ -301,8 +289,8 @@ class ReservationVisiteTest {
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
 		Client clientTest = ConstructorFactory.createClient("Buchle", "Guillaume");
-		ReservationVisite reservation = new ReservationVisite();
 		Reservation reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 20, false);
+		ReservationVisite reservation = new ReservationVisite();
 		boolean visiteAnnulee = false;
 		try {
 			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
