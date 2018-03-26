@@ -28,7 +28,7 @@ public interface Memorisable {
 	 * Renvoie la liste des valeurs des attributs actuels formatés pour la base de données SANS l'ID de l'objet (clé primaire)
 	 * @return la liste des valeurs des attributs actuels formatés pour la base de données SANS l'ID de l'objet (clé primaire)
 	 */
-	public List<String> getListeAttributs();
+	public List<String> extractListeAttributs();
 
 	/**
 	 * Renvoie la liste des noms des attributs DANS la Base de Donnee AVEC l'ID de l'objet (clé primaire)
@@ -45,5 +45,5 @@ public interface Memorisable {
 	/**
 	 * Valorise les attributs de l'objet avec les valeurs dans la liste
 	 */
-	public void setListeAttributs(List<String> listeNouvellesValeurs);
+	public void modifyListeAttributs(List<String> listeNouvellesValeurs);
 }

@@ -3,6 +3,8 @@ package fr.eseo.javaee.projet.db.objet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
+
 public class ConstructorFactory {
 
 	private ConstructorFactory() { throw new IllegalStateException("Utility class");}
@@ -38,7 +40,7 @@ public class ConstructorFactory {
 		visite.setCodeVisite(codeVisite);
 		visite.setTypeDeVisite(typeDeVisite);
 		visite.setVille(ville);
-		visite.setDateVisite(dateVisite);
+		visite.setDateVisite(ConvertisseurDate.asUtilDate(dateVisite));
 		visite.setPrix(prix);
 		return visite;
 	}
@@ -77,7 +79,7 @@ public class ConstructorFactory {
 		client.setIdClient(idClient);
 		client.setNom(nom);
 		client.setPrenom(prenom);
-		client.setDateNaissance(dateNaissance);
+		client.setDateNaissance(ConvertisseurDate.asUtilDate(dateNaissance));
 		client.setAdresse(adresse);
 		client.setCodePostal(codePostal);
 		client.setPays(pays);

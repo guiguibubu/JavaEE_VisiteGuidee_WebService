@@ -2,9 +2,11 @@ package fr.eseo.javaee.projet.db.objet;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.eseo.javaee.projet.db.BaseDeDonnees;
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
 
 public class Visite implements Memorisable {
 
@@ -22,7 +24,7 @@ public class Visite implements Memorisable {
 	private int codeVisite;
 	private String typeDeVisite;
 	private String ville;
-	private LocalDateTime dateVisite;
+	private Date dateVisite;
 	private float prix;
 
 	public static List<String> extractNomAttributs() {
@@ -48,8 +50,8 @@ public class Visite implements Memorisable {
 	public String getVille() {return this.ville;}
 	public void setVille(String ville) {this.ville = ville;}
 
-	public LocalDateTime getDateVisite() {return (this.dateVisite == null) ? LocalDateTime.MIN : this.dateVisite;}
-	public void setDateVisite(LocalDateTime dateVisite) {this.dateVisite = dateVisite;}
+	public Date getDateVisite() {return (this.dateVisite == null) ? ConvertisseurDate.asUtilDate(LocalDateTime.MIN) : this.dateVisite;}
+	public void setDateVisite(Date dateVisite) {this.dateVisite = dateVisite;}
 
 	public float getPrix() {return this.prix;}
 	public void setPrix(float prix) {this.prix = prix;}
@@ -65,21 +67,21 @@ public class Visite implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeAttributs() {
+	public List<String> extractListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.typeDeVisite);
 		listeAttributs.add(this.ville);
-		listeAttributs.add(BaseDeDonnees.convertForDB(this.getDateVisite()));
+		listeAttributs.add(BaseDeDonnees.convertForDB(ConvertisseurDate.asLocalDateTime(this.getDateVisite())));
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.prix));
 		return listeAttributs;
 	}
 
 	@Override
-	public void setListeAttributs(List<String> listeNouvellesValeurs) {
+	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeVisite = Integer.parseInt(listeNouvellesValeurs.get(0));
 		this.typeDeVisite = listeNouvellesValeurs.get(1);
 		this.ville 		= listeNouvellesValeurs.get(2);
-		this.dateVisite = BaseDeDonnees.convertDateTimeFromDB(listeNouvellesValeurs.get(3));
+		this.dateVisite = ConvertisseurDate.asUtilDate(BaseDeDonnees.convertDateTimeFromDB(listeNouvellesValeurs.get(3)));
 		this.prix 		= BaseDeDonnees.convertFloatFromDB(listeNouvellesValeurs.get(4));
 	}
 
@@ -87,7 +89,7 @@ public class Visite implements Memorisable {
 	public List<String> getListeAttributsWithID() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.codeVisite));
-		listeAttributs.addAll(this.getListeAttributs());
+		listeAttributs.addAll(this.extractListeAttributs());
 		return listeAttributs;
 	}
 

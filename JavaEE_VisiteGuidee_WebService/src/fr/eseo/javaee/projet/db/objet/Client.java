@@ -2,9 +2,11 @@ package fr.eseo.javaee.projet.db.objet;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.eseo.javaee.projet.db.BaseDeDonnees;
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
 
 public class Client implements Memorisable {
 
@@ -28,7 +30,7 @@ public class Client implements Memorisable {
 	private int idClient;
 	private String nom;
 	private String prenom;
-	private LocalDate dateNaissance;
+	private Date dateNaissance;
 	private String adresse;
 	private int codePostal;
 	private String pays;
@@ -63,8 +65,8 @@ public class Client implements Memorisable {
 	public String getPrenom() {return this.prenom;}
 	public void setPrenom(String prenom) {this.prenom = prenom;}
 
-	public LocalDate getDatenaissance() {return (this.dateNaissance == null) ? LocalDate.MIN : this.dateNaissance;}
-	public void setDateNaissance(LocalDate dateNaissance) {this.dateNaissance = dateNaissance;}
+	public Date getDatenaissance() {return (this.dateNaissance == null) ?ConvertisseurDate.asUtilDate(LocalDate.MIN) : this.dateNaissance;}
+	public void setDateNaissance(Date dateNaissance) {this.dateNaissance = dateNaissance;}
 
 	public String getAdresse() {return this.adresse;}
 	public void setAdresse(String adresse) {this.adresse = adresse;}
@@ -87,11 +89,11 @@ public class Client implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeAttributs() {
+	public List<String> extractListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.nom);
 		listeAttributs.add(this.prenom);
-		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateNaissance));
+		listeAttributs.add(BaseDeDonnees.convertForDB(ConvertisseurDate.asLocalDate(this.dateNaissance)));
 		listeAttributs.add(this.adresse);
 		listeAttributs.add(String.valueOf(this.codePostal));
 		listeAttributs.add(this.pays);
@@ -101,11 +103,11 @@ public class Client implements Memorisable {
 	}
 
 	@Override
-	public void setListeAttributs(List<String> listeNouvellesValeurs) {
+	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.idClient 		= Integer.parseInt(listeNouvellesValeurs.get(0));
 		this.nom 			= listeNouvellesValeurs.get(1);
 		this.prenom 		= listeNouvellesValeurs.get(2);
-		this.dateNaissance 	= BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3));
+		this.dateNaissance 	= ConvertisseurDate.asUtilDate(BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3)));
 		this.adresse 		= listeNouvellesValeurs.get(4);
 		this.codePostal 	= Integer.parseInt(listeNouvellesValeurs.get(5));
 		this.pays 			= listeNouvellesValeurs.get(6);
@@ -127,7 +129,7 @@ public class Client implements Memorisable {
 	public List<String> getListeAttributsWithID() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.idClient));
-		listeAttributs.addAll(this.getListeAttributs());
+		listeAttributs.addAll(this.extractListeAttributs());
 		return listeAttributs;
 	}
 }

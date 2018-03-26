@@ -2,7 +2,7 @@
 <wsdl:definitions name="ReservationVisiteService" targetNamespace="http://visiteguidee.projet.javaee.eseo.fr/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://visiteguidee.projet.javaee.eseo.fr/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <schema xmlns="http://www.w3.org/2001/XMLSchema">
-  <import namespace="http://visiteguidee.projet.javaee.eseo.fr/" schemaLocation="reservationvisite_schema1.xsd"/>
+  <import namespace="http://visiteguidee.projet.javaee.eseo.fr/" schemaLocation="gestionvisite_schema1.xsd"/>
 </schema>
   </wsdl:types>
   <wsdl:message name="trouverVisite">

@@ -61,7 +61,7 @@ public class Reservation implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeAttributs() {
+	public List<String> extractListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
 		listeAttributs.add(String.valueOf(this.client.getIdClient()));
@@ -74,12 +74,12 @@ public class Reservation implements Memorisable {
 	public List<String> getListeAttributsWithID() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
-		listeAttributs.addAll(this.getListeAttributs());
+		listeAttributs.addAll(this.extractListeAttributs());
 		return listeAttributs;
 	}
 
 	@Override
-	public void setListeAttributs(List<String> listeNouvellesValeurs) {
+	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeReservation = Integer.parseInt(listeNouvellesValeurs.get(0));
 		this.visite = ConstructorFactory.createVisite(Integer.parseInt(listeNouvellesValeurs.get(1)));
 		this.client = ConstructorFactory.createClient(Integer.parseInt(listeNouvellesValeurs.get(2)));

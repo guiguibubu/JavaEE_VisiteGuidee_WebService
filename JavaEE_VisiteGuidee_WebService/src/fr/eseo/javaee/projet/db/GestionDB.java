@@ -12,6 +12,7 @@ import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 import fr.eseo.javaee.projet.db.tools.SQLTools;
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
 
 public class GestionDB {
 
@@ -48,7 +49,7 @@ public class GestionDB {
 			for(String nomCol : client.getListeNomAttributsWithID()) {
 				listeNouveauAttributs.add(rs.getString(nomCol));
 			}
-			client.setListeAttributs(listeNouveauAttributs);
+			client.modifyListeAttributs(listeNouveauAttributs);
 		}
 		closeConnection();
 		return client;
@@ -64,7 +65,7 @@ public class GestionDB {
 			for(String nomCol : client.getListeNomAttributsWithID()) {
 				listeNouveauAttributs.add(rs.getString(nomCol));
 			}
-			client.setListeAttributs(listeNouveauAttributs);
+			client.modifyListeAttributs(listeNouveauAttributs);
 		}
 		closeConnection();
 		return client;
@@ -83,7 +84,7 @@ public class GestionDB {
 		if(!existeClient(prenom, nom)) {
 			initConnection();
 			Client client = ConstructorFactory.createClient(nom, prenom);
-			String sql = SQLTools.insertSQL(client.getNomTable(), client.getListeNomAttributs(), client.getListeAttributs());
+			String sql = SQLTools.insertSQL(client.getNomTable(), client.getListeNomAttributs(), client.extractListeAttributs());
 			ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 			while(rs.next()) {
 				generatedId = rs.getInt(1);
@@ -114,13 +115,13 @@ public class GestionDB {
 		Client client = searchClient(prenom, nom);
 		if(client.getIdClient() != 0) {
 			initConnection();
-			client.setDateNaissance(dateNaissance);
+			client.setDateNaissance(ConvertisseurDate.asUtilDate(dateNaissance));
 			client.setAdresse(adresse);
 			client.setCodePostal(codePostal);
 			client.setPays(pays);
 			client.setNumTelephone(numTelephone);
 			client.setMail(mail);
-			String sql = SQLTools.updateSQL(Client.NOM_TABLE, client.getListeNomAttributs(), client.getListeAttributs(), Client.NOM_COL_ID, BaseDeDonnees.convertForDB(client.getIdClient()));
+			String sql = SQLTools.updateSQL(Client.NOM_TABLE, client.getListeNomAttributs(), client.extractListeAttributs(), Client.NOM_COL_ID, BaseDeDonnees.convertForDB(client.getIdClient()));
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
@@ -156,7 +157,7 @@ public class GestionDB {
 			for(String nomCol : visite.getListeNomAttributsWithID()) {
 				listeNouveauAttributs.add(rs.getString(nomCol));
 			}
-			visite.setListeAttributs(listeNouveauAttributs);
+			visite.modifyListeAttributs(listeNouveauAttributs);
 			listVisite.add(visite);
 		}
 		closeConnection();
@@ -170,7 +171,7 @@ public class GestionDB {
 	public static List<Visite> searchVisite(Visite visite) throws SQLException{
 		List<Visite> listVisite = new ArrayList<>();
 		if(visite != null) {
-			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite());
+			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()));
 		}
 		return listVisite;
 	}
@@ -194,7 +195,7 @@ public class GestionDB {
 			for(String nomCol : visite.getListeNomAttributsWithID()) {
 				listeNouveauAttributs.add(rs.getString(nomCol));
 			}
-			visite.setListeAttributs(listeNouveauAttributs);
+			visite.modifyListeAttributs(listeNouveauAttributs);
 		}
 		closeConnection();
 		return visite;
@@ -217,7 +218,7 @@ public class GestionDB {
 		if(!existeVisite(type, ville, date)) {
 			initConnection();
 			Visite visite = ConstructorFactory.createVisite(type, ville, date, prix);
-			String sql = SQLTools.insertSQL(visite.getNomTable(), visite.getListeNomAttributs(), visite.getListeAttributs());
+			String sql = SQLTools.insertSQL(visite.getNomTable(), visite.getListeNomAttributs(), visite.extractListeAttributs());
 			ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 			while(rs.next()) {
 				generatedId = rs.getInt(1);
@@ -228,7 +229,7 @@ public class GestionDB {
 	}
 
 	public static int ajoutVisite(Visite visite) throws SQLException {
-		return ajoutVisite(visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite(), visite.getPrix());
+		return ajoutVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
 	}
 
 	public static void supprimerVisiteById(int idVisite) throws SQLException {
@@ -248,9 +249,9 @@ public class GestionDB {
 			initConnection();
 			visite.setTypeDeVisite(type);
 			visite.setVille(ville);
-			visite.setDateVisite(date);
+			visite.setDateVisite(ConvertisseurDate.asUtilDate(date));
 			visite.setPrix(prix);
-			String sql = SQLTools.updateSQL(Visite.NOM_TABLE, visite.getListeNomAttributs(), visite.getListeAttributs(), Visite.NOM_COL_ID, BaseDeDonnees.convertForDB(visite.getCodeVisite()));
+			String sql = SQLTools.updateSQL(Visite.NOM_TABLE, visite.getListeNomAttributs(), visite.extractListeAttributs(), Visite.NOM_COL_ID, BaseDeDonnees.convertForDB(visite.getCodeVisite()));
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
@@ -258,7 +259,7 @@ public class GestionDB {
 
 	public static void updateVisiteById(Visite visite) throws SQLException {
 		if(visite != null) {
-			updateVisiteById(visite.getCodeVisite(), visite.getTypeDeVisite(), visite.getVille(), visite.getDateVisite(), visite.getPrix());
+			updateVisiteById(visite.getCodeVisite(), visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
 		}
 	}
 
@@ -268,7 +269,7 @@ public class GestionDB {
 		List<Reservation> listReservation = new ArrayList<>();
 		initConnection();
 		Reservation reservation = ConstructorFactory.createReservation(visite, client, nombrePersonnes, paiementEffectue);
-		String sql = SQLTools.selectSQL(Reservation.NOM_TABLE, reservation.getListeNomAttributs(), reservation.getListeAttributs());
+		String sql = SQLTools.selectSQL(Reservation.NOM_TABLE, reservation.getListeNomAttributs(), reservation.extractListeAttributs());
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 		while (rs.next()) {
 			reservation = ConstructorFactory.createReservation(rs.getInt(Reservation.NOM_COL_ID),
@@ -305,7 +306,7 @@ public class GestionDB {
 		if(!existeReservation(visite, client, nombrePersonnes, paiementEffectue)) {
 			initConnection();
 			Reservation reservation = ConstructorFactory.createReservation(visite, client, nombrePersonnes, paiementEffectue);
-			String sql = SQLTools.insertSQL(reservation.getNomTable(), reservation.getListeNomAttributs(), reservation.getListeAttributs());
+			String sql = SQLTools.insertSQL(reservation.getNomTable(), reservation.getListeNomAttributs(), reservation.extractListeAttributs());
 			ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 			while(rs.next()) {
 				generatedId = rs.getInt(1);
@@ -344,7 +345,7 @@ public class GestionDB {
 			reservation.setClient(client);
 			reservation.setNombrePersonnes(nombrePersonnes);
 			reservation.setPaiementEffectue(paiementEffectue);
-			String sql = SQLTools.updateSQL(Reservation.NOM_TABLE, reservation.getListeNomAttributs(), reservation.getListeAttributs(), Reservation.NOM_COL_ID, BaseDeDonnees.convertForDB(reservation.getCodeReservation()));
+			String sql = SQLTools.updateSQL(Reservation.NOM_TABLE, reservation.getListeNomAttributs(), reservation.extractListeAttributs(), Reservation.NOM_COL_ID, BaseDeDonnees.convertForDB(reservation.getCodeReservation()));
 			BaseDeDonnees.executeSQL(sql, false);
 			closeConnection();
 		}
