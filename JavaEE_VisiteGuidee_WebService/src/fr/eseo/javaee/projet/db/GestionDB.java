@@ -143,12 +143,12 @@ public class GestionDB {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMin), " >= ", "'"));
 		}
 		if(dateMax != null  && !dateMax.equals(Visite.dateVisiteParDefaut)) {
-			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " <= ", "'"));
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " < ", "'"));
 		}
-		if(prixMin >= 0 && !dateMin.equals(Visite.dateVisiteParDefaut)) {
+		if(prixMin >= 0  && prixMin < Float.MAX_VALUE) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMin), " >= ", "'"));
 		}
-		if(prixMax < Float.MAX_VALUE) {
+		if(prixMax >= 0 && prixMax < Float.MAX_VALUE) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMax), " <= ", "'"));
 		}
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
@@ -170,7 +170,7 @@ public class GestionDB {
 	}
 
 	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime date, float prix) throws SQLException{
-		return searchVisite(typeVisite, ville, date, date, -1, prix);
+		return searchVisite(typeVisite, ville, date, date.plusDays(1), -1, prix);
 	}
 
 	public static List<Visite> searchVisite(Visite visite) throws SQLException{
