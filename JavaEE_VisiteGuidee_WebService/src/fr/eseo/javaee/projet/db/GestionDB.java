@@ -154,7 +154,9 @@ public class GestionDB {
 			//					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
 			//					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
 			Visite visite = new Visite();
-			for(String nomCol : visite.getListeNomAttributsWithID()) {
+			List<String> listNomAttributs = visite.getListeNomAttributsWithID();
+			listeNouveauAttributs = new ArrayList<>();
+			for(String nomCol : listNomAttributs) {
 				listeNouveauAttributs.add(rs.getString(nomCol));
 			}
 			visite.modifyListeAttributs(listeNouveauAttributs);

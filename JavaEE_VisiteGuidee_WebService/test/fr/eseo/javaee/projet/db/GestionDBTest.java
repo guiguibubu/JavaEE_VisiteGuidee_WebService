@@ -247,6 +247,10 @@ class GestionDBTest {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(2,listVisite.size());
+		Assertions.assertEquals("libre", listVisite.get(0).getTypeDeVisite());
+		Assertions.assertEquals("guide", listVisite.get(1).getTypeDeVisite());
+		Assertions.assertEquals("Paris", listVisite.get(0).getVille());
+		Assertions.assertEquals("Paris", listVisite.get(1).getVille());
 	}
 
 	//test passe mais ne devrait pas ==> liste vide
