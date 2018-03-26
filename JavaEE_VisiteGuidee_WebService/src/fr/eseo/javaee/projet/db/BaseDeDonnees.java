@@ -55,7 +55,7 @@ public class BaseDeDonnees {
 	}
 
 	//GESTION DE LA CONNEXION
-	protected static void openConnection() throws SQLException {
+	public static void openConnection() throws SQLException {
 		if(instance == null) {
 			initBDD();
 		}
@@ -66,12 +66,12 @@ public class BaseDeDonnees {
 		instance.connect = DriverManager.getConnection(url);
 	}
 
-	protected static void closeConnection() throws SQLException {
+	public static void closeConnection() throws SQLException {
 		if(instance.connect != null){instance.connect.close();}
 	}
 
 	//GESTION REQUETE SQL
-	protected static ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
+	public static ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
 		try{
 			instance.stat = instance.connect.createStatement();
 			if(sql != null && sql.trim().startsWith("INSERT")) {
@@ -100,11 +100,11 @@ public class BaseDeDonnees {
 		closeConnection();
 	}
 
-	protected static void closeResulSet() throws SQLException {
+	public static void closeResulSet() throws SQLException {
 		if(instance.rs != null) {instance.rs.close();}
 	}
 
-	protected static void closeStatement() throws SQLException {
+	public static void closeStatement() throws SQLException {
 		if(instance.stat != null) {instance.stat.close();}
 	}
 

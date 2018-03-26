@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
+import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
 class GestionDBTest {
@@ -71,12 +72,12 @@ class GestionDBTest {
 	@AfterAll
 	static void resetDonneesDeTestsAfter() {
 		nbAfter++;
-		GestionDBTest.setDonneesDeTests();
+		setDonneesDeTests();
 	}
 
 	@Test
 	void testResetDonnesDeTests() {
-		GestionDBTest.setDonneesDeTests();
+		setDonneesDeTests();
 	}
 
 	//Test Client
@@ -182,8 +183,7 @@ class GestionDBTest {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visite = new Visite();
-		visite = ConstructorFactory.createVisite("guide", "Angers", date, 59);
+		Visite visite = ConstructorFactory.createVisite("guide", "Angers", date, 59);
 		try {
 			visite.setCodeVisite(GestionDB.ajoutVisite("guide","Angers", date, 59));
 			GestionDB.supprimerVisiteById(visite);
@@ -306,27 +306,41 @@ class GestionDBTest {
 	//Test Reservation
 	@Test
 	void testAjouterReservation() {
-		Visite visteTest = new Visite();
-		Client clientTest = new Client();
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Nantes", LocalDateTime.now(), 50);
+		Client clientTest = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Reservation reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 2, false);
+		boolean reservationAjoutee = false;
 		try {
-			GestionDB.ajoutReservation(visteTest,clientTest, 10, true);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
+			clientTest.setIdClient(GestionDB.ajoutClient(clientTest));
+			reservationTest.setCodeReservation(GestionDB.ajoutReservation(visiteTest,clientTest, 10, true));
+			reservationAjoutee = GestionDB.existeReservationById(reservationTest);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertTrue(true);
+		Assertions.assertTrue(reservationAjoutee);
 	}
 
 	@Test
 	void testSupprimerReservation() {
-		Visite visteTest = new Visite();
-		Client clientTest = new Client();
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Nantes", LocalDateTime.now(), 50);
+		Client clientTest = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Reservation reservationTest = ConstructorFactory.createReservation(visiteTest, clientTest, 2, false);
+		boolean reservationSupprimee = false;
 		try {
-			GestionDB.ajoutReservation(visteTest,clientTest, 10, true);
-			GestionDB.supprimeClient(clientTest.getIdClient());
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
+			clientTest.setIdClient(GestionDB.ajoutClient(clientTest));
+			reservationTest.setCodeReservation(GestionDB.ajoutReservation(reservationTest));
+			GestionDB.supprimerReservationById(reservationTest);
+			reservationSupprimee = !GestionDB.existeReservationById(reservationTest);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertTrue(true);
+		Assertions.assertTrue(reservationSupprimee);
 	}
 
 }

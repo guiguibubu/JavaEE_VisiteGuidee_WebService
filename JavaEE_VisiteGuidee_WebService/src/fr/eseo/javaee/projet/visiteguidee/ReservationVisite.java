@@ -2,10 +2,10 @@ package fr.eseo.javaee.projet.visiteguidee;
 
 
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.jws.WebService;
 
+import fr.eseo.javaee.projet.db.BaseDeDonnees;
 import fr.eseo.javaee.projet.db.GestionDB;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
@@ -20,25 +20,20 @@ public class ReservationVisite implements ReservationVisiteSEI {
 
 	@Override
 	public int reserverVisite (Reservation maReservation) throws SQLException {
-		int idReservation = 0;
-		GestionDB.ajoutReservation(maReservation);
-		List<Reservation> listReservation = GestionDB.searchReservation(maReservation);
-		idReservation = listReservation.get(listReservation.size()-1).getCodeReservation();
-		return idReservation;
+		return GestionDB.ajoutReservation(maReservation);
 	}
 
 	@Override
 	public String payerVisite (int monCodeReservation) throws SQLException {
-		String text = "";
 		Reservation reservation = GestionDB.searchReservationById(monCodeReservation);
 		reservation.setPaiementEffectue(true);
 		GestionDB.updateReservationById(reservation);
-		return text;
+		return BaseDeDonnees.convertForDB(reservation.getCodeReservation() != 0);
 	}
 
 	@Override
 	public boolean annulerVisite (int monCodeReservation) throws SQLException {
 		GestionDB.supprimerReservationById(monCodeReservation);
-		return GestionDB.existeReservationById(monCodeReservation);
+		return !GestionDB.existeReservationById(monCodeReservation);
 	}
 }

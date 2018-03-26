@@ -63,6 +63,7 @@ public class Reservation implements Memorisable {
 	@Override
 	public List<String> getListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
+		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
 		listeAttributs.add(String.valueOf(this.client.getIdClient()));
 		listeAttributs.add(String.valueOf(this.nombrePersonnes));
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.paiementEffectue));

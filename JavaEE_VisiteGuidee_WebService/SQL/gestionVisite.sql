@@ -75,7 +75,7 @@ CREATE TABLE `reservation` (
   `idVisite` int(11) NOT NULL,
   `idClient` int(11) NOT NULL,
   `nombrePlaces` int(11) NOT NULL DEFAULT '1',
-  `booleenPaiementEffectue` tinyint(1) NOT NULL DEFAULT '0'
+  `booleanPaiementEffectue` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -211,13 +211,3 @@ insert into reservation values(9,5,5,5,1);
 insert into reservation values(10,5,6,8,0);
 insert into reservation values(11,1,6,7,1);
 insert into reservation values(12,2,4,1,0);
-
-
-
-
-
-
-
-
-
-

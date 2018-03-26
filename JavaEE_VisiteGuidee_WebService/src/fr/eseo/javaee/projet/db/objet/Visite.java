@@ -35,9 +35,9 @@ public class Visite implements Memorisable {
 		return listeNomAttribut;
 	}
 
-	public boolean isOuverte() {
-		return LocalDateTime.now().isBefore(this.dateVisite);
-	}
+	//	public boolean isOuverte() {
+	//		return LocalDateTime.now().isBefore(this.dateVisite);
+	//	}
 
 	public int getCodeVisite() {return this.codeVisite;}
 	public void setCodeVisite(int codeVisite) {this.codeVisite = codeVisite;}
@@ -48,7 +48,7 @@ public class Visite implements Memorisable {
 	public String getVille() {return this.ville;}
 	public void setVille(String ville) {this.ville = ville;}
 
-	public LocalDateTime getDateVisite() {return this.dateVisite;}
+	public LocalDateTime getDateVisite() {return (this.dateVisite == null) ? LocalDateTime.MIN : this.dateVisite;}
 	public void setDateVisite(LocalDateTime dateVisite) {this.dateVisite = dateVisite;}
 
 	public float getPrix() {return this.prix;}
@@ -69,7 +69,7 @@ public class Visite implements Memorisable {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.typeDeVisite);
 		listeAttributs.add(this.ville);
-		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateVisite));
+		listeAttributs.add(BaseDeDonnees.convertForDB(this.getDateVisite()));
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.prix));
 		return listeAttributs;
 	}
@@ -84,7 +84,7 @@ public class Visite implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeNomAttributsWithID() {
+	public List<String> getListeAttributsWithID() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.codeVisite));
 		listeAttributs.addAll(this.getListeAttributs());
@@ -92,7 +92,7 @@ public class Visite implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeAttributsWithID() {
+	public List<String> getListeNomAttributsWithID() {
 		return listeNomAttributsWithID;
 	}
 
