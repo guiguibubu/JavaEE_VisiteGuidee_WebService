@@ -12,6 +12,10 @@
 
   <xs:element name="reserverVisiteResponse" type="tns:reserverVisiteResponse"/>
 
+  <xs:element name="trouverClient" type="tns:trouverClient"/>
+
+  <xs:element name="trouverClientResponse" type="tns:trouverClientResponse"/>
+
   <xs:element name="trouverVisite" type="tns:trouverVisite"/>
 
   <xs:element name="trouverVisiteResponse" type="tns:trouverVisiteResponse"/>
@@ -94,6 +98,19 @@
   <xs:complexType name="annulerVisiteResponse">
     <xs:sequence>
       <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="trouverClient">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="trouverClientResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:client"/>
     </xs:sequence>
   </xs:complexType>
 

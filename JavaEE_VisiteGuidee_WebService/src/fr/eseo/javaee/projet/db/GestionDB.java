@@ -129,7 +129,7 @@ public class GestionDB {
 
 	//METHODES VISITES
 
-	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime dateMin, LocalDateTime dateMax) throws SQLException {
+	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime dateMin, LocalDateTime dateMax, float prixMin, float prixMax) throws SQLException {
 		List<Visite> listVisite = new ArrayList<>();
 		initConnection();
 		List<String> listClausesWhere = new ArrayList<>();
@@ -145,14 +145,17 @@ public class GestionDB {
 		if(dateMax != null  && !dateMax.equals(Visite.dateVisiteParDefaut)) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " <= ", "'"));
 		}
+		if(prixMin >= 0 && !dateMin.equals(Visite.dateVisiteParDefaut)) {
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMin), " >= ", "'"));
+		}
+		if(prixMax < Float.MAX_VALUE) {
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMax), " <= ", "'"));
+		}
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 
 		List<String> listeNouveauAttributs = new ArrayList<>();
 		while (rs.next()) {
-			//			Visite visite = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
-			//					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
-			//					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
 			Visite visite = new Visite();
 			List<String> listNomAttributs = visite.getListeNomAttributsWithID();
 			listeNouveauAttributs = new ArrayList<>();
@@ -166,14 +169,14 @@ public class GestionDB {
 		return listVisite;
 	}
 
-	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime date) throws SQLException{
-		return searchVisite(typeVisite, ville, date, date);
+	public static List<Visite> searchVisite(String typeVisite, String ville, LocalDateTime date, float prix) throws SQLException{
+		return searchVisite(typeVisite, ville, date, date, -1, prix);
 	}
 
 	public static List<Visite> searchVisite(Visite visite) throws SQLException{
 		List<Visite> listVisite = new ArrayList<>();
 		if(visite != null) {
-			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()));
+			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
 		}
 		return listVisite;
 	}
@@ -183,16 +186,8 @@ public class GestionDB {
 		initConnection();
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, Visite.NOM_COL_ID, BaseDeDonnees.convertForDB(idVisite));
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
-		//		while (rs.next()) {
-		//			visite = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
-		//					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
-		//					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
-		//		}
 		List<String> listeNouveauAttributs = new ArrayList<>();
 		while (rs.next()) {
-			//			Visite visite = ConstructorFactory.createVisite(rs.getInt(Visite.NOM_COL_ID), rs.getString(Visite.NOM_COL_TYPE),
-			//					rs.getString(Visite.NOM_COL_VILLE), BaseDeDonnees.convertDateTimeFromDB(rs.getString(Visite.NOM_COL_DATE)),
-			//					Float.parseFloat(rs.getString(Visite.NOM_COL_PRIX)));
 			visite = new Visite();
 			for(String nomCol : visite.getListeNomAttributsWithID()) {
 				listeNouveauAttributs.add(rs.getString(nomCol));
@@ -203,8 +198,8 @@ public class GestionDB {
 		return visite;
 	}
 
-	public static boolean existeVisite(String typeVisite, String ville, LocalDateTime date) throws SQLException {
-		return !searchVisite(typeVisite, ville, date, date).isEmpty();
+	public static boolean existeVisite(String typeVisite, String ville, LocalDateTime date, float prix) throws SQLException {
+		return !searchVisite(typeVisite, ville, date, date, -1, prix).isEmpty();
 	}
 
 	public static boolean existeVisite(Visite visite) throws SQLException {
@@ -217,7 +212,7 @@ public class GestionDB {
 
 	public static int ajoutVisite(String type, String ville, LocalDateTime date, float prix) throws SQLException {
 		int generatedId = 0;
-		if(!existeVisite(type, ville, date)) {
+		if(!existeVisite(type, ville, date, prix)) {
 			initConnection();
 			Visite visite = ConstructorFactory.createVisite(type, ville, date, prix);
 			String sql = SQLTools.insertSQL(visite.getNomTable(), visite.getListeNomAttributs(), visite.extractListeAttributs());

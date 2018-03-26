@@ -187,7 +187,7 @@ class GestionDBTest {
 		try {
 			visite.setCodeVisite(GestionDB.ajoutVisite("guide","Angers", date, 59));
 			GestionDB.supprimerVisiteById(visite);
-			existeVisite = GestionDB.existeVisite("guide","Angers",date);
+			existeVisite = GestionDB.existeVisite("guide","Angers",date, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -202,7 +202,7 @@ class GestionDBTest {
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
 		try {
 			GestionDB.ajoutVisite("guide", "Nante", date, 59);
-			existeVisite = GestionDB.existeVisite("guide","Nante",date);
+			existeVisite = GestionDB.existeVisite("guide","Nante",date,Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -222,7 +222,7 @@ class GestionDBTest {
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite("guide", null, null, null);
+			listVisite = GestionDB.searchVisite("guide", null, null, null,-1, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -242,7 +242,7 @@ class GestionDBTest {
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite(null, "Paris", null, null);
+			listVisite = GestionDB.searchVisite(null, "Paris", null, null,-1, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -266,7 +266,7 @@ class GestionDBTest {
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite(null, null, date, date);
+			listVisite = GestionDB.searchVisite(null, null, date, date,-1, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -300,7 +300,7 @@ class GestionDBTest {
 		try {
 			visiteTest.setCodeVisite(GestionDB.ajoutVisite(visiteTest));
 			GestionDB.supprimerVisiteById(visiteTest);
-			existeVisite = GestionDB.existeVisite("guide","Angers",date);
+			existeVisite = GestionDB.existeVisite("guide","Angers",date,Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}

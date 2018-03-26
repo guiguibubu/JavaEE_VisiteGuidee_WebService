@@ -8,12 +8,23 @@ import java.util.List;
 import javax.jws.WebService;
 
 import fr.eseo.javaee.projet.db.GestionDB;
+import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
 
 @WebService(targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/", endpointInterface = "fr.eseo.javaee.projet.visiteguidee.ReservationVisiteSEI", portName = "ReservationVisitePort", serviceName = "ReservationVisiteService")
 public class ReservationVisite implements ReservationVisiteSEI {
+
+	public Client trouverClient(String nom, String prenom) {
+		Client client = ConstructorFactory.createClient();
+		try {
+			client = GestionDB.searchClient(prenom, nom);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return client;
+	}
 
 	public List<Visite> trouverVisite (Visite maVisite) {
 		List<Visite> listVisite = new ArrayList<>();

@@ -2,7 +2,7 @@
 <wsdl:definitions name="ReservationVisiteService" targetNamespace="http://visiteguidee.projet.javaee.eseo.fr/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://visiteguidee.projet.javaee.eseo.fr/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
     <schema xmlns="http://www.w3.org/2001/XMLSchema">
-  <import namespace="http://visiteguidee.projet.javaee.eseo.fr/" schemaLocation="reservationvisite_schema1.xsd"/>
+  <import namespace="http://visiteguidee.projet.javaee.eseo.fr/" schemaLocation="gestionvisite_schema1.xsd"/>
 </schema>
   </wsdl:types>
   <wsdl:message name="trouverVisite">
@@ -29,12 +29,20 @@
     <wsdl:part name="parameters" element="tns:payerVisite">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="trouverClientResponse">
+    <wsdl:part name="parameters" element="tns:trouverClientResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="payerVisiteResponse">
     <wsdl:part name="parameters" element="tns:payerVisiteResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="annulerVisiteResponse">
     <wsdl:part name="parameters" element="tns:annulerVisiteResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="trouverClient">
+    <wsdl:part name="parameters" element="tns:trouverClient">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="ReservationVisiteSEI">
@@ -60,6 +68,12 @@
       <wsdl:input name="annulerVisite" message="tns:annulerVisite">
     </wsdl:input>
       <wsdl:output name="annulerVisiteResponse" message="tns:annulerVisiteResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="trouverClient">
+      <wsdl:input name="trouverClient" message="tns:trouverClient">
+    </wsdl:input>
+      <wsdl:output name="trouverClientResponse" message="tns:trouverClientResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
@@ -98,6 +112,15 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="annulerVisiteResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="trouverClient">
+      <soap:operation soapAction="urn:TrouverClient" style="document"/>
+      <wsdl:input name="trouverClient">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="trouverClientResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
