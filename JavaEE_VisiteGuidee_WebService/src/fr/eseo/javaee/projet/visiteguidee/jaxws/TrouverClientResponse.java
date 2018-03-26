@@ -13,20 +13,20 @@ import javax.xml.bind.annotation.XmlType;
  * Generated source version: 3.2.2
  */
 
-@XmlRootElement(name = "payerVisiteResponse", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
+@XmlRootElement(name = "trouverClientResponse", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "payerVisiteResponse", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
+@XmlType(name = "trouverClientResponse", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 
-public class PayerVisiteResponse {
+public class TrouverClientResponse {
 
     @XmlElement(name = "return")
-    private boolean _return;
+    private fr.eseo.javaee.projet.db.objet.Client _return;
 
-    public boolean getReturn() {
+    public fr.eseo.javaee.projet.db.objet.Client getReturn() {
         return this._return;
     }
 
-    public void setReturn(boolean new_return)  {
+    public void setReturn(fr.eseo.javaee.projet.db.objet.Client new_return)  {
         this._return = new_return;
     }
 

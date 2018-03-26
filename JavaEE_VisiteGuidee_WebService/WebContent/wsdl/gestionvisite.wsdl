@@ -9,10 +9,6 @@
     <wsdl:part name="parameters" element="tns:trouverVisite">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="SQLException">
-    <wsdl:part name="SQLException" element="tns:SQLException">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="annulerVisite">
     <wsdl:part name="parameters" element="tns:annulerVisite">
     </wsdl:part>
@@ -33,6 +29,10 @@
     <wsdl:part name="parameters" element="tns:payerVisite">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="trouverClientResponse">
+    <wsdl:part name="parameters" element="tns:trouverClientResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="payerVisiteResponse">
     <wsdl:part name="parameters" element="tns:payerVisiteResponse">
     </wsdl:part>
@@ -41,38 +41,40 @@
     <wsdl:part name="parameters" element="tns:annulerVisiteResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="trouverClient">
+    <wsdl:part name="parameters" element="tns:trouverClient">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="ReservationVisiteSEI">
     <wsdl:operation name="reserverVisite">
       <wsdl:input name="reserverVisite" message="tns:reserverVisite">
     </wsdl:input>
       <wsdl:output name="reserverVisiteResponse" message="tns:reserverVisiteResponse">
     </wsdl:output>
-      <wsdl:fault name="SQLException" message="tns:SQLException">
-    </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="payerVisite">
       <wsdl:input name="payerVisite" message="tns:payerVisite">
     </wsdl:input>
       <wsdl:output name="payerVisiteResponse" message="tns:payerVisiteResponse">
     </wsdl:output>
-      <wsdl:fault name="SQLException" message="tns:SQLException">
-    </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="trouverVisite">
       <wsdl:input name="trouverVisite" message="tns:trouverVisite">
     </wsdl:input>
       <wsdl:output name="trouverVisiteResponse" message="tns:trouverVisiteResponse">
     </wsdl:output>
-      <wsdl:fault name="SQLException" message="tns:SQLException">
-    </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="annulerVisite">
       <wsdl:input name="annulerVisite" message="tns:annulerVisite">
     </wsdl:input>
       <wsdl:output name="annulerVisiteResponse" message="tns:annulerVisiteResponse">
     </wsdl:output>
-      <wsdl:fault name="SQLException" message="tns:SQLException">
-    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="trouverClient">
+      <wsdl:input name="trouverClient" message="tns:trouverClient">
+    </wsdl:input>
+      <wsdl:output name="trouverClientResponse" message="tns:trouverClientResponse">
+    </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ReservationVisiteServiceSoapBinding" type="tns:ReservationVisiteSEI">
@@ -85,9 +87,6 @@
       <wsdl:output name="reserverVisiteResponse">
         <soap:body use="literal"/>
       </wsdl:output>
-      <wsdl:fault name="SQLException">
-        <soap:fault name="SQLException" use="literal"/>
-      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="payerVisite">
       <soap:operation soapAction="urn:PayerVisite" style="document"/>
@@ -97,9 +96,6 @@
       <wsdl:output name="payerVisiteResponse">
         <soap:body use="literal"/>
       </wsdl:output>
-      <wsdl:fault name="SQLException">
-        <soap:fault name="SQLException" use="literal"/>
-      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="trouverVisite">
       <soap:operation soapAction="urn:TrouverVisite" style="document"/>
@@ -109,9 +105,6 @@
       <wsdl:output name="trouverVisiteResponse">
         <soap:body use="literal"/>
       </wsdl:output>
-      <wsdl:fault name="SQLException">
-        <soap:fault name="SQLException" use="literal"/>
-      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="annulerVisite">
       <soap:operation soapAction="urn:AnnulerVisite" style="document"/>
@@ -121,9 +114,15 @@
       <wsdl:output name="annulerVisiteResponse">
         <soap:body use="literal"/>
       </wsdl:output>
-      <wsdl:fault name="SQLException">
-        <soap:fault name="SQLException" use="literal"/>
-      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="trouverClient">
+      <soap:operation soapAction="urn:TrouverClient" style="document"/>
+      <wsdl:input name="trouverClient">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="trouverClientResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="ReservationVisiteService">
