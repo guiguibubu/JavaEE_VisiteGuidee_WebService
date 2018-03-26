@@ -139,10 +139,10 @@ public class GestionDB {
 		if(ville != null && !ville.trim().isEmpty()) {
 			listClausesWhere.add(SQLTools.convertIntoWhereClause(Visite.NOM_COL_VILLE, ville));
 		}
-		if(dateMin != null) {
+		if(dateMin != null && !dateMin.equals(Visite.dateVisiteParDefaut)) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMin), " >= ", "'"));
 		}
-		if(dateMax != null) {
+		if(dateMax != null  && !dateMax.equals(Visite.dateVisiteParDefaut)) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " <= ", "'"));
 		}
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
