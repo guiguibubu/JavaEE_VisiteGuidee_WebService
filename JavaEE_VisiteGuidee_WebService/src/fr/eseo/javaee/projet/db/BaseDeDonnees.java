@@ -17,8 +17,10 @@ public class BaseDeDonnees {
 
 	private static BaseDeDonnees instance;
 
-	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	private static final String DATE_FORMATTER_STRING = "yyyy-MM-dd";
+	private static final String DATE_TIME_FORMATTER_STRING = "yyyy-MM-dd HH:mm:ss";
+	private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMATTER_STRING);
+	private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_STRING);
 	private static final String REGEX_MAIL = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 	private static final String TRUE = "1";
 	private static final String FALSE = "0";
@@ -53,7 +55,10 @@ public class BaseDeDonnees {
 	}
 
 	//GESTION DE LA CONNEXION
-	protected static void openConnection() throws SQLException {
+	public static void openConnection() throws SQLException {
+		if(instance == null) {
+			initBDD();
+		}
 		if(instance.connect != null && !instance.connect.isClosed()) {
 			closeConnection();
 		}
@@ -61,16 +66,22 @@ public class BaseDeDonnees {
 		instance.connect = DriverManager.getConnection(url);
 	}
 
-	protected static void closeConnection() throws SQLException {
+	public static void closeConnection() throws SQLException {
 		if(instance.connect != null){instance.connect.close();}
 	}
 
 	//GESTION REQUETE SQL
-	protected static ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
+	public static ResultSet executeSQL(String sql, boolean withReturn) throws SQLException {
 		try{
 			instance.stat = instance.connect.createStatement();
-			instance.stat.execute(sql);
-			instance.rs = instance.stat.getResultSet();
+			if(sql != null && sql.trim().startsWith("INSERT")) {
+				instance.stat.execute(sql,Statement.RETURN_GENERATED_KEYS);
+				instance.rs = instance.stat.getGeneratedKeys();
+			}
+			else {
+				instance.stat.execute(sql);
+				instance.rs = instance.stat.getResultSet();
+			}
 		} finally {
 			if(!(instance.stat == null || instance.rs == null || withReturn)) {
 				closeResulSet();
@@ -88,17 +99,19 @@ public class BaseDeDonnees {
 		closeStatement();
 		closeConnection();
 	}
-	protected static void closeResulSet() throws SQLException {
+
+	public static void closeResulSet() throws SQLException {
 		if(instance.rs != null) {instance.rs.close();}
 	}
 
-	protected static void closeStatement() throws SQLException {
+	public static void closeStatement() throws SQLException {
 		if(instance.stat != null) {instance.stat.close();}
 	}
 
 	//CONVERTISSEURS POUR INTRODUIRE DES DONNEES
 	public static String convertForDB(LocalDate date) {
-		return date.format(dateFormatter);
+		String dateSQL = date.format(dateFormatter);
+		return dateSQL.substring(dateSQL.length() - DATE_FORMATTER_STRING.length());
 	}
 
 	public static String convertForDB(LocalDateTime date) {
@@ -110,11 +123,11 @@ public class BaseDeDonnees {
 	}
 
 	public static String convertForDB(float num) {
-		return String.format(FORMAT_FLOAT, num);
+		return String.format(FORMAT_FLOAT, num).replace(",", ".");
 	}
 
 	public static String convertForDB(int num) {
-		return String.format(FORMAT_FLOAT, num);
+		return String.valueOf(num);
 	}
 
 	public static String convertForDB(Visite visite) {
@@ -133,7 +146,7 @@ public class BaseDeDonnees {
 	}
 
 	public static LocalDateTime convertDateTimeFromDB(String dateDB) {
-		return LocalDateTime.parse(dateDB, dateFormatter);
+		return LocalDateTime.parse(dateDB.substring(0, DATE_TIME_FORMATTER_STRING.length()), dateTimeFormatter);
 	}
 
 	public static boolean convertBooleanFromDB(String boolDB) {

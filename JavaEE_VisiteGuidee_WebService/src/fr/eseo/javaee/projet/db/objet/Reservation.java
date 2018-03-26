@@ -15,7 +15,9 @@ public class Reservation implements Memorisable {
 	public static final String NOM_COL_PLACE 	= "nombrePlaces";
 	public static final String NOM_COL_PAIEMENT	= "booleanPaiementEffectue";
 
-	private static List<String> listeNomAttributs = extractNomAttributs();
+	private static List<String> listeNomAttributsWithID = extractNomAttributs();
+	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
+
 
 	private int codeReservation;
 	private Visite visite;
@@ -25,6 +27,7 @@ public class Reservation implements Memorisable {
 
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
+		listeNomAttribut.add(NOM_COL_ID);
 		listeNomAttribut.add(NOM_COL_VISITE);
 		listeNomAttribut.add(NOM_COL_CLIENT);
 		listeNomAttribut.add(NOM_COL_PLACE);
@@ -58,7 +61,7 @@ public class Reservation implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeAttributs() {
+	public List<String> extractListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
 		listeAttributs.add(String.valueOf(this.client.getIdClient()));
@@ -68,12 +71,25 @@ public class Reservation implements Memorisable {
 	}
 
 	@Override
-	public void setListeAttributs(List<String> listeNouvellesValeurs) {
+	public List<String> getListeAttributsWithID() {
+		List<String> listeAttributs = new ArrayList<>();
+		listeAttributs.add(String.valueOf(this.visite.getCodeVisite()));
+		listeAttributs.addAll(this.extractListeAttributs());
+		return listeAttributs;
+	}
+
+	@Override
+	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeReservation = Integer.parseInt(listeNouvellesValeurs.get(0));
 		this.visite = ConstructorFactory.createVisite(Integer.parseInt(listeNouvellesValeurs.get(1)));
 		this.client = ConstructorFactory.createClient(Integer.parseInt(listeNouvellesValeurs.get(2)));
 		this.nombrePersonnes = Integer.parseInt(listeNouvellesValeurs.get(3));
 		this.paiementEffectue = BaseDeDonnees.convertBooleanFromDB(listeNouvellesValeurs.get(4));
+	}
+
+	@Override
+	public List<String> getListeNomAttributsWithID() {
+		return listeNomAttributsWithID;
 	}
 
 }

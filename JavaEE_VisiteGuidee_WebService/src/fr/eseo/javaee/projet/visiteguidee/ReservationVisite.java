@@ -13,32 +13,26 @@ import fr.eseo.javaee.projet.db.objet.Visite;
 @WebService(targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/", endpointInterface = "fr.eseo.javaee.projet.visiteguidee.ReservationVisiteSEI", portName = "ReservationVisitePort", serviceName = "ReservationVisiteService")
 public class ReservationVisite implements ReservationVisiteSEI {
 
-	@Override
-	public Visite[] trouverVisite (Visite maVisite) throws SQLException {
-		return GestionDB.searchVisite(maVisite).toArray(new Visite[0]);
+	public List<Visite> trouverVisite (Visite maVisite) throws SQLException {
+		return GestionDB.searchVisite(maVisite);
 	}
 
-	@Override
 	public int reserverVisite (Reservation maReservation) throws SQLException {
-		int idReservation = 0;
-		GestionDB.ajoutReservation(maReservation);
-		List<Reservation> listReservation = GestionDB.searchReservation(maReservation);
-		idReservation = listReservation.get(listReservation.size()-1).getCodeReservation();
-		return idReservation;
+		return GestionDB.ajoutReservation(maReservation);
 	}
 
-	@Override
-	public String payerVisite (int monCodeReservation) throws SQLException {
-		String text = "";
+	public boolean payerVisite (int monCodeReservation) throws SQLException {
 		Reservation reservation = GestionDB.searchReservationById(monCodeReservation);
-		reservation.setPaiementEffectue(true);
-		GestionDB.updateReservationById(reservation);
-		return text;
+		if(reservation.getCodeReservation() != 0) {
+			reservation.setPaiementEffectue(true);
+			GestionDB.updateReservationById(reservation);
+			reservation = GestionDB.searchReservationById(monCodeReservation);
+		}
+		return reservation.isPaiementEffectue();
 	}
 
-	@Override
 	public boolean annulerVisite (int monCodeReservation) throws SQLException {
 		GestionDB.supprimerReservationById(monCodeReservation);
-		return GestionDB.existeReservationById(monCodeReservation);
+		return !GestionDB.existeReservationById(monCodeReservation);
 	}
 }

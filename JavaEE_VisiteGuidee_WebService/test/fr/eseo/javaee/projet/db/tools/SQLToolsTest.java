@@ -42,7 +42,7 @@ class SQLToolsTest {
 		list.add(null);
 		list.add("Kate");
 		String link = " et ";
-		Assertions.assertEquals(textAttendu, SQLTools.stickElementWithLink(list, link));
+		Assertions.assertEquals(textAttendu, SQLTools.stickElementWithLink(list, link, false));
 	}
 
 	@Test

@@ -16,7 +16,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="client" type="tns:client"/>
       <xs:element name="codeReservation" type="xs:int"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="listeAttributs" nillable="true" type="xs:string"/>
       <xs:element name="nombrePersonnes" type="xs:int"/>
       <xs:element name="paiementEffectue" type="xs:boolean"/>
       <xs:element minOccurs="0" name="visite" type="tns:visite"/>
@@ -26,31 +25,23 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="adresse" type="xs:string"/>
       <xs:element name="codePostal" type="xs:int"/>
-      <xs:element minOccurs="0" name="dateNaissance" type="tns:localDate"/>
       <xs:element name="idClient" type="xs:int"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="listeAttributs" nillable="true" type="xs:string"/>
       <xs:element minOccurs="0" name="mail" type="xs:string"/>
       <xs:element minOccurs="0" name="nom" type="xs:string"/>
       <xs:element name="numTelephone" type="xs:int"/>
       <xs:element minOccurs="0" name="pays" type="xs:string"/>
       <xs:element minOccurs="0" name="prenom" type="xs:string"/>
+      <xs:element minOccurs="0" name="dateNaissance" type="xs:dateTime"/>
     </xs:sequence>
-  </xs:complexType>
-  <xs:complexType final="extension restriction" name="localDate">
-    <xs:sequence/>
   </xs:complexType>
   <xs:complexType name="visite">
     <xs:sequence>
       <xs:element name="codeVisite" type="xs:int"/>
-      <xs:element minOccurs="0" name="dateVisite" type="tns:localDateTime"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="listeAttributs" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="dateVisite" type="xs:dateTime"/>
       <xs:element name="prix" type="xs:float"/>
       <xs:element minOccurs="0" name="typeDeVisite" type="xs:string"/>
       <xs:element minOccurs="0" name="ville" type="xs:string"/>
     </xs:sequence>
-  </xs:complexType>
-  <xs:complexType final="extension restriction" name="localDateTime">
-    <xs:sequence/>
   </xs:complexType>
   <xs:complexType name="reserverVisiteResponse">
     <xs:sequence>
@@ -64,7 +55,7 @@
   </xs:complexType>
   <xs:complexType name="payerVisiteResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
+      <xs:element name="return" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="trouverVisite">

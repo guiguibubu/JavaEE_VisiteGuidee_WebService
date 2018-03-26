@@ -1,3 +1,7 @@
 autoEnabled=false
 eclipse.preferences.version=1
 extraProperties=
+fileExclusions=
+moduleKey=gestionVisite
+projectKey=gestionVisite
+serverId=SonarQube

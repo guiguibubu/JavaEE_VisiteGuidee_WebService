@@ -2,9 +2,11 @@ package fr.eseo.javaee.projet.db.objet;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import fr.eseo.javaee.projet.db.BaseDeDonnees;
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
 
 public class Visite implements Memorisable {
 
@@ -16,35 +18,20 @@ public class Visite implements Memorisable {
 	public static final String NOM_COL_DATE 	= "dateVisite";
 	public static final String NOM_COL_PRIX 	= "prixVisite";
 
-	private static List<String> listeNomAttributs = extractNomAttributs();
+	private static List<String> listeNomAttributsWithID = extractNomAttributs();
+	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
+
+	public static final LocalDateTime dateVisiteParDefaut = LocalDateTime.of(0, 1, 1, 0, 0, 0);
 
 	private int codeVisite;
 	private String typeDeVisite;
 	private String ville;
-	private LocalDateTime dateVisite;
+	private Date dateVisite;
 	private float prix;
-
-	public Visite() {
-		this(0);
-	}
-
-	public Visite(int codeVisite) {
-		this(codeVisite,"","",LocalDateTime.now(),0);
-	}
-
-	public Visite(String typeDeVisite, String ville, LocalDateTime dateVisite, float prix) {
-		this(0, typeDeVisite, ville, dateVisite, prix);
-	}
-	public Visite(int codeVisite, String typeDeVisite, String ville, LocalDateTime dateVisite, float prix) {
-		this.codeVisite = codeVisite;
-		this.typeDeVisite = typeDeVisite;
-		this.ville = ville;
-		this.dateVisite = dateVisite;
-		this.prix = prix;
-	}
 
 	public static List<String> extractNomAttributs() {
 		List<String> listeNomAttribut = new ArrayList<>();
+		listeNomAttribut.add(NOM_COL_ID);
 		listeNomAttribut.add(NOM_COL_TYPE);
 		listeNomAttribut.add(NOM_COL_VILLE);
 		listeNomAttribut.add(NOM_COL_DATE);
@@ -52,8 +39,8 @@ public class Visite implements Memorisable {
 		return listeNomAttribut;
 	}
 
-	public boolean isOuverte() {
-		return LocalDateTime.now().isBefore(this.dateVisite);
+	public static boolean isOuverte(Visite visite) {
+		return LocalDateTime.now().isBefore(ConvertisseurDate.asLocalDateTime(visite.getDateVisite()));
 	}
 
 	public int getCodeVisite() {return this.codeVisite;}
@@ -65,8 +52,8 @@ public class Visite implements Memorisable {
 	public String getVille() {return this.ville;}
 	public void setVille(String ville) {this.ville = ville;}
 
-	public LocalDateTime getDateVisite() {return this.dateVisite;}
-	public void setDateVisite(LocalDateTime dateVisite) {this.dateVisite = dateVisite;}
+	public Date getDateVisite() {return (this.dateVisite == null) ? ConvertisseurDate.asUtilDate(dateVisiteParDefaut) : this.dateVisite;}
+	public void setDateVisite(Date dateVisite) {this.dateVisite = dateVisite;}
 
 	public float getPrix() {return this.prix;}
 	public void setPrix(float prix) {this.prix = prix;}
@@ -82,22 +69,35 @@ public class Visite implements Memorisable {
 	}
 
 	@Override
-	public List<String> getListeAttributs() {
+	public List<String> extractListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
 		listeAttributs.add(this.typeDeVisite);
 		listeAttributs.add(this.ville);
-		listeAttributs.add(BaseDeDonnees.convertForDB(this.dateVisite));
+		listeAttributs.add(BaseDeDonnees.convertForDB(ConvertisseurDate.asLocalDateTime(this.getDateVisite())));
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.prix));
 		return listeAttributs;
 	}
 
 	@Override
-	public void setListeAttributs(List<String> listeNouvellesValeurs) {
+	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeVisite = Integer.parseInt(listeNouvellesValeurs.get(0));
 		this.typeDeVisite = listeNouvellesValeurs.get(1);
 		this.ville 		= listeNouvellesValeurs.get(2);
-		this.dateVisite = BaseDeDonnees.convertDateTimeFromDB(listeNouvellesValeurs.get(3));
+		this.dateVisite = ConvertisseurDate.asUtilDate(BaseDeDonnees.convertDateTimeFromDB(listeNouvellesValeurs.get(3)));
 		this.prix 		= BaseDeDonnees.convertFloatFromDB(listeNouvellesValeurs.get(4));
+	}
+
+	@Override
+	public List<String> getListeAttributsWithID() {
+		List<String> listeAttributs = new ArrayList<>();
+		listeAttributs.add(String.valueOf(this.codeVisite));
+		listeAttributs.addAll(this.extractListeAttributs());
+		return listeAttributs;
+	}
+
+	@Override
+	public List<String> getListeNomAttributsWithID() {
+		return listeNomAttributsWithID;
 	}
 
 }

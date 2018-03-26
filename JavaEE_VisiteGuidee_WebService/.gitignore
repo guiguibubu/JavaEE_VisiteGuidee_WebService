@@ -1,6 +1,7 @@
 /build/
 /.scannerwork/
-/sonar-project.properties
 /build.xml
 /buildAntSonar.txt
 /reports/
+/sonar/
+/sonar-project.properties
