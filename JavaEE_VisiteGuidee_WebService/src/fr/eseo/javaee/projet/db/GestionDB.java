@@ -142,7 +142,7 @@ public class GestionDB {
 		if(dateMin != null && !dateMin.equals(Visite.dateVisiteParDefaut)) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMin), " >= ", "'", false));
 		}
-		if(dateMax != null  && !dateMax.equals(Visite.dateVisiteParDefaut)) {
+		if(dateMax != null  && !dateMax.equals(Visite.dateVisiteParDefaut.plusDays(1)) && !dateMax.equals(Visite.dateVisiteParDefaut.plusSeconds(1))) {
 			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " < ", "'", false));
 		}
 		if(prixMin >= 0  && prixMin < Float.MAX_VALUE) {

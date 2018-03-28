@@ -5,16 +5,30 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class ConvertisseurDate {
 
-
+	public static final LocalDateTime dateTimeParDefaut = LocalDateTime.of(1900, 1, 1, 0, 0, 0);
+	public static final LocalDate dateParDefaut = LocalDate.of(1900, 1, 1);
 	/**
 	 * Calls {@link #asLocalDate(Date, ZoneId)} with the system default time zone.
 	 */
 	public static LocalDate asLocalDate(java.util.Date date) {
-		return asLocalDate(date, ZoneId.systemDefault());
+		LocalDate dateTime;
+		if(date == null) {
+			dateTime = dateParDefaut;
+		} else {
+			GregorianCalendar c = new GregorianCalendar();
+			c.setTime(date);
+			dateTime = LocalDate.of(c.get(Calendar.YEAR),
+					c.get(Calendar.MONTH)+1,
+					c.get(Calendar.DAY_OF_MONTH));
+		}
+		return dateTime;
+		//		return asLocalDate(date, ZoneId.systemDefault());
 	}
 
 	/**
@@ -36,7 +50,21 @@ public class ConvertisseurDate {
 	 * Calls {@link #asLocalDateTime(Date, ZoneId)} with the system default time zone.
 	 */
 	public static LocalDateTime asLocalDateTime(java.util.Date date) {
-		return asLocalDateTime(date, ZoneId.systemDefault());
+		LocalDateTime dateTime;
+		if(date == null) {
+			dateTime = dateTimeParDefaut;
+		} else {
+			GregorianCalendar c = new GregorianCalendar();
+			c.setTime(date);
+			dateTime = LocalDateTime.of(c.get(Calendar.YEAR),
+					c.get(Calendar.MONTH)+1,
+					c.get(Calendar.DAY_OF_MONTH),
+					c.get(Calendar.HOUR_OF_DAY),
+					c.get(Calendar.MINUTE),
+					c.get(Calendar.SECOND));
+		}
+		return dateTime;
+		//		return asLocalDateTime(date, ZoneId.systemDefault());
 	}
 
 	/**
