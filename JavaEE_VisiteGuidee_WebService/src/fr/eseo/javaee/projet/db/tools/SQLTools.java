@@ -60,15 +60,19 @@ public class SQLTools {
 		return stringBuilder.toString();
 	}
 
-	public static String stickElementWithLinkAndGuillemet(String textLeft, String textRight, String link, String guillemet) {
+	public static String stickElementWithLinkAndGuillemet(String textLeft, String textRight, String link, String guillemet, boolean upperCase) {
 		String text = "";
 		if(link != null && textLeft != null && textRight != null) {
-			text += textLeft+link+guillemet+textRight+guillemet;
+			if(upperCase) {
+				text += "UPPER("+textLeft+")"+link+guillemet+textRight.toUpperCase()+guillemet;
+			} else {
+				text += textLeft+link+guillemet+textRight+guillemet;
+			}
 		}
 		return text;
 	}
 
-	public static List<String> stickElementWithLinkAndGuillemet(List<String> listLeft, List<String> listRight, String link, String guillemet) {
+	public static List<String> stickElementWithLinkAndGuillemet(List<String> listLeft, List<String> listRight, String link, String guillemet, boolean upperString) {
 		List<String> list = new ArrayList<>();
 		boolean listesNotNull = listLeft != null && listRight != null;
 		boolean listesSameSize = (listesNotNull) ? listLeft.size() == listRight.size() : false;
@@ -76,8 +80,10 @@ public class SQLTools {
 			for(int i = 0; i<listLeft.size(); i++) {
 				boolean elementsNotNull = listLeft.get(i) != null && listRight.get(i) != null;
 				boolean elementsNotEmpty = (elementsNotNull) ? !listLeft.get(i).trim().isEmpty() && !listRight.get(i).trim().isEmpty() : false;
+				boolean elementRechercheContainsNumber = (elementsNotNull) ? listRight.get(i).matches("[0-9]") : true;
 				if(elementsNotEmpty) {
-					list.add(stickElementWithLinkAndGuillemet(listLeft.get(i), listRight.get(i), link, guillemet));
+					boolean compareWithUpper = upperString && !elementRechercheContainsNumber;
+					list.add(stickElementWithLinkAndGuillemet(listLeft.get(i), listRight.get(i), link, guillemet,compareWithUpper));
 				}
 			}
 		}
@@ -85,7 +91,7 @@ public class SQLTools {
 	}
 
 	public static List<String> convertIntoListOfWhereClauses(List<String> listColNames, List<String> listArgs){
-		return stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'");
+		return stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'", true);
 	}
 
 	public static String convertIntoWhereClauses(List<String> listClauses){
@@ -93,11 +99,11 @@ public class SQLTools {
 	}
 
 	public static String convertIntoWhereClause(String textLeft, String textRight){
-		return stickElementWithLinkAndGuillemet(textLeft, textRight, " = ", "'");
+		return stickElementWithLinkAndGuillemet(textLeft, textRight, " = ", "'", true);
 	}
 
 	public static List<String> convertIntoListOfSetClauses(List<String> listColNames, List<String> listArgs){
-		return stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'");
+		return stickElementWithLinkAndGuillemet(listColNames, listArgs, " = ", "'", false);
 	}
 
 	public static String convertIntoSetClauses(List<String> listClauses){
@@ -105,7 +111,7 @@ public class SQLTools {
 	}
 
 	public static String convertIntoSetClause(String textLeft, String textRight){
-		return stickElementWithLinkAndGuillemet(textLeft, textRight, " = ", "'");
+		return stickElementWithLinkAndGuillemet(textLeft, textRight, " = ", "'",false);
 	}
 
 	//METHODES SELECT

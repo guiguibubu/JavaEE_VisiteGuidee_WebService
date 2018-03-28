@@ -86,7 +86,7 @@ class ReservationVisiteTest {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "AnGers", date, 99);
 		ReservationVisite reservation = new ReservationVisite();
 		List<Visite> visite_trouvee = null;
 		try {
@@ -97,7 +97,25 @@ class ReservationVisiteTest {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(1, visite_trouvee.size());
-		Assertions.assertEquals("Angers", visite_trouvee.get(0).getVille());
+		Assertions.assertEquals("Angers".toUpperCase(), visite_trouvee.get(0).getVille().toUpperCase());
+	}
+
+	@Test
+	void testTrouverVisitePresente2() {
+		LocalDateTime date = Visite.dateVisiteParDefaut;
+		Visite visiteTest = ConstructorFactory.createVisite("guIdee", "AnGers", date, 0);
+		ReservationVisite reservation = new ReservationVisite();
+		List<Visite> visite_trouvee = null;
+		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			GestionDB.ajoutVisite(visiteTest);
+			visite_trouvee = reservation.trouverVisite(visiteTest);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(1, visite_trouvee.size());
+		Assertions.assertEquals("Angers".toUpperCase(), visite_trouvee.get(0).getVille().toUpperCase());
+		Assertions.assertEquals("guidee".toUpperCase(), visite_trouvee.get(0).getTypeDeVisite().toUpperCase());
 	}
 
 	@Test

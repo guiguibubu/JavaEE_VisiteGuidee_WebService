@@ -140,16 +140,16 @@ public class GestionDB {
 			listClausesWhere.add(SQLTools.convertIntoWhereClause(Visite.NOM_COL_VILLE, ville));
 		}
 		if(dateMin != null && !dateMin.equals(Visite.dateVisiteParDefaut)) {
-			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMin), " >= ", "'"));
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMin), " >= ", "'", false));
 		}
 		if(dateMax != null  && !dateMax.equals(Visite.dateVisiteParDefaut)) {
-			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " < ", "'"));
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_DATE, BaseDeDonnees.convertForDB(dateMax), " < ", "'", false));
 		}
 		if(prixMin >= 0  && prixMin < Float.MAX_VALUE) {
-			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMin), " >= ", "'"));
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMin), " >= ", "'", false));
 		}
-		if(prixMax >= 0 && prixMax < Float.MAX_VALUE) {
-			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMax), " <= ", "'"));
+		if(prixMax > 0 && prixMax < Float.MAX_VALUE) {
+			listClausesWhere.add(SQLTools.stickElementWithLinkAndGuillemet(Visite.NOM_COL_PRIX, BaseDeDonnees.convertForDB(prixMax), " <= ", "'", false));
 		}
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);

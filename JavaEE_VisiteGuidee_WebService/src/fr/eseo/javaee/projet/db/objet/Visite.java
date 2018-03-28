@@ -71,8 +71,8 @@ public class Visite implements Memorisable {
 	@Override
 	public List<String> extractListeAttributs() {
 		List<String> listeAttributs = new ArrayList<>();
-		listeAttributs.add(this.typeDeVisite);
-		listeAttributs.add(this.ville);
+		listeAttributs.add(this.typeDeVisite.toUpperCase());
+		listeAttributs.add(this.ville.toUpperCase());
 		listeAttributs.add(BaseDeDonnees.convertForDB(ConvertisseurDate.asLocalDateTime(this.getDateVisite())));
 		listeAttributs.add(BaseDeDonnees.convertForDB(this.prix));
 		return listeAttributs;
@@ -81,8 +81,8 @@ public class Visite implements Memorisable {
 	@Override
 	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.codeVisite = Integer.parseInt(listeNouvellesValeurs.get(0));
-		this.typeDeVisite = listeNouvellesValeurs.get(1);
-		this.ville 		= listeNouvellesValeurs.get(2);
+		this.typeDeVisite = listeNouvellesValeurs.get(1).toUpperCase();
+		this.ville 		= listeNouvellesValeurs.get(2).toUpperCase();
 		this.dateVisite = ConvertisseurDate.asUtilDate(BaseDeDonnees.convertDateTimeFromDB(listeNouvellesValeurs.get(3)));
 		this.prix 		= BaseDeDonnees.convertFloatFromDB(listeNouvellesValeurs.get(4));
 	}

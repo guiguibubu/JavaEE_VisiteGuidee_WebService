@@ -106,14 +106,14 @@ public class Client implements Memorisable {
 	@Override
 	public void modifyListeAttributs(List<String> listeNouvellesValeurs) {
 		this.idClient 		= Integer.parseInt(listeNouvellesValeurs.get(0));
-		this.nom 			= listeNouvellesValeurs.get(1);
-		this.prenom 		= listeNouvellesValeurs.get(2);
+		this.nom 			= listeNouvellesValeurs.get(1).toUpperCase();
+		this.prenom 		= listeNouvellesValeurs.get(2).toUpperCase();
 		this.dateNaissance 	= ConvertisseurDate.asUtilDate(BaseDeDonnees.convertDateFromDB(listeNouvellesValeurs.get(3)));
-		this.adresse 		= listeNouvellesValeurs.get(4);
+		this.adresse 		= listeNouvellesValeurs.get(4).toUpperCase();
 		this.codePostal 	= Integer.parseInt(listeNouvellesValeurs.get(5));
-		this.pays 			= listeNouvellesValeurs.get(6);
+		this.pays 			= listeNouvellesValeurs.get(6).toUpperCase();
 		this.numTelephone 	= Integer.parseInt(listeNouvellesValeurs.get(7));
-		this.mail 			= listeNouvellesValeurs.get(8);
+		this.mail 			= listeNouvellesValeurs.get(8).toUpperCase();
 	}
 
 	@Override

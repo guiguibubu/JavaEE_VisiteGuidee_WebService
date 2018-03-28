@@ -52,7 +52,7 @@ class SQLToolsTest {
 		String textRight = "Juliette";
 		String link = " et ";
 		String guillemet ="\"";
-		Assertions.assertEquals(textAttendu, SQLTools.stickElementWithLinkAndGuillemet(textLeft, textRight, link, guillemet));
+		Assertions.assertEquals(textAttendu, SQLTools.stickElementWithLinkAndGuillemet(textLeft, textRight, link, guillemet, false));
 	}
 
 	@Test
@@ -68,14 +68,14 @@ class SQLToolsTest {
 		listRight.add("Kate");
 		String link = " et ";
 		String guillemet ="\"";
-		Assertions.assertEquals(listTextAttendu, SQLTools.stickElementWithLinkAndGuillemet(listLeft, listRight, link, guillemet));
+		Assertions.assertEquals(listTextAttendu, SQLTools.stickElementWithLinkAndGuillemet(listLeft, listRight, link, guillemet,false));
 	}
 
 	@Test
 	void testConvertIntoListOfWhereClauses() {
 		List<String> listAttendu = new ArrayList<>();
-		listAttendu.add("prenom = 'Guillaume'");
-		listAttendu.add("nom = 'Buchle'");
+		listAttendu.add("UPPER(prenom) = 'Guillaume'");
+		listAttendu.add("UPPER(nom) = 'Buchle'");
 		List<String> listColNames = new ArrayList<String>();
 		List<String> listArgs = new ArrayList<String>();
 		listColNames.add("prenom");

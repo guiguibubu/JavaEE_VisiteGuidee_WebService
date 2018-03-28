@@ -21,10 +21,10 @@ SET time_zone = "+00:00";
 --
 
 -- Création de la base.
-CREATE DATABASE gestionVisite;
+CREATE DATABASE IF NOT EXISTS gestionVisite;
 
 -- Création de l'utilisateur de la base.
-CREATE USER 'test'@'localhost' IDENTIFIED BY 'test';
+CREATE USER IF NOT EXISTS 'test'@'localhost' IDENTIFIED BY 'test';
 
 -- Déclaration des privilège pour l'utilisateur sur la base.
 GRANT ALL ON gestionVisite.* TO 'test'@'localhost';
@@ -39,7 +39,7 @@ USE gestionVisite;
 -- Structure de la table `client`
 --
 
-CREATE TABLE `client` (
+CREATE TABLE IF NOT EXISTS `client` (
   `idClient` int(11) NOT NULL,
   `nom` varchar(35) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `prenom` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
@@ -54,6 +54,7 @@ CREATE TABLE `client` (
 --
 -- Déclencheurs `client`
 --
+DROP TRIGGER IF EXISTS `trig_email_check`;
 DELIMITER $$
 CREATE TRIGGER `trig_email_check` BEFORE INSERT ON `client` FOR EACH ROW BEGIN 
 IF (NEW.mail REGEXP '^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$' ) = 0 THEN 
@@ -70,7 +71,7 @@ DELIMITER ;
 -- Structure de la table `reservation`
 --
 
-CREATE TABLE `reservation` (
+CREATE TABLE IF NOT EXISTS `reservation` (
   `idReservation` int(11) NOT NULL,
   `idVisite` int(11) NOT NULL,
   `idClient` int(11) NOT NULL,
@@ -84,7 +85,7 @@ CREATE TABLE `reservation` (
 -- Structure de la table `visite`
 --
 
-CREATE TABLE `visite` (
+CREATE TABLE IF NOT EXISTS `visite` (
   `idVisite` int(11) NOT NULL,
   `typeVisite` varchar(15) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `ville` varchar(30) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
