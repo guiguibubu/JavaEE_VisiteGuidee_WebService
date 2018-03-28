@@ -1,5 +1,7 @@
 package fr.eseo.javaee.projet.tools;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,14 +10,18 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class ConvertisseurDate {
 
+	public static final String DATE_FORMATTER_STRING = "yyyy-MM-dd";
+	public static final String DATE_TIME_FORMATTER_STRING = "yyyy-MM-dd HH:mm:ss";
+	public static final DateFormat dateFormatter = new SimpleDateFormat(DATE_FORMATTER_STRING);
+	public static final DateFormat dateTimeFormatter = new SimpleDateFormat(DATE_TIME_FORMATTER_STRING);
+
 	public static final LocalDateTime dateTimeParDefaut = LocalDateTime.of(1900, 1, 1, 0, 0, 0);
 	public static final LocalDate dateParDefaut = LocalDate.of(1900, 1, 1);
-	/**
-	 * Calls {@link #asLocalDate(Date, ZoneId)} with the system default time zone.
-	 */
+
 	public static LocalDate asLocalDate(java.util.Date date) {
 		LocalDate dateTime;
 		if(date == null) {
@@ -23,32 +29,14 @@ public class ConvertisseurDate {
 		} else {
 			GregorianCalendar c = new GregorianCalendar();
 			c.setTime(date);
+			c.setTimeZone(TimeZone.getDefault());
 			dateTime = LocalDate.of(c.get(Calendar.YEAR),
 					c.get(Calendar.MONTH)+1,
 					c.get(Calendar.DAY_OF_MONTH));
 		}
 		return dateTime;
-		//		return asLocalDate(date, ZoneId.systemDefault());
 	}
 
-	/**
-	 * Creates {@link LocalDate} from {@code java.util.Date} or it's subclasses. Null-safe.
-	 */
-	public static LocalDate asLocalDate(java.util.Date date, ZoneId zone) {
-		if (date == null) {
-			return null;
-		}
-
-		if (date instanceof java.sql.Date) {
-			return ((java.sql.Date) date).toLocalDate();
-		} else {
-			return Instant.ofEpochMilli(date.getTime()).atZone(zone).toLocalDate();
-		}
-	}
-
-	/**
-	 * Calls {@link #asLocalDateTime(Date, ZoneId)} with the system default time zone.
-	 */
 	public static LocalDateTime asLocalDateTime(java.util.Date date) {
 		LocalDateTime dateTime;
 		if(date == null) {
@@ -56,6 +44,7 @@ public class ConvertisseurDate {
 		} else {
 			GregorianCalendar c = new GregorianCalendar();
 			c.setTime(date);
+			c.setTimeZone(TimeZone.getDefault());
 			dateTime = LocalDateTime.of(c.get(Calendar.YEAR),
 					c.get(Calendar.MONTH)+1,
 					c.get(Calendar.DAY_OF_MONTH),
@@ -64,22 +53,6 @@ public class ConvertisseurDate {
 					c.get(Calendar.SECOND));
 		}
 		return dateTime;
-		//		return asLocalDateTime(date, ZoneId.systemDefault());
-	}
-
-	/**
-	 * Creates {@link LocalDateTime} from {@code java.util.Date} or it's subclasses. Null-safe.
-	 */
-	public static LocalDateTime asLocalDateTime(java.util.Date date, ZoneId zone) {
-		if (date == null) {
-			return null;
-		}
-
-		if (date instanceof java.sql.Timestamp) {
-			return ((java.sql.Timestamp) date).toLocalDateTime();
-		} else {
-			return Instant.ofEpochMilli(date.getTime()).atZone(zone).toLocalDateTime();
-		}
 	}
 
 	/**
@@ -116,10 +89,16 @@ public class ConvertisseurDate {
 			return (java.util.Date) date;
 		}
 		if (date instanceof LocalDate) {
-			return java.util.Date.from(((LocalDate) date).atStartOfDay(zone).toInstant());
+			GregorianCalendar c = new GregorianCalendar(((LocalDate) date).getYear(), ((LocalDate) date).getMonthValue()-1, ((LocalDate) date).getDayOfMonth());
+			c.setTimeZone(TimeZone.getDefault());
+			return c.getTime();
+			//			return java.util.Date.from(((LocalDate) date).atStartOfDay(zone).toInstant());
 		}
 		if (date instanceof LocalDateTime) {
-			return java.util.Date.from(((LocalDateTime) date).atZone(zone).toInstant());
+			GregorianCalendar c = new GregorianCalendar(((LocalDateTime) date).getYear(), ((LocalDateTime) date).getMonthValue()-1, ((LocalDateTime) date).getDayOfMonth(), ((LocalDateTime) date).getHour(), ((LocalDateTime) date).getMinute(), ((LocalDateTime) date).getSecond());
+			c.setTimeZone(TimeZone.getDefault());
+			return c.getTime();
+			//			return java.util.Date.from(((LocalDateTime) date).atZone(zone).toInstant());
 		}
 		if (date instanceof ZonedDateTime) {
 			return java.util.Date.from(((ZonedDateTime) date).toInstant());

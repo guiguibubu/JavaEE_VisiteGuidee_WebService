@@ -21,6 +21,7 @@ import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
 
 class ReservationVisiteTest {
 
@@ -156,6 +157,31 @@ class ReservationVisiteTest {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(0, visite_trouvee.size());
+	}
+
+	@Test
+	void testTrouverToutesLesVisites() {
+		LocalDateTime date = ConvertisseurDate.dateTimeParDefaut;
+		Visite visiteRecherche = ConstructorFactory.createVisite("", null, date, -1);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Lille", LocalDateTime.now(), 999);
+		Visite visiteTest2 = ConstructorFactory.createVisite("guidee", "Nantes", date.plusDays(5), 999);
+		Visite visiteTest3 = ConstructorFactory.createVisite("guidee", "Paris", date.plusHours(2), 600);
+		Visite visiteTest4 = ConstructorFactory.createVisite("libre", "Angers", date.minusMonths(3), 500);
+		Visite visiteTest5 = ConstructorFactory.createVisite("guidee", "Lille", date.plusYears(1), 400);
+		ReservationVisite reservation = new ReservationVisite();
+		List<Visite> visite_trouvee = null;
+		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			GestionDB.ajoutVisite(visiteTest);
+			GestionDB.ajoutVisite(visiteTest2);
+			GestionDB.ajoutVisite(visiteTest3);
+			GestionDB.ajoutVisite(visiteTest4);
+			GestionDB.ajoutVisite(visiteTest5);
+			visite_trouvee = reservation.trouverVisite(visiteRecherche);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(5, visite_trouvee.size());
 	}
 
 	@Test
