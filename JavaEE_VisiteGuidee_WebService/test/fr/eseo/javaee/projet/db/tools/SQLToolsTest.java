@@ -74,8 +74,8 @@ class SQLToolsTest {
 	@Test
 	void testConvertIntoListOfWhereClauses() {
 		List<String> listAttendu = new ArrayList<>();
-		listAttendu.add("UPPER(prenom) = 'Guillaume'");
-		listAttendu.add("UPPER(nom) = 'Buchle'");
+		listAttendu.add("UPPER(prenom) = 'GUILLAUME'");
+		listAttendu.add("UPPER(nom) = 'BUCHLE'");
 		List<String> listColNames = new ArrayList<String>();
 		List<String> listArgs = new ArrayList<String>();
 		listColNames.add("prenom");
@@ -102,7 +102,7 @@ class SQLToolsTest {
 
 	@Test
 	void testConvertIntoWhereClause() {
-		String textAttendu = "prenom = 'Guillaume'";
+		String textAttendu = "UPPER(prenom) = 'GUILLAUME'";
 		String textLeft = "prenom";
 		String textRight = "Guillaume";
 		Assertions.assertEquals(textAttendu, SQLTools.convertIntoWhereClause(textLeft, textRight));
@@ -147,7 +147,7 @@ class SQLToolsTest {
 
 	@Test
 	void testSelectSQLStringListOfStringListOfString() {
-		String sqlAttendu = "SELECT * FROM client WHERE prenom = 'Guillaume' AND nom = 'Buchle'";
+		String sqlAttendu = "SELECT * FROM client WHERE UPPER(prenom) = 'GUILLAUME' AND UPPER(nom) = 'BUCHLE'";
 		String table = "client";
 		ArrayList<String> listColNames = new ArrayList<String>();
 		ArrayList<String> listArgs = new ArrayList<String>();
@@ -160,7 +160,7 @@ class SQLToolsTest {
 
 	@Test
 	void testSelectSQLStringStringString() {
-		String sqlAttendu = "SELECT * FROM client WHERE prenom = 'Guillaume'";
+		String sqlAttendu = "SELECT * FROM client WHERE UPPER(prenom) = 'GUILLAUME'";
 		String table = "client";
 		String colName = "prenom";
 		String arg = "Guillaume";
@@ -204,7 +204,7 @@ class SQLToolsTest {
 
 	@Test
 	void testDeleteSQLStringListOfStringListOfString() {
-		String sqlAttendu = "DELETE FROM client WHERE prenom = 'Guillaume' AND nom = 'Buchle'";
+		String sqlAttendu = "DELETE FROM client WHERE UPPER(prenom) = 'GUILLAUME' AND UPPER(nom) = 'BUCHLE'";
 		String table = "client";
 		ArrayList<String> listColNames = new ArrayList<String>();
 		ArrayList<String> listArgs = new ArrayList<String>();
@@ -217,7 +217,7 @@ class SQLToolsTest {
 
 	@Test
 	void testDeleteSQLStringStringString() {
-		String sqlAttendu = "DELETE FROM client WHERE prenom = 'Guillaume'";
+		String sqlAttendu = "DELETE FROM client WHERE UPPER(prenom) = 'GUILLAUME'";
 		String table = "client";
 		String colName = "prenom";
 		String arg = "Guillaume";
@@ -246,7 +246,7 @@ class SQLToolsTest {
 
 	@Test
 	void testUpdateSQLStringListOfStringListOfStringListOfStringListOfString() {
-		String sqlAttendu = "UPDATE client SET prenom = 'Guillaume', nom = 'Buchle' WHERE ecole = 'ESEO' AND ville = 'Nantes'";
+		String sqlAttendu = "UPDATE client SET prenom = 'Guillaume', nom = 'Buchle' WHERE UPPER(ecole) = 'ESEO' AND UPPER(ville) = 'NANTES'";
 		String table = "client";
 		ArrayList<String> listColNames = new ArrayList<String>();
 		ArrayList<String> listArgs = new ArrayList<String>();
@@ -265,7 +265,7 @@ class SQLToolsTest {
 
 	@Test
 	void testUpdateSQLStringListOfStringListOfStringStringString() {
-		String sqlAttendu = "UPDATE client SET prenom = 'Guillaume', nom = 'Buchle' WHERE ecole = 'ESEO'";
+		String sqlAttendu = "UPDATE client SET prenom = 'Guillaume', nom = 'Buchle' WHERE UPPER(ecole) = 'ESEO'";
 		String table = "client";
 		ArrayList<String> listColNames = new ArrayList<String>();
 		ArrayList<String> listArgs = new ArrayList<String>();

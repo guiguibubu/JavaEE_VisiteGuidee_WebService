@@ -199,7 +199,7 @@ public class GestionDB {
 	}
 
 	public static boolean existeVisite(String typeVisite, String ville, LocalDateTime date, float prix) throws SQLException {
-		return !searchVisite(typeVisite, ville, date, date, -1, prix).isEmpty();
+		return !searchVisite(typeVisite, ville, date, date.plusSeconds(1), -1, prix).isEmpty();
 	}
 
 	public static boolean existeVisite(Visite visite) throws SQLException {
