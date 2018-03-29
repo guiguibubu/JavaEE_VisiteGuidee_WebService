@@ -83,6 +83,39 @@ class ReservationVisiteTest {
 	}
 
 	@Test
+	void testTrouverClientDejaEnBase() {
+		Client client = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client clientTrouve = ConstructorFactory.createClient();
+		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			client.setIdClient(GestionDB.ajoutClient(client));
+			ReservationVisite reservation = new ReservationVisite();
+			clientTrouve = reservation.trouverClient(client.getNom(), client.getPrenom());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(client.getIdClient(), clientTrouve.getIdClient());
+		Assertions.assertEquals(client.getNom(), clientTrouve.getNom());
+		Assertions.assertEquals(client.getPrenom(), clientTrouve.getPrenom());
+	}
+
+	@Test
+	void testTrouverClientNonEnBase() {
+		Client client = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client clientTrouve = ConstructorFactory.createClient();
+		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			ReservationVisite reservation = new ReservationVisite();
+			clientTrouve = reservation.trouverClient(client.getNom(), client.getPrenom());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertNotEquals(0, clientTrouve.getIdClient());
+		Assertions.assertEquals(client.getNom(), clientTrouve.getNom());
+		Assertions.assertEquals(client.getPrenom(), clientTrouve.getPrenom());
+	}
+
+	@Test
 	void testTrouverVisitePresente() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
@@ -94,7 +127,7 @@ class ReservationVisiteTest {
 			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
 			GestionDB.ajoutVisite(visiteTest);
 			visite_trouvee = reservation.trouverVisite(visiteTest);
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(1, visite_trouvee.size());

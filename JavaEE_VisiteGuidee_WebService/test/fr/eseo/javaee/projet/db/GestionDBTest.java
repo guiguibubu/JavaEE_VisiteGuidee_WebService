@@ -242,15 +242,15 @@ class GestionDBTest {
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite(null, "Paris", null, null,-1, Float.MAX_VALUE+1);
+			listVisite = GestionDB.searchVisite(null, "PaRis", null, null,-1, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(2,listVisite.size());
-		Assertions.assertEquals("libre".toUpperCase(), listVisite.get(0).getTypeDeVisite());
-		Assertions.assertEquals("guide".toUpperCase(), listVisite.get(1).getTypeDeVisite());
-		Assertions.assertEquals("Paris".toUpperCase(), listVisite.get(0).getVille());
-		Assertions.assertEquals("Paris".toUpperCase(), listVisite.get(1).getVille());
+		Assertions.assertEquals("libre", listVisite.get(0).getTypeDeVisite());
+		Assertions.assertEquals("guide", listVisite.get(1).getTypeDeVisite());
+		Assertions.assertEquals("Paris", listVisite.get(0).getVille());
+		Assertions.assertEquals("Paris", listVisite.get(1).getVille());
 	}
 
 	//test passe mais ne devrait pas ==> liste vide
