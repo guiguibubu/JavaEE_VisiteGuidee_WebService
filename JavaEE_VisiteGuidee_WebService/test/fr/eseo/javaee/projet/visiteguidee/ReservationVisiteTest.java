@@ -21,6 +21,7 @@ import fr.eseo.javaee.projet.db.objet.Client;
 import fr.eseo.javaee.projet.db.objet.ConstructorFactory;
 import fr.eseo.javaee.projet.db.objet.Reservation;
 import fr.eseo.javaee.projet.db.objet.Visite;
+import fr.eseo.javaee.projet.tools.ConvertisseurDate;
 
 class ReservationVisiteTest {
 
@@ -82,11 +83,61 @@ class ReservationVisiteTest {
 	}
 
 	@Test
+	void testTrouverClientDejaEnBase() {
+		Client client = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client clientTrouve = ConstructorFactory.createClient();
+		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			client.setIdClient(GestionDB.ajoutClient(client));
+			ReservationVisite reservation = new ReservationVisite();
+			clientTrouve = reservation.trouverClient(client.getNom(), client.getPrenom());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(client.getIdClient(), clientTrouve.getIdClient());
+		Assertions.assertEquals(client.getNom(), clientTrouve.getNom());
+		Assertions.assertEquals(client.getPrenom(), clientTrouve.getPrenom());
+	}
+
+	@Test
+	void testTrouverClientNonEnBase() {
+		Client client = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client clientTrouve = ConstructorFactory.createClient();
+		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			ReservationVisite reservation = new ReservationVisite();
+			clientTrouve = reservation.trouverClient(client.getNom(), client.getPrenom());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertNotEquals(0, clientTrouve.getIdClient());
+		Assertions.assertEquals(client.getNom(), clientTrouve.getNom());
+		Assertions.assertEquals(client.getPrenom(), clientTrouve.getPrenom());
+	}
+
+	@Test
 	void testTrouverVisitePresente() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
 		LocalTime dateTime = LocalTime.of(11,22,33,00);
 		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
-		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Angers", date, 99);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "AnGers", date, 99);
+		ReservationVisite reservation = new ReservationVisite();
+		List<Visite> visite_trouvee = null;
+		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			GestionDB.ajoutVisite(visiteTest);
+			visite_trouvee = reservation.trouverVisite(visiteTest);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(1, visite_trouvee.size());
+		Assertions.assertEquals("Angers".toUpperCase(), visite_trouvee.get(0).getVille().toUpperCase());
+	}
+
+	@Test
+	void testTrouverVisitePresente2() {
+		LocalDateTime date = Visite.dateVisiteParDefaut;
+		Visite visiteTest = ConstructorFactory.createVisite("guIdee", "AnGers", date, 0);
 		ReservationVisite reservation = new ReservationVisite();
 		List<Visite> visite_trouvee = null;
 		try {
@@ -97,7 +148,8 @@ class ReservationVisiteTest {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(1, visite_trouvee.size());
-		Assertions.assertEquals("Angers", visite_trouvee.get(0).getVille());
+		Assertions.assertEquals("Angers".toUpperCase(), visite_trouvee.get(0).getVille().toUpperCase());
+		Assertions.assertEquals("guidee".toUpperCase(), visite_trouvee.get(0).getTypeDeVisite().toUpperCase());
 	}
 
 	@Test
@@ -138,6 +190,31 @@ class ReservationVisiteTest {
 			e.printStackTrace();
 		}
 		Assertions.assertEquals(0, visite_trouvee.size());
+	}
+
+	@Test
+	void testTrouverToutesLesVisites() {
+		LocalDateTime date = ConvertisseurDate.dateTimeParDefaut;
+		Visite visiteRecherche = ConstructorFactory.createVisite("", null, date, -1);
+		Visite visiteTest = ConstructorFactory.createVisite("guidee", "Lille", LocalDateTime.now(), 999);
+		Visite visiteTest2 = ConstructorFactory.createVisite("guidee", "Nantes", date.plusDays(5), 999);
+		Visite visiteTest3 = ConstructorFactory.createVisite("guidee", "Paris", date.plusHours(2), 600);
+		Visite visiteTest4 = ConstructorFactory.createVisite("libre", "Angers", date.minusMonths(3), 500);
+		Visite visiteTest5 = ConstructorFactory.createVisite("guidee", "Lille", date.plusYears(1), 400);
+		ReservationVisite reservation = new ReservationVisite();
+		List<Visite> visite_trouvee = null;
+		try {
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			GestionDB.ajoutVisite(visiteTest);
+			GestionDB.ajoutVisite(visiteTest2);
+			GestionDB.ajoutVisite(visiteTest3);
+			GestionDB.ajoutVisite(visiteTest4);
+			GestionDB.ajoutVisite(visiteTest5);
+			visite_trouvee = reservation.trouverVisite(visiteRecherche);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(5, visite_trouvee.size());
 	}
 
 	@Test

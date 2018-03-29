@@ -26,7 +26,7 @@ public class Client implements Memorisable {
 	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
 
 	public static final String emailParDefaut = "mail@parDefaut.fr";
-	public static final LocalDate dateNaissanceParDefaut = LocalDate.of(0, 1, 1);
+	public static final LocalDate dateNaissanceParDefaut = ConvertisseurDate.dateParDefaut;
 
 	private int idClient;
 	private String nom;

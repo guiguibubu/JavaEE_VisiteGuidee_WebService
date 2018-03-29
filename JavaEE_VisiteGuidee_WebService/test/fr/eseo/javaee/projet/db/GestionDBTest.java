@@ -242,7 +242,7 @@ class GestionDBTest {
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite(null, "Paris", null, null,-1, Float.MAX_VALUE+1);
+			listVisite = GestionDB.searchVisite(null, "PaRis", null, null,-1, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -266,7 +266,7 @@ class GestionDBTest {
 			GestionDB.ajoutVisite("guide", "Angers", date, 60);
 			GestionDB.ajoutVisite("libre", "Paris", date, 61);
 			GestionDB.ajoutVisite("guide", "Paris", LocalDateTime.now(), 99);
-			listVisite = GestionDB.searchVisite(null, null, date, date,-1, Float.MAX_VALUE+1);
+			listVisite = GestionDB.searchVisite(null, null, date, date.plusDays(1),-1, Float.MAX_VALUE+1);
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}

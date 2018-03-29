@@ -21,7 +21,7 @@ public class Visite implements Memorisable {
 	private static List<String> listeNomAttributsWithID = extractNomAttributs();
 	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
 
-	public static final LocalDateTime dateVisiteParDefaut = LocalDateTime.of(0, 1, 1, 0, 0, 0);
+	public static final LocalDateTime dateVisiteParDefaut = ConvertisseurDate.dateTimeParDefaut;
 
 	private int codeVisite;
 	private String typeDeVisite;
