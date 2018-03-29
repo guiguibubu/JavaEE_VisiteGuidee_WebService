@@ -20,9 +20,12 @@ public class ReservationVisite implements ReservationVisiteSEI {
 	public Client trouverClient(String nom, String prenom) {
 		Client client = ConstructorFactory.createClient();
 		try {
-			client = GestionDB.searchClient(prenom, nom);
-			if(client.getIdClient() == 0) {
+			if(GestionDB.existeClient(prenom, nom)) {
+				client = GestionDB.searchClient(prenom, nom);
+			} else {
 				client.setIdClient(GestionDB.ajoutClient(prenom, prenom));
+				client.setNom(nom);
+				client.setPrenom(prenom);
 			}
 		} catch (SQLException e) {
 			client.setIdClient(-1);

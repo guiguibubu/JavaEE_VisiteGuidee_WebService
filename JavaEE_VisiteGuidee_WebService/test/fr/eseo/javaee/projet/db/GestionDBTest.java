@@ -83,23 +83,55 @@ class GestionDBTest {
 	//Test Client
 	@Test
 	void testAjoutClient() {
-		String nom = "";
-		String prenom = "";
+		String nom = "Buchle";
+		String prenom = "Guillaume";
+		Client clientTrouve = ConstructorFactory.createClient();
 		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			clientTrouve.setIdClient(GestionDB.ajoutClient(prenom, nom));
 			BaseDeDonnees.openConnection();
-			BaseDeDonnees.executeSQL("DELETE FROM client WHERE nom='Buchle' AND prenom='Guillaume'", false);
-			GestionDB.ajoutClient("Guillaume", "Buchle");
-
-			BaseDeDonnees.openConnection();
-			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='Buchle' AND prenom='Guillaume'", true);
+			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='"+nom+"' AND prenom='"+prenom+"'", true);
 			while(rs.next()) {
-				nom = rs.getString("nom");
-				prenom = rs.getString("prenom");
+				clientTrouve.setNom(rs.getString(Client.NOM_COL_NOM));
+				clientTrouve.setPrenom(rs.getString(Client.NOM_COL_PRENOM));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertTrue("Buchle".equals(nom) && "Guillaume".equals(prenom));
+		Assertions.assertNotEquals(0, clientTrouve.getIdClient());
+		Assertions.assertEquals(nom, clientTrouve.getNom());
+		Assertions.assertEquals(prenom, clientTrouve.getPrenom());
+	}
+
+	@Test
+	void testAjoutClientVide() {
+		String nom1 = "";
+		String prenom1 = " ";
+		String nom2 = null;
+		String prenom2 = "Henri";
+		Client clientTrouve1 = ConstructorFactory.createClient();
+		Client clientTrouve2 = ConstructorFactory.createClient();
+		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			clientTrouve1.setIdClient(GestionDB.ajoutClient(prenom1, nom1));
+			clientTrouve2.setIdClient(GestionDB.ajoutClient(prenom2, nom2));
+			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='"+nom1+"' AND prenom='"+prenom1+"'", true);
+			while(rs.next()) {
+				clientTrouve1.setNom(rs.getString("nom"));
+				clientTrouve1.setPrenom(rs.getString("prenom"));
+			}
+			rs.close();
+			rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='"+nom2+"' AND prenom='"+prenom2+"'", true);
+			while(rs.next()) {
+				clientTrouve2.setNom(rs.getString("nom"));
+				clientTrouve2.setPrenom(rs.getString("prenom"));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(0, clientTrouve1.getIdClient());
+		Assertions.assertEquals(0, clientTrouve2.getIdClient());
 	}
 
 	@Test

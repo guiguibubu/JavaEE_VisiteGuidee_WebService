@@ -72,7 +72,8 @@ public class GestionDB {
 	}
 
 	public static boolean existeClient(String prenom, String nom) throws SQLException {
-		return searchClient(prenom, nom).getIdClient() != 0;
+		boolean nomPrenomGoodFormat = !(prenom == null || nom == null || "".equals(prenom.trim()) || "".equals(nom.trim()));
+		return (nomPrenomGoodFormat) ? searchClient(prenom, nom).getIdClient() != 0 : false;
 	}
 
 	public static boolean existeClientById(int idClient) throws SQLException {
@@ -81,7 +82,8 @@ public class GestionDB {
 
 	public static int ajoutClient(String prenom, String nom) throws SQLException {
 		int generatedId = 0;
-		if(!existeClient(prenom, nom)) {
+		boolean nomPrenomGoodFormat = !(prenom == null || nom == null || "".equals(prenom.trim()) || "".equals(nom.trim()));
+		if(!existeClient(prenom, nom) && nomPrenomGoodFormat) {
 			initConnection();
 			Client client = ConstructorFactory.createClient(nom, prenom);
 			String sql = SQLTools.insertSQL(client.getNomTable(), client.getListeNomAttributs(), client.extractListeAttributs());
