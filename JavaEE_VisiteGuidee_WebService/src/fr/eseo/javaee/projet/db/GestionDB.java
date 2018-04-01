@@ -178,7 +178,12 @@ public class GestionDB {
 	public static List<Visite> searchVisite(Visite visite) throws SQLException{
 		List<Visite> listVisite = new ArrayList<>();
 		if(visite != null) {
-			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
+			if(visite.getCodeVisite() > 0) {
+				listVisite.add(searchVisiteById(visite.getCodeVisite()));
+			}
+			else {
+				listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
+			}
 		}
 		return listVisite;
 	}
@@ -295,7 +300,15 @@ public class GestionDB {
 	}
 
 	public static List<Reservation> searchReservation(Reservation reservation) throws SQLException {
-		return searchReservation(reservation.getVisite(), reservation.getClient(), reservation.getNombrePersonnes(), reservation.isPaiementEffectue());
+		List<Reservation> listeReservation = new ArrayList<>();
+		if(reservation != null) {
+			if(reservation.getCodeReservation() > 0) {
+				listeReservation.add(searchReservationById(reservation.getCodeReservation()));
+			} else {
+				listeReservation = searchReservation(reservation.getVisite(), reservation.getClient(), reservation.getNombrePersonnes(), reservation.isPaiementEffectue());
+			}
+		}
+		return listeReservation;
 	}
 
 	public static Reservation searchReservationById(int idReservation) throws SQLException {

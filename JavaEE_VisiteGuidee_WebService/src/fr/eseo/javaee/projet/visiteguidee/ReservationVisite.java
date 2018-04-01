@@ -16,6 +16,7 @@ import fr.eseo.javaee.projet.db.objet.Visite;
 @WebService(targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/", endpointInterface = "fr.eseo.javaee.projet.visiteguidee.ReservationVisiteSEI", portName = "ReservationVisitePort", serviceName = "ReservationVisiteService")
 public class ReservationVisite implements ReservationVisiteSEI {
 
+	@Override
 	public List<Reservation> trouverReservationByIdClient(int idClient) {
 		List<Reservation> listeReservation = new ArrayList<>();
 		try {
@@ -32,6 +33,7 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return listeReservation;
 	}
 
+	@Override
 	public Client trouverClient(String nom, String prenom) {
 		Client client = ConstructorFactory.createClient();
 		try {
@@ -49,6 +51,7 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return client;
 	}
 
+	@Override
 	public List<Visite> trouverVisite (Visite maVisite) {
 		List<Visite> listVisite = new ArrayList<>();
 		try {
@@ -59,6 +62,7 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return listVisite;
 	}
 
+	@Override
 	public int reserverVisite (Reservation maReservation) {
 		int codeReservation = 0;
 		try {
@@ -70,6 +74,7 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return codeReservation;
 	}
 
+	@Override
 	public boolean payerVisite (int monCodeReservation) {
 		Reservation reservation = ConstructorFactory.createReservation();
 		try {
@@ -85,14 +90,15 @@ public class ReservationVisite implements ReservationVisiteSEI {
 		return reservation.isPaiementEffectue();
 	}
 
+	@Override
 	public boolean annulerVisite (int monCodeReservation) {
-		boolean existeVisite = true;
+		boolean annulationReusie = false;
 		try {
 			GestionDB.supprimerReservationById(monCodeReservation);
-			existeVisite = !GestionDB.existeReservationById(monCodeReservation);
+			annulationReusie = !GestionDB.existeReservationById(monCodeReservation);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return existeVisite;
+		return annulationReusie;
 	}
 }
