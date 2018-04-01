@@ -13,11 +13,11 @@ import javax.xml.bind.annotation.XmlType;
  * Generated source version: 3.2.2
  */
 
-@XmlRootElement(name = "payerVisite", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
+@XmlRootElement(name = "trouverReservationByIdClient", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "payerVisite", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
+@XmlType(name = "trouverReservationByIdClient", namespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 
-public class PayerVisite {
+public class TrouverReservationByIdClient {
 
     @XmlElement(name = "arg0")
     private int arg0;

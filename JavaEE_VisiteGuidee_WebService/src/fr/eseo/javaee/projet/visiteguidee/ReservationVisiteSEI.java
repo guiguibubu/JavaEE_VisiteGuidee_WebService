@@ -16,6 +16,12 @@ import fr.eseo.javaee.projet.db.objet.Visite;
 @WebService(name = "ReservationVisiteSEI", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 public interface ReservationVisiteSEI {
 
+	@WebMethod(operationName = "trouverReservationByIdClient", action = "urn:TrouverReservationByIdClient")
+	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverReservationByIdClient", localName = "trouverReservationByIdClient", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
+	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverReservationByIdClientResponse", localName = "trouverReservationByIdClientResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
+	@WebResult(name = "return")
+	List<Reservation> trouverReservationByIdClient(@WebParam(name = "arg0") int idClient);
+
 	@WebMethod(operationName = "trouverClient", action = "urn:TrouverClient")
 	@RequestWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverClient", localName = "trouverClient", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")
 	@ResponseWrapper(className = "fr.eseo.javaee.projet.visiteguidee.jaxws.TrouverClientResponse", localName = "trouverClientResponse", targetNamespace = "http://visiteguidee.projet.javaee.eseo.fr/")

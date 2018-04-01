@@ -83,23 +83,55 @@ class GestionDBTest {
 	//Test Client
 	@Test
 	void testAjoutClient() {
-		String nom = "";
-		String prenom = "";
+		String nom = "Buchle";
+		String prenom = "Guillaume";
+		Client clientTrouve = ConstructorFactory.createClient();
 		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			clientTrouve.setIdClient(GestionDB.ajoutClient(prenom, nom));
 			BaseDeDonnees.openConnection();
-			BaseDeDonnees.executeSQL("DELETE FROM client WHERE nom='Buchle' AND prenom='Guillaume'", false);
-			GestionDB.ajoutClient("Guillaume", "Buchle");
-
-			BaseDeDonnees.openConnection();
-			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='Buchle' AND prenom='Guillaume'", true);
+			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='"+nom+"' AND prenom='"+prenom+"'", true);
 			while(rs.next()) {
-				nom = rs.getString("nom");
-				prenom = rs.getString("prenom");
+				clientTrouve.setNom(rs.getString(Client.NOM_COL_NOM));
+				clientTrouve.setPrenom(rs.getString(Client.NOM_COL_PRENOM));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Assertions.assertTrue("Buchle".equals(nom) && "Guillaume".equals(prenom));
+		Assertions.assertNotEquals(0, clientTrouve.getIdClient());
+		Assertions.assertEquals(nom, clientTrouve.getNom());
+		Assertions.assertEquals(prenom, clientTrouve.getPrenom());
+	}
+
+	@Test
+	void testAjoutClientVide() {
+		String nom1 = "";
+		String prenom1 = " ";
+		String nom2 = null;
+		String prenom2 = "Henri";
+		Client clientTrouve1 = ConstructorFactory.createClient();
+		Client clientTrouve2 = ConstructorFactory.createClient();
+		try {
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			clientTrouve1.setIdClient(GestionDB.ajoutClient(prenom1, nom1));
+			clientTrouve2.setIdClient(GestionDB.ajoutClient(prenom2, nom2));
+			ResultSet rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='"+nom1+"' AND prenom='"+prenom1+"'", true);
+			while(rs.next()) {
+				clientTrouve1.setNom(rs.getString("nom"));
+				clientTrouve1.setPrenom(rs.getString("prenom"));
+			}
+			rs.close();
+			rs = BaseDeDonnees.executeSQL("SELECT * FROM client WHERE nom='"+nom2+"' AND prenom='"+prenom2+"'", true);
+			while(rs.next()) {
+				clientTrouve2.setNom(rs.getString("nom"));
+				clientTrouve2.setPrenom(rs.getString("prenom"));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(0, clientTrouve1.getIdClient());
+		Assertions.assertEquals(0, clientTrouve2.getIdClient());
 	}
 
 	@Test
@@ -209,7 +241,6 @@ class GestionDBTest {
 		Assertions.assertTrue(existeVisite);
 	}
 
-	//test passe mais ne devrait pas ==> liste vide
 	@Test
 	void testSearchVisiteTypeVisite() {
 		LocalDate dateDate = LocalDate.of(2018,02, 2);
@@ -345,6 +376,74 @@ class GestionDBTest {
 			e.printStackTrace();
 		}
 		Assertions.assertTrue(reservationSupprimee);
+	}
+
+	@Test
+	void testSearchReservationClient() {
+		LocalDate dateDate = LocalDate.of(2018,02, 2);
+		LocalTime dateTime = LocalTime.of(11,22,33,00);
+		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
+		List<Reservation> listReservation1 = new ArrayList<>();
+		List<Reservation> listReservation2 = new ArrayList<>();
+		Visite visite1 = ConstructorFactory.createVisite("guide", "Nantes", date, 60);
+		Visite visite2 = ConstructorFactory.createVisite("libre", "Angers", date, 70);
+		Client client1 = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client client2 = ConstructorFactory.createClient("Pennyworth", "Alfred");
+		Reservation reservation1 = ConstructorFactory.createReservation(visite1, client1, 1, false);
+		Reservation reservation2 = ConstructorFactory.createReservation(visite2, client1, 1, false);
+		Reservation reservation3 = ConstructorFactory.createReservation(visite2, client2, 1, false);
+		try {
+			BaseDeDonnees.cleanTable(Reservation.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			visite1.setCodeVisite(GestionDB.ajoutVisite(visite1));
+			visite2.setCodeVisite(GestionDB.ajoutVisite(visite2));
+			client1.setIdClient(GestionDB.ajoutClient(client1));
+			client2.setIdClient(GestionDB.ajoutClient(client2));
+			reservation1.setCodeReservation(GestionDB.ajoutReservation(reservation1));
+			reservation2.setCodeReservation(GestionDB.ajoutReservation(reservation2));
+			reservation3.setCodeReservation(GestionDB.ajoutReservation(reservation3));
+			listReservation1 = GestionDB.searchReservation(null, client1, -1, false);
+			listReservation2 = GestionDB.searchReservation(null, client2, -1, false);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(2,listReservation1.size());
+		Assertions.assertEquals(1,listReservation2.size());
+	}
+
+	@Test
+	void testSearchReservationClientPaiement() {
+		LocalDate dateDate = LocalDate.of(2018,02, 2);
+		LocalTime dateTime = LocalTime.of(11,22,33,00);
+		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
+		List<Reservation> listReservation1 = new ArrayList<>();
+		List<Reservation> listReservation2 = new ArrayList<>();
+		Visite visite1 = ConstructorFactory.createVisite("guide", "Nantes", date, 60);
+		Visite visite2 = ConstructorFactory.createVisite("libre", "Angers", date, 70);
+		Client client1 = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client client2 = ConstructorFactory.createClient("Pennyworth", "Alfred");
+		Reservation reservation1 = ConstructorFactory.createReservation(visite1, client1, 1, false);
+		Reservation reservation2 = ConstructorFactory.createReservation(visite2, client1, 1, true);
+		Reservation reservation3 = ConstructorFactory.createReservation(visite2, client2, 1, false);
+		try {
+			BaseDeDonnees.cleanTable(Reservation.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			visite1.setCodeVisite(GestionDB.ajoutVisite(visite1));
+			visite2.setCodeVisite(GestionDB.ajoutVisite(visite2));
+			client1.setIdClient(GestionDB.ajoutClient(client1));
+			client2.setIdClient(GestionDB.ajoutClient(client2));
+			reservation1.setCodeReservation(GestionDB.ajoutReservation(reservation1));
+			reservation2.setCodeReservation(GestionDB.ajoutReservation(reservation2));
+			reservation3.setCodeReservation(GestionDB.ajoutReservation(reservation3));
+			listReservation1 = GestionDB.searchReservation(null, client1, -1, true);
+			listReservation2 = GestionDB.searchReservation(null, client2, -1, false);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(1,listReservation1.size());
+		Assertions.assertEquals(1,listReservation2.size());
 	}
 
 }

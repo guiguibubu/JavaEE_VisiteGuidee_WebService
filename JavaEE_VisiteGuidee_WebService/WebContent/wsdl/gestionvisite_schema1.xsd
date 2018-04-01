@@ -16,9 +16,47 @@
 
   <xs:element name="trouverClientResponse" type="tns:trouverClientResponse"/>
 
+  <xs:element name="trouverReservationByIdClient" type="tns:trouverReservationByIdClient"/>
+
+  <xs:element name="trouverReservationByIdClientResponse" type="tns:trouverReservationByIdClientResponse"/>
+
   <xs:element name="trouverVisite" type="tns:trouverVisite"/>
 
   <xs:element name="trouverVisiteResponse" type="tns:trouverVisiteResponse"/>
+
+  <xs:complexType name="trouverVisite">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:visite"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="visite">
+    <xs:sequence>
+      <xs:element name="codeVisite" type="xs:int"/>
+      <xs:element minOccurs="0" name="dateVisite" type="xs:dateTime"/>
+      <xs:element name="prix" type="xs:float"/>
+      <xs:element minOccurs="0" name="typeDeVisite" type="xs:string"/>
+      <xs:element minOccurs="0" name="ville" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="trouverVisiteResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:visite"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="annulerVisite">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="annulerVisiteResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:complexType name="reserverVisite">
     <xs:sequence>
@@ -49,16 +87,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="visite">
-    <xs:sequence>
-      <xs:element name="codeVisite" type="xs:int"/>
-      <xs:element minOccurs="0" name="dateVisite" type="xs:dateTime"/>
-      <xs:element name="prix" type="xs:float"/>
-      <xs:element minOccurs="0" name="typeDeVisite" type="xs:string"/>
-      <xs:element minOccurs="0" name="ville" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:complexType name="reserverVisiteResponse">
     <xs:sequence>
       <xs:element name="return" type="xs:int"/>
@@ -77,27 +105,15 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="trouverVisite">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="arg0" type="tns:visite"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="trouverVisiteResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:visite"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="annulerVisite">
+  <xs:complexType name="trouverReservationByIdClient">
     <xs:sequence>
       <xs:element name="arg0" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="annulerVisiteResponse">
+  <xs:complexType name="trouverReservationByIdClientResponse">
     <xs:sequence>
-      <xs:element name="return" type="xs:boolean"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:reservation"/>
     </xs:sequence>
   </xs:complexType>
 

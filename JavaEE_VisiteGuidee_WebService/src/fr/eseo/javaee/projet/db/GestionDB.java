@@ -72,7 +72,8 @@ public class GestionDB {
 	}
 
 	public static boolean existeClient(String prenom, String nom) throws SQLException {
-		return searchClient(prenom, nom).getIdClient() != 0;
+		boolean nomPrenomGoodFormat = !(prenom == null || nom == null || "".equals(prenom.trim()) || "".equals(nom.trim()));
+		return (nomPrenomGoodFormat) ? searchClient(prenom, nom).getIdClient() != 0 : false;
 	}
 
 	public static boolean existeClientById(int idClient) throws SQLException {
@@ -81,7 +82,8 @@ public class GestionDB {
 
 	public static int ajoutClient(String prenom, String nom) throws SQLException {
 		int generatedId = 0;
-		if(!existeClient(prenom, nom)) {
+		boolean nomPrenomGoodFormat = !(prenom == null || nom == null || "".equals(prenom.trim()) || "".equals(nom.trim()));
+		if(!existeClient(prenom, nom) && nomPrenomGoodFormat) {
 			initConnection();
 			Client client = ConstructorFactory.createClient(nom, prenom);
 			String sql = SQLTools.insertSQL(client.getNomTable(), client.getListeNomAttributs(), client.extractListeAttributs());
@@ -176,7 +178,12 @@ public class GestionDB {
 	public static List<Visite> searchVisite(Visite visite) throws SQLException{
 		List<Visite> listVisite = new ArrayList<>();
 		if(visite != null) {
-			listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
+			if(visite.getCodeVisite() > 0) {
+				listVisite.add(searchVisiteById(visite.getCodeVisite()));
+			}
+			else {
+				listVisite = searchVisite(visite.getTypeDeVisite(), visite.getVille(), ConvertisseurDate.asLocalDateTime(visite.getDateVisite()), visite.getPrix());
+			}
 		}
 		return listVisite;
 	}
@@ -265,9 +272,22 @@ public class GestionDB {
 	public static List<Reservation> searchReservation(Visite visite, Client client, int nombrePersonnes, boolean paiementEffectue) throws SQLException {
 		List<Reservation> listReservation = new ArrayList<>();
 		initConnection();
-		Reservation reservation = ConstructorFactory.createReservation(visite, client, nombrePersonnes, paiementEffectue);
-		String sql = SQLTools.selectSQL(Reservation.NOM_TABLE, reservation.getListeNomAttributs(), reservation.extractListeAttributs());
+
+		List<String> listClausesWhere = new ArrayList<>();
+		if(visite != null && visite.getCodeVisite() > 0) {
+			listClausesWhere.add(SQLTools.convertIntoWhereClause(Reservation.NOM_COL_VISITE, BaseDeDonnees.convertForDB(visite.getCodeVisite())));
+		}
+		if(client != null && client.getIdClient() > 0) {
+			listClausesWhere.add(SQLTools.convertIntoWhereClause(Reservation.NOM_COL_CLIENT, BaseDeDonnees.convertForDB(client.getIdClient())));
+		}
+		if(nombrePersonnes > 0) {
+			listClausesWhere.add(SQLTools.convertIntoWhereClause(Reservation.NOM_COL_PLACE, BaseDeDonnees.convertForDB(nombrePersonnes)));
+		}
+		listClausesWhere.add(SQLTools.convertIntoWhereClause(Reservation.NOM_COL_PAIEMENT, BaseDeDonnees.convertForDB(paiementEffectue)));
+
+		String sql = SQLTools.selectSQL(Reservation.NOM_TABLE, listClausesWhere);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
+		Reservation reservation;
 		while (rs.next()) {
 			reservation = ConstructorFactory.createReservation(rs.getInt(Reservation.NOM_COL_ID),
 					ConstructorFactory.createVisite(rs.getInt(Reservation.NOM_COL_VISITE)),
@@ -280,7 +300,15 @@ public class GestionDB {
 	}
 
 	public static List<Reservation> searchReservation(Reservation reservation) throws SQLException {
-		return searchReservation(reservation.getVisite(), reservation.getClient(), reservation.getNombrePersonnes(), reservation.isPaiementEffectue());
+		List<Reservation> listeReservation = new ArrayList<>();
+		if(reservation != null) {
+			if(reservation.getCodeReservation() > 0) {
+				listeReservation.add(searchReservationById(reservation.getCodeReservation()));
+			} else {
+				listeReservation = searchReservation(reservation.getVisite(), reservation.getClient(), reservation.getNombrePersonnes(), reservation.isPaiementEffectue());
+			}
+		}
+		return listeReservation;
 	}
 
 	public static Reservation searchReservationById(int idReservation) throws SQLException {

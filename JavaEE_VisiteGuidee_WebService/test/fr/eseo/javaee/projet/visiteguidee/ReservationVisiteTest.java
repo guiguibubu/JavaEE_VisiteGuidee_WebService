@@ -380,4 +380,40 @@ class ReservationVisiteTest {
 		}
 		Assertions.assertTrue(visiteAnnulee);
 	}
+
+	@Test
+	void testtrouveReservationVisite() {
+		LocalDate dateDate = LocalDate.of(2018,02, 2);
+		LocalTime dateTime = LocalTime.of(11,22,33,00);
+		LocalDateTime date = LocalDateTime.of(dateDate,dateTime);
+		List<Reservation> listReservation1 = new ArrayList<>();
+		List<Reservation> listReservation2 = new ArrayList<>();
+		Visite visite1 = ConstructorFactory.createVisite("guide", "Nantes", date, 60);
+		Visite visite2 = ConstructorFactory.createVisite("libre", "Angers", date, 70);
+		Client client1 = ConstructorFactory.createClient("Buchle", "Guillaume");
+		Client client2 = ConstructorFactory.createClient("Pennyworth", "Alfred");
+		Reservation reservation1 = ConstructorFactory.createReservation(visite1, client1, 1, false);
+		Reservation reservation2 = ConstructorFactory.createReservation(visite2, client1, 1, true);
+		Reservation reservation3 = ConstructorFactory.createReservation(visite2, client2, 1, false);
+		try {
+			BaseDeDonnees.cleanTable(Reservation.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Visite.NOM_TABLE);
+			BaseDeDonnees.cleanTable(Client.NOM_TABLE);
+			visite1.setCodeVisite(GestionDB.ajoutVisite(visite1));
+			visite2.setCodeVisite(GestionDB.ajoutVisite(visite2));
+			client1.setIdClient(GestionDB.ajoutClient(client1));
+			client2.setIdClient(GestionDB.ajoutClient(client2));
+			reservation1.setCodeReservation(GestionDB.ajoutReservation(reservation1));
+			reservation2.setCodeReservation(GestionDB.ajoutReservation(reservation2));
+			reservation3.setCodeReservation(GestionDB.ajoutReservation(reservation3));
+
+			ReservationVisite reservationVisite = new ReservationVisite();
+			listReservation1 = reservationVisite.trouverReservationByIdClient(client1.getIdClient());
+			listReservation2 = reservationVisite.trouverReservationByIdClient(client2.getIdClient());
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Assertions.assertEquals(2,listReservation1.size());
+		Assertions.assertEquals(1,listReservation2.size());
+	}
 }

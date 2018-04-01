@@ -17,12 +17,32 @@ import fr.eseo.javaee.projet.db.objet.Visite;
 public class ReservationVisite implements ReservationVisiteSEI {
 
 	@Override
+	public List<Reservation> trouverReservationByIdClient(int idClient) {
+		List<Reservation> listeReservation = new ArrayList<>();
+		try {
+			if(idClient > 0) {
+				Client client = GestionDB.searchClientById(idClient);
+				if(client != null && client.getIdClient() > 0) {
+					listeReservation = GestionDB.searchReservation(null, client, -1, false);
+					listeReservation.addAll(GestionDB.searchReservation(null, client, -1, true));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listeReservation;
+	}
+
+	@Override
 	public Client trouverClient(String nom, String prenom) {
 		Client client = ConstructorFactory.createClient();
 		try {
-			client = GestionDB.searchClient(prenom, nom);
-			if(client.getIdClient() == 0) {
+			if(GestionDB.existeClient(prenom, nom)) {
+				client = GestionDB.searchClient(prenom, nom);
+			} else {
 				client.setIdClient(GestionDB.ajoutClient(prenom, prenom));
+				client.setNom(nom);
+				client.setPrenom(prenom);
 			}
 		} catch (SQLException e) {
 			client.setIdClient(-1);
@@ -72,13 +92,13 @@ public class ReservationVisite implements ReservationVisiteSEI {
 
 	@Override
 	public boolean annulerVisite (int monCodeReservation) {
-		boolean existeVisite = true;
+		boolean annulationReusie = false;
 		try {
 			GestionDB.supprimerReservationById(monCodeReservation);
-			existeVisite = !GestionDB.existeReservationById(monCodeReservation);
+			annulationReusie = !GestionDB.existeReservationById(monCodeReservation);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return existeVisite;
+		return annulationReusie;
 	}
 }
