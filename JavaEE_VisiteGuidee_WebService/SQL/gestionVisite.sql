@@ -110,7 +110,8 @@ ALTER TABLE `client`
 ALTER TABLE `reservation`
   ADD PRIMARY KEY (`idReservation`),
   ADD KEY `idVisite` (`idVisite`),
-  ADD KEY `idClient` (`idClient`);
+  ADD KEY `idClient` (`idClient`),
+  ADD UNIQUE KEY `Unicite_Reservation` (`idVisite`,`idClient`);
 
 --
 -- Index pour la table `visite`
@@ -205,7 +206,7 @@ insert into reservation values(2,4,2,9,0);
 insert into reservation values(3,3,2,1,0);
 insert into reservation values(4,2,3,5,1);
 insert into reservation values(5,4,3,8,1);
-insert into reservation values(6,2,3,6,1);
+insert into reservation values(6,3,3,6,1);
 insert into reservation values(7,3,4,19,0);
 insert into reservation values(8,4,5,3,1);
 insert into reservation values(9,5,5,5,1);
