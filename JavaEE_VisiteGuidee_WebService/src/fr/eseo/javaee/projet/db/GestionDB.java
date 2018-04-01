@@ -156,7 +156,7 @@ public class GestionDB {
 		String sql = SQLTools.selectSQL(Visite.NOM_TABLE, listClausesWhere);
 		ResultSet rs = BaseDeDonnees.executeSQL(sql, true);
 
-		List<String> listeNouveauAttributs = new ArrayList<>();
+		List<String> listeNouveauAttributs;
 		while (rs.next()) {
 			Visite visite = new Visite();
 			List<String> listNomAttributs = visite.getListeNomAttributsWithID();

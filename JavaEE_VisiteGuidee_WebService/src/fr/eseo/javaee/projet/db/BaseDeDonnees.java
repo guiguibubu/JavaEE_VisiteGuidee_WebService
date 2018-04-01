@@ -52,7 +52,7 @@ public class BaseDeDonnees {
 		return instance;
 	}
 
-	public static void initBDD() throws SQLException {
+	public static void initBDD() {
 		if(!isInitialized()) {
 			instance = new BaseDeDonnees();
 		}
