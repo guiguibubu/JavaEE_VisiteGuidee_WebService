@@ -23,6 +23,11 @@ public class ConvertisseurDate {
 	public static final LocalDate dateParDefaut = LocalDate.of(1900, 1, 1);
 
 	private ConvertisseurDate() {}
+	/**
+	 * Renvoie un objet {@link java.time.LocalDate} correspondant à la date de l'objet {@link java.util.Date}
+	 * @param date, L'objet Date que l'on souhaite convertir
+	 * @return L'objet LocalDate correspondant à la date entrée
+	 */
 	public static LocalDate asLocalDate(java.util.Date date) {
 		LocalDate dateTime;
 		if(date == null) {
@@ -38,6 +43,11 @@ public class ConvertisseurDate {
 		return dateTime;
 	}
 
+	/**
+	 * Renvoie un objet {@link java.time.LocalDateTime} correspondant à la date de l'objet {@link java.util.Date}
+	 * @param date, L'objet Date que l'on souhaite convertir
+	 * @return L'objet LocalDateTime correspondant à la date entrée
+	 */
 	public static LocalDateTime asLocalDateTime(java.util.Date date) {
 		LocalDateTime dateTime;
 		if(date == null) {

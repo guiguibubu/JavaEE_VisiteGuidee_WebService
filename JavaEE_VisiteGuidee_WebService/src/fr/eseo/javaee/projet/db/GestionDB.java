@@ -101,10 +101,10 @@ public class GestionDB {
 	}
 
 	public static void supprimeClient(String prenom, String nom) throws SQLException {
-		supprimeClient(searchClient(prenom, nom).getIdClient());
+		supprimeClientById(searchClient(prenom, nom).getIdClient());
 	}
 
-	public static void supprimeClient(int idClient) throws SQLException {
+	public static void supprimeClientById(int idClient) throws SQLException {
 		if(idClient != 0) {
 			initConnection();
 			String sql = SQLTools.deleteSQL(Client.NOM_TABLE, Client.NOM_COL_ID, BaseDeDonnees.convertForDB(idClient));
