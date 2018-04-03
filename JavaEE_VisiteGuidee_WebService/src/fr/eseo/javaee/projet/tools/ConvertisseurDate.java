@@ -22,6 +22,12 @@ public class ConvertisseurDate {
 	public static final LocalDateTime dateTimeParDefaut = LocalDateTime.of(1900, 1, 1, 0, 0, 0);
 	public static final LocalDate dateParDefaut = LocalDate.of(1900, 1, 1);
 
+	private ConvertisseurDate() {}
+	/**
+	 * Renvoie un objet {@link java.time.LocalDate} correspondant à la date de l'objet {@link java.util.Date}
+	 * @param date, L'objet Date que l'on souhaite convertir
+	 * @return L'objet LocalDate correspondant à la date entrée
+	 */
 	public static LocalDate asLocalDate(java.util.Date date) {
 		LocalDate dateTime;
 		if(date == null) {
@@ -37,6 +43,11 @@ public class ConvertisseurDate {
 		return dateTime;
 	}
 
+	/**
+	 * Renvoie un objet {@link java.time.LocalDateTime} correspondant à la date de l'objet {@link java.util.Date}
+	 * @param date, L'objet Date que l'on souhaite convertir
+	 * @return L'objet LocalDateTime correspondant à la date entrée
+	 */
 	public static LocalDateTime asLocalDateTime(java.util.Date date) {
 		LocalDateTime dateTime;
 		if(date == null) {
@@ -92,13 +103,11 @@ public class ConvertisseurDate {
 			GregorianCalendar c = new GregorianCalendar(((LocalDate) date).getYear(), ((LocalDate) date).getMonthValue()-1, ((LocalDate) date).getDayOfMonth());
 			c.setTimeZone(TimeZone.getDefault());
 			return c.getTime();
-			//			return java.util.Date.from(((LocalDate) date).atStartOfDay(zone).toInstant());
 		}
 		if (date instanceof LocalDateTime) {
 			GregorianCalendar c = new GregorianCalendar(((LocalDateTime) date).getYear(), ((LocalDateTime) date).getMonthValue()-1, ((LocalDateTime) date).getDayOfMonth(), ((LocalDateTime) date).getHour(), ((LocalDateTime) date).getMinute(), ((LocalDateTime) date).getSecond());
 			c.setTimeZone(TimeZone.getDefault());
 			return c.getTime();
-			//			return java.util.Date.from(((LocalDateTime) date).atZone(zone).toInstant());
 		}
 		if (date instanceof ZonedDateTime) {
 			return java.util.Date.from(((ZonedDateTime) date).toInstant());

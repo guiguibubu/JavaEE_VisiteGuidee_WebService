@@ -25,7 +25,7 @@ public class Client implements Memorisable {
 	private static List<String> listeNomAttributsWithID = extractNomAttributs();
 	private static List<String> listeNomAttributs = listeNomAttributsWithID.subList(1, listeNomAttributsWithID.size());
 
-	public static final String emailParDefaut = "mail@parDefaut.fr";
+	public static final String EMAIL_PAR_DEFAUT = "mail@parDefaut.fr";
 	public static final LocalDate dateNaissanceParDefaut = ConvertisseurDate.dateParDefaut;
 
 	private int idClient;
@@ -81,7 +81,7 @@ public class Client implements Memorisable {
 	public int getNumTelephone() {return this.numTelephone;}
 	public void setNumTelephone(int numTelephone) {this.numTelephone = numTelephone;}
 
-	public String getMail() {return (this.mail.trim().isEmpty()) ? emailParDefaut : this.mail;}
+	public String getMail() {return (this.mail.trim().isEmpty()) ? EMAIL_PAR_DEFAUT : this.mail;}
 	public void setMail(String mail) {this.mail = mail;}
 
 	@Override
