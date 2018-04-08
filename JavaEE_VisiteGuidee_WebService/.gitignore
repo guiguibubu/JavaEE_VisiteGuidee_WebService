@@ -1,6 +1,5 @@
 /build/
 /.scannerwork/
-/build.xml
 /buildAntSonar.txt
 /reports/
 /sonar/
