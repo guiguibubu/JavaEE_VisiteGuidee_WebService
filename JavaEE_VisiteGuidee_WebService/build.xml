@@ -1,0 +1,92 @@
+<!-- Create a project, giving it a name, setting the base directory and setting a namespace for jacoco,
+otherwise eclipse highlights an error -->
+<project name="GestionVisite" basedir="." xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<!-- Declare a folder (sub folder of the project root, to store junit results -->
+	<property name="test_results" location="junit-reports" />
+
+	<!-- Declare the path (relative to the basedir) where the compiled classes will be stored -->
+	<path id="classpath">
+		<pathelement location ="build/classes" />
+	</path>
+
+	<!-- Define the jacoco ant task -->
+	<!--<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">-->
+		<!-- On your servers, the jacocoant.jar file is stored in the ant/lib file-->
+		<!--<classpath path="lib/jacocoant.jar" />-->
+	<!--</taskdef>-->
+
+	<!-- target used to delete any of the folders created by the antbuild -->
+	<target name="clean">
+		<delete dir="build" />
+		<delete dir="test-output" />
+		<delete dir="junit-reports" />
+	</target>
+
+	<!-- target used to compile the source code for major manager for executing tests-->
+	<target name="compile_src_debug">
+		<mkdir dir="build/classes" />
+		<mkdir dir="target" />
+		<mkdir dir="junit-reports" />
+		<javac debug="on" debuglevel="lines,vars,source" srcdir="src" destdir="build/classes" />
+	</target>
+
+	<!-- target used to compile the test source code for major manager, depends upon the source code being compiled for testing (with debug information)-->
+
+	<target name="compile_tests_debug" depends="compile_src_debug">
+		<javac debug="on" debuglevel="lines,vars,source" srcdir="test" destdir="build/classes">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+
+	<!-- dummy target that compiles both source and tests ready to test-->
+	<target name="compile_for_tests" depends="compile_src_debug,compile_tests_debug" />
+
+	
+	<target name="test_preparation" depends="compile_for_tests">
+		<copy todir="build/classes">
+		    <fileset dir="src" excludes="**/*.java"/>
+		</copy>
+		<copy todir="build/classes">
+			<fileset dir="test" excludes="**/*.java"/>
+		</copy>
+	</target>
+	
+	<!-- Example using Junit-->
+	<target name="test_execution" depends="test_preparation">
+		<jacoco:coverage destfile="target/jacoco.exec">
+			<junit fork="true" forkmode="once">
+				<classpath refid="classpath" />
+				<batchtest todir="${test_results}" haltonfailure="no">
+					<fileset dir="test">
+						<include name="**/*SQLToolsTest*" />
+					</fileset>
+					<formatter type="plain" />
+					<formatter type="xml" />
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+	</target>
+
+	<target name="analysis" depends="clean,test_execution" />
+
+	<!-- target used to compile the source code for major manager for executing tests-->
+	<target name="compile_src_production">
+		<mkdir dir="build/classes" />
+		<mkdir dir="target" />
+		<javac srcdir="src" destdir="build/classes" />
+	</target>
+
+	<!-- target used to create a jar file of built production code -->
+	<target name="export_jar" depends="clean,compile_src_production">
+		<mkdir dir="build/output" />
+		<jar destfile="build/output/majormanager.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Implementation-Title" value="Major Manager" />
+			</manifest>
+		</jar>
+	</target>
+
+
+</project>
